@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            <ion-img [src] = "selectedMember.imageUrl"></ion-img>
+          </ion-card-header>
+          <ion-card-content>
+            <h2>{{ selectedMember.name }}</h2>
+            <h2>{{ selectedMember.phone1 }}</h2>
+
+          </ion-card-content>
+        </ion-card>
+        <ion-icon name="call-outline"></ion-icon>
+        <ion-icon name="chatbox-outline"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="primary" (click)="onEdit()"
+         >
+          Edit</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="primary" (click)="onDelete()"
+         >
+          Delete</ion-button>
+      </ion-col>
+    </ion-row>    
+  </ion-grid>
+</ion-content>

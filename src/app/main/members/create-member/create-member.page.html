@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>create-member</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<form (ngSubmit)="onAddMember(f)" #f="ngForm">
+<ion-grid>
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+      <ion-item>
+        <ion-input type="text" placeholder="name" ngModel name="name" required></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+      <ion-item>
+        <ion-input type="text" placeholder="phone1" ngModel name="phone1" required></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+      <ion-item>
+        <ion-input type="text" placeholder="address" ngModel name="address" required></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>  
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+      <ion-item>
+        <ion-button type="submit" expand="block" color="primary" >Save</ion-button>
+      </ion-item>
+    </ion-col>
+  </ion-row>  
+  <ion-row>
+    <ion-col>
+      <div class="picker">
+        <ion-img 
+          class="image" 
+          role="button"
+          (click)="onPickImage()"
+          [src]="selectedImage" 
+          *ngIf="selectedImage"></ion-img>
+        <ion-button color="primary" 
+          (click)="onPickImage()" 
+          *ngIf="!selectedImage">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          <ion-label>Take Picture</ion-label>
+        </ion-button>
+      </div>
+      <input
+       type="file"
+       accept="image/jpeg"
+       *ngIf="usePicker" 
+       #filePicker 
+       (change) ="onFileChosen($event.target.files)"/>
+    </ion-col>
+  </ion-row>   
+</ion-grid>
+</form>
+</ion-content>
