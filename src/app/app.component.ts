@@ -6,7 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { AuthComponent } from './auth/auth.component';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
+import { take, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  isUserAuthenticated = false;
   private authSub: Subscription;
-
+  private previousAuthState = false;
+  isUserAuthenticated = false;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -36,22 +37,81 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authSub = this.authService.userIsAuthenticated.subscribe(value => {
-      this.isUserAuthenticated = value;
+    this.authService.userIsAuthenticatedObser.pipe(
+      take(1),
+      switchMap(isAuthenticated => {
+        if (!isAuthenticated) {
+          return this.authService.autoLogin();
+        } else {
+          return of(isAuthenticated);
+        }
+      })/* ,
+      tap(isAuthenticated => {
+        if (!isAuthenticated) {
+          this.router.navigateByUrl('/auth');
+        }
+      }) */
+    ).subscribe(resData => {
+      this.isUserAuthenticated = resData; 
+    })
+  
+
+/*     this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
+      this.isUserAuthenticated = isAuth;
     });
+ */
+    /* this.authService.userIsAuthenticated.subscribe(isAuth => {
+      this.isUserAuthenticated = isAuth; */
+      /* if (!isAuth && this.previousAuthState !== isAuth) {
+        this.router.navigateByUrl('/auth');
+      }
+      this.previousAuthState = isAuth; */
+  }
+
+  ionViewWillEnter() {
+    this.authService.userIsAuthenticatedObser.pipe(
+      take(1),
+      switchMap(isAuthenticated => {
+        if (!isAuthenticated) {
+          return this.authService.autoLogin();
+        } else {
+          return of(isAuthenticated);
+        }
+      })/* ,
+      tap(isAuthenticated => {
+        if (!isAuthenticated) {
+          this.router.navigateByUrl('/auth');
+        }
+      }) */
+    ).subscribe(resData => {
+      this.isUserAuthenticated = resData; 
+    })
   }
 
   onLogout() {
     this.authService.logout();
+    this.isUserAuthenticated = false;
+
     // this.router.navigateByUrl('/auth');
   }
 
   onLogin() {
     this.modelCtrl.create({
-      component: AuthComponent
+      component: AuthComponent,
+      componentProps: {},
+      id: 'test'
     }).then(modalEl => {
       modalEl.present();
-      return modalEl.onDidDismiss();
+      return modalEl.onDidDismiss().then(resData => {
+        console.log(resData);
+        if
+          ((resData.role === 'login-success') || 
+          (resData.role === 'signup-success')) {
+          this.isUserAuthenticated = true;
+        }
+        // this.isUserAuthenticated = true;
+        this.router.navigate(['/main/tabs/news']);
+      });
     });
   }
 

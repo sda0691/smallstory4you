@@ -10,12 +10,17 @@
     align-items: center;
   }
   
-  .image {
+.image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
+  } 
   
 .input [type='file'] {
     display: none;
 }
+
+/* ion-toolbar, ion-header {
+    height: 20px;//by default 56px
+}
+ */

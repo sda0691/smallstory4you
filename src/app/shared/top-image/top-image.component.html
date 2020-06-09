@@ -1,0 +1,17 @@
+<!-- <ion-img class="test"></ion-img> -->
+<div class="hero-image" style="height: 160px;" >
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-right">
+        <ion-button fill="clear"  color="danger" *ngIf="isAuth && !isLoading" (click)="onMyInfo()">
+          내정보
+        </ion-button>
+        <ion-button fill="clear"  color="danger" *ngIf="!isAuth && !isLoading" (click)="onLogin()">
+          로그인 
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</div> 
+

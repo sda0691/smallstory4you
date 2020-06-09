@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MainPage } from './main.page';
+import { AuthGuard } from '../auth/auth.guard';
 
 const routes: Routes = [
   {
@@ -46,20 +47,40 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('./members/members.module').then( m => m.MembersPageModule)
+            loadChildren: () => import('./members/members.module').then( m => m.MembersPageModule),
+            //canLoad: [AuthGuard]
           },
           {
             path: 'new',
-            loadChildren: () => import('./members/create-member/create-member.module').then( m => m.CreateMemberPageModule)
+            loadChildren: () => import('./members/create-member/create-member.module').then( m => m.CreateMemberPageModule),
+            //canLoad: [AuthGuard]
           },
           {
             path: 'edit/:memberId',
-            loadChildren: () => import('./members/edit-member/edit-member.module').then( m => m.EditMemberPageModule)
+            loadChildren: () => import('./members/edit-member/edit-member.module').then( m => m.EditMemberPageModule),
+            //canLoad: [AuthGuard]
           }
         ]
       },
       {
+        path: 'binder',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./binder/binder.module').then( m => m.BinderPageModule)
+          }
 
+        ]
+      },
+      {
+        path: 'medias',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./medias/medias.module').then( m => m.MediasPageModule)
+          }
+
+        ]
       },
       {
         path: '',
@@ -73,6 +94,10 @@ const routes: Routes = [
     redirectTo: '/main/tabs/news',
     pathMatch: 'full'
   },
+  {
+    path: 'medias',
+    loadChildren: () => import('./medias/medias.module').then( m => m.MediasPageModule)
+  }
 ];
 
 @NgModule({

@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-members',
@@ -16,55 +18,55 @@ export class MembersPage implements OnInit, OnDestroy {
   // loadedMembers: Member[];
   loadedMembers = []; // Member[];
   private memberSub: Subscription;
+  private Subs: Subscription[] = [];
+  isUserAuthenticated = false;
 
   constructor(
     private membersService: MembersService,
     private modalCtrl: ModalController,
     private route: ActivatedRoute,
     private router: Router,
-    private loadingCtrl: LoadingController
-    ) { }
+    private loadingCtrl: LoadingController,
+    private authService: AuthService,
+    private fireAuth: AngularFireAuth
+    ) { 
+        this.fireAuth.onAuthStateChanged(user => {
+        
+        console.log(user);
+      });
+    }
 
   ngOnInit() {
-    /* this.memberSub = this.membersService
-      .get_members()
+    this.Subs.push(this.membersService.members
       .subscribe(data => {
-      this.loadedMembers = data.map(e => {
-        return {
-          id: e.payload.doc.id,
-          isEdit: false,
-          groupid: e.payload.doc.data()['groupid'],
-          name: e.payload.doc.data()['name'],
-          phone1: e.payload.doc.data()['phone1'],
-          imageUrl: e.payload.doc.data()['imageUrl'],
-          address: e.payload.doc.data()['address'],
-          fileName: e.payload.doc.data()['fileName']
-        }
-      });
-    }); */
+        this.loadedMembers = data;
+      }));
   }
   ionViewWillEnter() {
-    this.loadingCtrl.create({message: 'Loading members...'})
-      .then(loadingEl => {
-        loadingEl.present();
-        this.membersService
-        .get_members()
-        .subscribe(data => {
-          this.loadedMembers = data.map(e => {
-            return {
-              id: e.payload.doc.id,
-              isEdit: false,
-              groupid: e.payload.doc.data()['groupid'],
-              name: e.payload.doc.data()['name'],
-              phone1: e.payload.doc.data()['phone1'],
-              imageUrl: e.payload.doc.data()['imageUrl'],
-              address: e.payload.doc.data()['address'],
-              fileName: e.payload.doc.data()['fileName']
-            };
-          });
+    this.authService.loggedUser.subscribe(user => {
+      console.log('user user user');
+      console.log(user.id);
+    });
+    this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
+      if (!isAuth) {
+        return;
+      } else {
+        this.isUserAuthenticated = isAuth;
+        this.loadingCtrl.create({message: 'Loading members...'})
+        .then(loadingEl => {
+          loadingEl.present();
+          this.Subs.push(this.membersService.fetchMembers()
+            .subscribe(data => {
+              // this.loadedMembers = data;
+              console.log(data);
+              loadingEl.dismiss();
+            }, error => {
+              loadingEl.dismiss();
+              console.log(error);
+            }));
         });
-        loadingEl.dismiss();
-      });
+      }
+    });
   }
 
   onMemberDetail(member: Member) {
@@ -91,9 +93,15 @@ export class MembersPage implements OnInit, OnDestroy {
     this.router.navigate(['/', 'main', 'tabs', 'members', 'edit', memberId]);
   }
   
+  onLogout() {
+    this.authService.logout();
+    // this.router.navigateByUrl('/auth');
+  }
+  
   ngOnDestroy() {
-    if (this.memberSub) {
+    this.Subs.forEach(sub => sub.unsubscribe());
+/*     if (this.memberSub) {
       this.memberSub.unsubscribe();
-    }
+    } */
   }
 }

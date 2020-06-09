@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { Member } from '../member.model';
 import { Router } from '@angular/router';
 import { MembersService } from '../members.service';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-member-details',
@@ -16,7 +17,9 @@ export class MemberDetailsComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private router: Router,
-    private membersService: MembersService
+    private membersService: MembersService,
+    private alertCtrl: AlertController,
+    private callNumber: CallNumber
   ) { }
 
   ngOnInit() {}
@@ -28,13 +31,44 @@ export class MemberDetailsComponent implements OnInit {
   }
   onDelete() {
     console.log('member delete');
+    this.alertCtrl.create({
+      header: 'Warning',
+      message: 'Are you sure to delete?',
+      buttons: [{text: 'Okey',
+        handler: () => {
+          this.membersService.deleteMember(this.selectedMember);
+          this.modalCtrl.dismiss();
+          this.router.navigate(['/main/tabs/members']);
+        }
+      },
+      {
+        text: 'No',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+      }
+    ]
+    }). then (alertEl => {
+      alertEl.present();
+    });
     // this.membersService.delete_student(this.selectedMember.id);
-    this.membersService.deleteMember(this.selectedMember);
-    this.modalCtrl.dismiss();
-    this.router.navigate(['/main/tabs/members']);
+
   }
 
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }
+
+  onCall() {
+    window.open("tel:" + this.selectedMember.phone1,"_system");
+
+        /* this.callNumber.callNumber("18001010101", true)
+    .then(res => console.log('Launched dialer!', res))
+    .catch(err => console.log('Error launching dialer', err)); */
+  }
+
+  onText() {
+    window.open("sms:"+ this.selectedMember.phone1,"_system");
+  }
+
 }

@@ -9,13 +9,15 @@ import { MembersPageRoutingModule } from './members-routing.module';
 import { MembersPage } from './members.page';
 
 import { MemberDetailsComponent } from './member-details/member-details.component';
+import { NewsPageModule } from '../news/news.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MembersPageRoutingModule
+    MembersPageRoutingModule,
+    NewsPageModule
   ],
   declarations: [MembersPage, MemberDetailsComponent],
   entryComponents: [MemberDetailsComponent]

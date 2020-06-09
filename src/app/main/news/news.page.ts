@@ -1,15 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { NewsService } from './news.service';
 import { News } from './News.model';
 import { ModalController } from '@ionic/angular';
 import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Subscription } from 'rxjs';
+import { Subscription, of } from 'rxjs';
+import { take, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
   templateUrl: './news.page.html',
   styleUrls: ['./news.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NewsPage implements OnInit, OnDestroy {
   isUserAuthenticated = false;
@@ -24,17 +26,28 @@ export class NewsPage implements OnInit, OnDestroy {
     ) { }
 
   ngOnInit() {
+    console.log('dfjdlsfjdsjfdsjfdsjfjsdkfjdsjf')
+    
     // this.loadedNews = this.newsService.getAllNews();
     this.newsSub = this.newsService.allNews.subscribe(news => {
       this.loadedNews = news;
     });
-
-    this.authSub = this.authService.userIsAuthenticated.subscribe(value => {
-      this.isUserAuthenticated = value;
-    });
-
   }
 
+  ionViewWillEnter() {
+    this.authService.userIsAuthenticatedObser.pipe(
+      take(1),
+      switchMap(isAuthenticated => {
+        if (!isAuthenticated) {
+          return this.authService.autoLogin();
+        } else {
+          return of(isAuthenticated);
+        }
+      })
+    ).subscribe(resData => {
+      this.isUserAuthenticated = resData; 
+    });
+  } 
   onMyInfo() {
     this.modalCtrl.create({
       component: MyinfoComponent// ,

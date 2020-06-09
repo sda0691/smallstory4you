@@ -8,6 +8,7 @@ import { NewsPageRoutingModule } from './news-routing.module';
 
 import { NewsPage } from './news.page';
 import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
+import { TopImageComponent } from 'src/app/shared/top-image/top-image.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
     IonicModule,
     NewsPageRoutingModule
   ],
-  declarations: [NewsPage, MyinfoComponent],
-  entryComponents: [MyinfoComponent]
+  declarations: [NewsPage, MyinfoComponent, TopImageComponent],
+  entryComponents: [MyinfoComponent, TopImageComponent],
+  exports: [TopImageComponent]
 })
 export class NewsPageModule {}

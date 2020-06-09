@@ -1,0 +1,66 @@
+.cell-class {
+    border-color: black; 
+    border-width: .01em; 
+    border-style:solid; margin-bottom : -1px;
+    background-color: lightgrey
+  }
+
+  ion-col.my-thin-col {
+    flex: 0 0 50px;
+    padding:0;
+    margin-right:20px;
+  }
+
+p.font-bold-black  {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:16px;
+}
+p.font-bold  {
+    font-weight: bold; 
+}
+p.font-gray  {
+    color: gray;
+}
+
+p.font-gray-small  {
+    color: gray;
+    font-size:12px;
+}
+.myDiv {
+    background-color:rgb(236, 234, 234);
+    // margin-left: 5px;
+    color: red;
+    height: 28px;
+    vertical-align: middle;
+    line-height: 28px;       /* The same as your div height */
+  }
+
+  .icon {
+    display: inline-block;
+    // font-size: 35px;
+    color: gray;
+    vertical-align: middle;
+   }
+   
+   .text{
+     display: inline-block;
+     vertical-align: middle;
+   }
+   .col-padding {
+       padding:8px;
+   }
+
+   ion-segment{
+    height:30px;
+  }
+  
+  ion-segment-button{
+     min-height:30px;
+     --color-checked: white;
+     --background-checked:var(--ion-color-primary);
+  }
+
+  ion-label.segment{
+    font-size: 12px !important;
+}

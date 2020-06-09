@@ -1,19 +1,12 @@
-
-
-
 <ion-header>
-  <ion-toolbar class="ion-text-center">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/main/tabs/members">
-        <ion-icon name="arrow-undo"></ion-icon>
-      </ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ isLoading ? 'Loading...' : member.id}}</ion-title>
-    <!-- <ion-buttons slot="primary" >
-      <ion-button type="submit" [disabled]="!f.valid">
-        <ion-icon name="checkmark-outline"></ion-icon>
+  <ion-toolbar>
+    <ion-title>정보수정</ion-title>
+    <ion-buttons slot="end" >
+      <ion-button routerLink="/main/tabs/members">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
       </ion-button>
-    </ion-buttons>     -->
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -23,15 +16,33 @@
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
-        <ion-input type="text" placeholder="name" [ngModel]="member.name" name="name" required></ion-input>
+        <ion-input 
+          type="text" 
+          placeholder="name" 
+          [ngModel]="member.name" 
+          name="name" 
+          #nameCtrl="ngModel"
+          required></ion-input>
       </ion-item>
+      <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
+        <ion-label color="primary">이름을 입력하세요</ion-label>
+      </ion-item>      
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
-        <ion-input type="text" placeholder="phone" [ngModel]="member.phone1" name="phone" required></ion-input>
+        <ion-input 
+          type="text" 
+          placeholder="phone" 
+          [ngModel]="member.phone1" 
+          name="phone" 
+          #phoneCtrl="ngModel"
+          required></ion-input>
       </ion-item>
+      <ion-item *ngIf="!phoneCtrl.valid && phoneCtrl.touched">
+        <ion-label color="primary">전화번호를 입력하세요</ion-label>
+      </ion-item>       
     </ion-col>
   </ion-row>
   <ion-row>
@@ -41,16 +52,11 @@
       </ion-item>
     </ion-col>
   </ion-row>  
-   <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
-        <ion-button type="submit" expand="block" color="primary" >Edit</ion-button>
-    </ion-col>
-  </ion-row> 
   <ion-row>
     <ion-col>
-      <div class="picker">
+      <div >
         <ion-img 
-          class="image" 
+
           role="button"
           (click)="onPickImage()"
           [src]="selectedImage" 
@@ -70,6 +76,15 @@
        (change) ="onFileChosen($event)"/>
     </ion-col>
   </ion-row>
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+        <ion-button 
+          type="submit" 
+          expand="block" 
+          [disabled]='!f.valid'
+          color="primary" >Edit</ion-button>
+    </ion-col>
+  </ion-row>   
 </ion-grid>
 </form>
 </ion-content>

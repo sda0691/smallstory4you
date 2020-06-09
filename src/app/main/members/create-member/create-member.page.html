@@ -1,6 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>create-member</ion-title>
+    <ion-title>멤버등록</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main/tabs/members">
+        <ion-icon name="close" ></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>  
   </ion-toolbar>
 </ion-header>
 
@@ -10,36 +16,52 @@
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
-        <ion-input type="text" placeholder="name" ngModel name="name" required></ion-input>
+        <ion-input 
+          type="text" 
+          placeholder="이름" 
+          ngModel name="name" 
+          required 
+          #nameCtrl="ngModel"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
+        <ion-label color="primary">이름을 입력하세요</ion-label>
       </ion-item>
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
-        <ion-input type="text" placeholder="phone1" ngModel name="phone1" required></ion-input>
+        <ion-input 
+          type="text" 
+          placeholder="전화번호" 
+          ngModel 
+          name="phone1" 
+          #phoneCtrl="ngModel"
+          required></ion-input>
       </ion-item>
+      <ion-item *ngIf="!phoneCtrl.valid && phoneCtrl.touched">
+        <ion-label color="primary">전화번호를 입력하세요</ion-label>
+      </ion-item>      
     </ion-col>
   </ion-row>
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
-        <ion-input type="text" placeholder="address" ngModel name="address" required></ion-input>
+        <ion-input 
+          type="text" 
+          placeholder="주소" 
+          ngModel 
+          name="address" 
+          required></ion-input>
       </ion-item>
     </ion-col>
   </ion-row>  
+ 
   <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
-      <ion-item>
-        <ion-button type="submit" expand="block" color="primary" >Save</ion-button>
-      </ion-item>
-    </ion-col>
-  </ion-row>  
-  <ion-row>
-    <ion-col>
-      <div class="picker">
+    <ion-col ion-col size-sm="6" offset-sm="3">
+      <div >
         <ion-img 
-          class="image" 
+          class="image"
           role="button"
           (click)="onPickImage()"
           [src]="selectedImage" 
@@ -57,6 +79,11 @@
        *ngIf="usePicker" 
        #filePicker 
        (change) ="onFileChosen($event.target.files)"/>
+    </ion-col>
+  </ion-row>   
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+        <ion-button type="submit" [disabled]='!f.valid' expand="full" color="primary" >Save</ion-button>
     </ion-col>
   </ion-row>   
 </ion-grid>

@@ -19,8 +19,8 @@ export class AuthPage implements OnInit {
   ngOnInit() {
   }
 
-  onLogin() {
-    this.loadingCtrl.create({message: 'Logging In...'})
+   onLogin() {
+    /* this.loadingCtrl.create({message: 'Logging In...'})
       .then(loadingEl => {
         loadingEl.present();
         setTimeout(() => {
@@ -28,8 +28,8 @@ export class AuthPage implements OnInit {
           this.router.navigateByUrl('/main/tabs/news');
           loadingEl.dismiss();
         }, 3000);
-      });
-  }
+      }); */
+  } 
 
   onFormSubmit() {
 

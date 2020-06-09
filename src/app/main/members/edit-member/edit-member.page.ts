@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router,  Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { MembersService } from '../members.service';
-import { NavController, LoadingController, Platform } from '@ionic/angular';
+import { NavController, LoadingController, Platform, AlertController } from '@ionic/angular';
 import { Member } from '../member.model';
 import { Subscription, observable, Observable } from 'rxjs';
 import { FormGroup, NgForm } from '@angular/forms';
@@ -53,6 +53,7 @@ export class EditMemberPage implements OnInit, OnDestroy {
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private router: Router,
+    private alertCtrl: AlertController
   ) {
     if ((
       this.platform.is('mobile') &&
@@ -178,7 +179,11 @@ export class EditMemberPage implements OnInit, OnDestroy {
             .then(() => {
               loadingEl.dismiss();
               inputData.form.reset();
-              this.router.navigate(['/main/tabs/members'])
+              this.router.navigate(['/main/tabs/members']);
+            })
+            .catch(error => {
+              loadingEl.dismiss();
+              this.showAlert(error.message);
             });
         } else {
           this.membersService.uploadImage( record, isEdit, this.pickedFile)
@@ -186,6 +191,9 @@ export class EditMemberPage implements OnInit, OnDestroy {
             loadingEl.dismiss();
             inputData.form.reset();
             this.router.navigate(['/main/tabs/members']);
+          }, error => {
+            loadingEl.dismiss();
+            this.showAlert(error.message);
           });
 
         }
@@ -212,6 +220,15 @@ export class EditMemberPage implements OnInit, OnDestroy {
         });
       }); */
 
+  }
+
+  private showAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Error',
+      message: message,
+      buttons: ['Okay']
+    })
+    .then(alertEl => alertEl.present());
   }
 
   onFileChosen(event: Event) {

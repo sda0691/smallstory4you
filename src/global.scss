@@ -24,3 +24,32 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+
+
+ .hero-image {
+    background: url(./assets/images/nature.jpg) no-repeat center ;
+    padding: 0 0 0 0;
+    background-size: 100% 100%;
+  }
+
+  ion-toolbar, ion-header {
+    --min-height: 40px;
+   }
+
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Bold.otf');//mine
+    src: url('../src/assets/fonts/NotoSansKR-Regular.otf');//mine
+    src: url('../src/assets/fonts/NotoSansKR-Black.otf');//mine
+
+    src: url('../src/assets/fonts/NotoSansKR-Light.otf');//mine
+    src: url('../src/assets/fonts/NotoSansKR-Medium.otf');//mine
+
+    src: url('../src/assets/fonts/NotoSansKR-Thin.otf');//mine
+  }
+  
+  * {
+    font-family: 'Noto Sans KR';
+  }

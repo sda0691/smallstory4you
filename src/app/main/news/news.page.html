@@ -1,29 +1,35 @@
+ 
 <ion-header>
   <ion-toolbar>
-    <ion-buttons>
+<!--     <ion-buttons>
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
      <ion-buttons slot="primary">
       <ion-label *ngIf="isUserAuthenticated">내정보</ion-label>
-    </ion-buttons> 
-    
-    <!--<ion-title slot="start">news</ion-title>
-    <ion-label>내정보</ion-label>
-     <ion-buttons slot="end">
-      <ion-button (click) = "onMyInfo()">
-        <ion-label>myinfo</ion-label>
-      </ion-button>
-    </ion-buttons> -->
+    </ion-buttons>  -->
+    <ion-title>교회소식</ion-title> 
+    <ion-buttons slot="primary" routerLink="/main/tabs/news/new">
+      <!-- <ion-label *ngIf="isUserAuthenticated">등록하기</ion-label> -->
+      <ion-icon *ngIf="isUserAuthenticated" name="create" slot="end"></ion-icon>등록하기
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-<ion-grid >
-  <ion-row>
-    <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
-      <ion-button color="primary" expand="block" routerLink="/main/tabs/news/new">Post News</ion-button>
+<ion-grid class="ion-no-padding">
+  <ion-row >
+    <ion-col class="ion-no-padding" size-sm="6" offset-sm="3">
+      <app-top-image [isAuth]="isUserAuthenticated"></app-top-image>
     </ion-col>
   </ion-row>
+<!--   <ion-row>
+    <ion-col size-sm="6" offset-sm="3" class=" ion-no-padding">
+      <ion-button 
+      color="primary" 
+      class="ion-no-padding" 
+      expand="full" routerLink="/main/tabs/news/new">Post News</ion-button>
+    </ion-col>
+  </ion-row> -->
   <ion-row *ngFor="let news of loadedNews">
     <ion-col size-sm="6" offset-sm="3"  >
       <ion-card class="ion-no-padding">

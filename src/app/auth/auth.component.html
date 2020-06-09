@@ -45,7 +45,7 @@
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-button type="submit" color="primary" 
-            (click)="onLogin()" expand="block"
+            expand="block"
             [disabled]='!f.valid'>
           Login
           </ion-button>
@@ -53,7 +53,7 @@
       </ion-row>
       <ion-row class="rowBottom">
         <ion-col size-sm="3" >
-          <ion-button color="light" expand="block" >SIGN-UP</ion-button>
+          <ion-button color="light" expand="block" (click)="onSignup()" >SIGN-UP</ion-button>
         </ion-col>
         <ion-col size-sm="3" offset-sm="3">
           <ion-button color="light" expand="block">FIND PASSWORD</ion-button>
