@@ -11,7 +11,7 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthComponent } from './auth/auth.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { AngularFireModule } from '@angular/fire';
@@ -23,12 +23,21 @@ import { environment } from '../environments/environment';
 import { CreateAuthComponent } from './auth/create-auth/create-auth.component';
 import { TopImageComponent } from './shared/top-image/top-image.component';
 import { NewsPageModule } from './main/news/news.module';
+// import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 import { EditMediaComponent } from './main/medias/edit-media/edit-media.component';
+import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
 
 
 @NgModule({
-  declarations: [AppComponent, AuthComponent, CreateAuthComponent, ResetPasswordComponent, EditMediaComponent],
+  declarations: [
+    AppComponent, 
+    AuthComponent, 
+    CreateAuthComponent, 
+    // ChangePasswordComponent,
+    ResetPasswordComponent, 
+    EditMediaComponent
+  ],
   entryComponents: [AuthComponent, CreateAuthComponent, ResetPasswordComponent, EditMediaComponent],
 
   imports: [
@@ -41,13 +50,15 @@ import { EditMediaComponent } from './main/medias/edit-media/edit-media.componen
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireAuthModule,
-    NewsPageModule
+    NewsPageModule,
+    ReactiveFormsModule
   ],
 
   providers: [
     StatusBar,
     SplashScreen,
-    CallNumber
+    CallNumber,
+    LaunchNavigator
   ],
   bootstrap: [AppComponent]
 })

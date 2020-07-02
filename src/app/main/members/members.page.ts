@@ -8,6 +8,7 @@ import { MemberDetailsComponent } from './member-details/member-details.componen
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { User } from 'src/app/auth/user.model';
 
 @Component({
   selector: 'app-members',
@@ -20,6 +21,7 @@ export class MembersPage implements OnInit, OnDestroy {
   private memberSub: Subscription;
   private Subs: Subscription[] = [];
   isUserAuthenticated = false;
+  loggedUser: User;
 
   constructor(
     private membersService: MembersService,
@@ -29,11 +31,7 @@ export class MembersPage implements OnInit, OnDestroy {
     private loadingCtrl: LoadingController,
     private authService: AuthService,
     private fireAuth: AngularFireAuth
-    ) { 
-        this.fireAuth.onAuthStateChanged(user => {
-        
-        console.log(user);
-      });
+    ) {
     }
 
   ngOnInit() {
@@ -41,17 +39,17 @@ export class MembersPage implements OnInit, OnDestroy {
       .subscribe(data => {
         this.loadedMembers = data;
       }));
+
+    this.Subs.push(this.authService.loggedUser.subscribe(user => {
+      this.loggedUser = user;
+    }));
   }
   ionViewWillEnter() {
-    this.authService.loggedUser.subscribe(user => {
-      console.log('user user user');
-      console.log(user.id);
-    });
-    this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
-      if (!isAuth) {
-        return;
+    this.authService.getCurrentUser1().subscribe(user => {
+      if (!user || (user && user.role.toUpperCase() === 'GUEST')) {
+        this.router.navigate(['/', 'main', 'tabs', 'medias']);
       } else {
-        this.isUserAuthenticated = isAuth;
+        this.isUserAuthenticated = true;
         this.loadingCtrl.create({message: 'Loading members...'})
         .then(loadingEl => {
           loadingEl.present();
@@ -74,7 +72,7 @@ export class MembersPage implements OnInit, OnDestroy {
     // this.navCtrl.navigateBack('/places/tabs/discover'); // ionic backward
     this.modalCtrl.create({
       component: MemberDetailsComponent,
-      componentProps: {selectedMember: member}
+      componentProps: {selectedMember: member, loggedUser: this.loggedUser}
     })
     .then(modalEl => {
       modalEl.present();
@@ -93,10 +91,9 @@ export class MembersPage implements OnInit, OnDestroy {
     this.router.navigate(['/', 'main', 'tabs', 'members', 'edit', memberId]);
   }
   
-  onLogout() {
+/*   onLogout() {
     this.authService.logout();
-    // this.router.navigateByUrl('/auth');
-  }
+  } */
   
   ngOnDestroy() {
     this.Subs.forEach(sub => sub.unsubscribe());

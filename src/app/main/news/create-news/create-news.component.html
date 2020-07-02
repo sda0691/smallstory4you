@@ -1,0 +1,108 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>소식등록</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>  
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form (ngSubmit)="onAddNews(f)" #f="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+         
+
+          <ion-item>
+            <ion-label position="floating">내용</ion-label>
+            <ion-textarea 
+              rows="10" 
+              clearInput
+              ngModel
+              name="note"
+              #noteCtrl="ngModel">
+            </ion-textarea>
+          </ion-item> 
+          <ion-item>
+            <ion-label position="floating">영상</ion-label>
+            <ion-input 
+              type="text" 
+              clearInput
+              placeholder="https://video-url"
+              ngModel
+              name="youtubeLink"
+              #youtubeLinkCtrl="ngModel">
+            </ion-input>
+          </ion-item>
+          <ion-list>
+            <ion-label position="floating">공개설정</ion-label>
+            <ion-radio-group [(ngModel)]="status" name="isPublic" >
+              <ion-item>
+                <ion-label>전체공개</ion-label>
+                <ion-radio value="public" ></ion-radio> &nbsp;&nbsp;
+                <ion-label>멤버공개</ion-label>
+                <ion-radio value="member"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+
+          <ion-item>
+            <h4>Image Preview</h4>
+            <!-- <img src="{{imageURI}}"  height="120" width="100%" > -->
+<!--             <div class="scrolling-wrapper">
+                <div class="card" *ngFor="let img of newImages ; let i=index" style="width:120px;padding: 1px">
+                    <img src="{{img.imageURI}}"  height="120" width="100%" ><p></p>
+                    <button class="button icon-left ion-camera" (click)="delete(i)">Delete Photo</button>
+                </div>
+            </div> -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col ion-col size-sm="6" offset-sm="3">
+          <div class="scrolling-wrapper">
+            <div class="card" *ngFor="let img of newImages ; let i=index" style="width:120px;padding: 1px">
+                <img src="{{img.imageUrl}}"  height="120" width="100%" ><p></p>
+                <button class="button icon-left ion-camera" (click)="delete(i)">Delete Photo</button>
+            </div>
+          </div>
+          <div >
+<!--              <ion-img 
+             role="button"
+             (click)="onPickImage()"
+             *ngIf="selectedImage"
+              [src]="selectedImage" 
+              >
+            </ion-img>  -->
+            <ion-button color="primary" 
+              (click)="onPickImage()" 
+              
+              >
+              <ion-icon name="camera" slot="start"></ion-icon>
+              <ion-label>Take Picture</ion-label>
+            </ion-button>
+          </div>
+          <input
+           type="file"
+           accept="image/jpeg"
+           *ngIf="usePicker"
+           #filePicker 
+           (change) ="onFileChosen($event.target.files)"/>
+        </ion-col>
+      </ion-row> 
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button type="submit" color="primary" 
+            expand="block"
+            [disabled]='!f.valid'>
+            Save
+          </ion-button>
+        </ion-col>
+      </ion-row>      
+    </ion-grid>
+  </form>
+</ion-content>
+

@@ -1,30 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+import { take, switchMap } from 'rxjs/operators';
+import { of, Subscription } from 'rxjs';
+import { User } from '../auth/user.model';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit {
-  isAuth = false;
-  private previousAuthState = false;
+export class MainPage implements OnInit, OnDestroy {
+
+  loggedUser: User;
+  private subs: Subscription[] = [];
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
-/*     this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
-      if (!isAuth && this.previousAuthState !== isAuth) {
-        this.router.navigateByUrl('/auth');
-      }
-      this.previousAuthState = isAuth;
-    }); */
-    this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
+/*     this.authService.userIsAuthenticated.subscribe(isAuth => {
       this.isAuth = isAuth;
-    }); 
+    }); */
+    // when page refreshed in web.
+    this.subs.push(this.authService.loggedUser.subscribe(user => {
+      this.loggedUser = user;
+    }));
+  }
+
+  ionViewWillEnter() {
+/*     this.subs.push(this.authService.getCurrentUser().subscribe(user => {
+    })); */
+  }
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

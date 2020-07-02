@@ -8,9 +8,13 @@
       <ion-label *ngIf="isUserAuthenticated">내정보</ion-label>
     </ion-buttons>  -->
     <ion-title>교회소식</ion-title> 
-    <ion-buttons slot="primary" routerLink="/main/tabs/news/new">
-      <!-- <ion-label *ngIf="isUserAuthenticated">등록하기</ion-label> -->
-      <ion-icon *ngIf="isUserAuthenticated" name="create" slot="end"></ion-icon>등록하기
+    <ion-buttons 
+      slot="end" 
+      *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
+      <ion-button (click)="openAddNews()">
+        <ion-label>소식등록</ion-label>&nbsp;
+        <ion-icon name="add-circle" ></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -19,7 +23,11 @@
 <ion-grid class="ion-no-padding">
   <ion-row >
     <ion-col class="ion-no-padding" size-sm="6" offset-sm="3">
-      <app-top-image [isAuth]="isUserAuthenticated"></app-top-image>
+      <app-top-image 
+      [isAuth]="isAuth"
+      [loggedUser]="loggedUser"
+      >
+      </app-top-image>
     </ion-col>
   </ion-row>
 <!--   <ion-row>
@@ -30,27 +38,47 @@
       expand="full" routerLink="/main/tabs/news/new">Post News</ion-button>
     </ion-col>
   </ion-row> -->
-  <ion-row *ngFor="let news of loadedNews">
+  <ion-row *ngFor="let news of loadedData">
     <ion-col size-sm="6" offset-sm="3"  >
       <ion-card class="ion-no-padding">
         <ion-card-header>
           <ion-card-title>
-            {{news.title}}
+            <p class="font-black-14-bold">{{news.author}}</p>
+            <p class="font-gray-10">
+              {{news.whenCreated | date: 'M'}} 월
+              {{news.whenCreated | date: 'd'}} 일
+            </p>
           </ion-card-title>
         </ion-card-header>
-        <ion-card-content>
-          {{news.note}}
+        <ion-card-content style="white-space: pre-wrap;">
+          <p class="font-black-12">{{(news.note)?.substring(0,30)}}</p>
         </ion-card-content>
         <div>
-          <ion-button
+<!--           <ion-button
             fill="clear"
             color="primary"
             [routerLink]="['/', 'main','tabs','news', news.id]"
           >
           More
-
-          </ion-button>
+          </ion-button> -->
+          <ion-button
+            fill="clear"
+            color="primary"
+            (click)='openNewsDetail(news)'
+          >
+          내용 더보기
+          </ion-button>          
+        </div>
+<!--           <div >
+            <div  *ngFor="let file of news.fileName ; let i=index" style="width:120px;padding: 1px">
+                <p>{{file}}</p>
+            </div>
+          </div> -->
+        <div class="scrolling-wrapper">
+          <div class="card" *ngFor="let url of news.downloadUrl ; let i=index" style="width:120px;padding: 1px">
+              <img src="{{url}}"  height="120" width="100%" ><p></p> 
           </div>
+        </div>          
       </ion-card>
     </ion-col>
   </ion-row>

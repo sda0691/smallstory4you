@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { User } from '../user.model';
 import { Subscription } from 'rxjs';
-import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { ResetPasswordComponent } from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-myinfo',
@@ -20,7 +20,9 @@ export class MyinfoComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private modalCtrl: ModalController) { }
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
+    ) { }
 
   ngOnInit() {
 
@@ -37,9 +39,18 @@ export class MyinfoComponent implements OnInit {
   }
 
   onResetPassword() {
-    this.authService.resetPassword('junsoft2000@gmail.com');
-    return;
-    this.modalCtrl.create({
+    if (this.loggedUser) {
+      this.authService.resetPassword(this.loggedUser.email)
+        .then(() => {
+          this.showAlert('Email has been sent');
+        })
+        .catch(error => {
+          this.showAlert(error.message);
+        })
+    }
+
+
+/*     this.modalCtrl.create({
       component: ResetPasswordComponent,
       componentProps: {},
       id: 'resetpassword'
@@ -51,7 +62,15 @@ export class MyinfoComponent implements OnInit {
       });
     })
     .then(resultData => {
-      // console.log(resultData.data, resultData.role);
-    });
+    }); */
+  }
+
+  private showAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Error',
+      message: message,
+      buttons: ['Okay']
+    })
+    .then(alertEl => alertEl.present());
   }
 }

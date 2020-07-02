@@ -1,43 +1,79 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-title>소식등록</ion-title>
+    <ion-buttons slot="primary">
       <ion-button routerLink="/main/tabs/news">
-        <ion-icon name="chevron-back-outline" slot="icon-only"></ion-icon>
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
       </ion-button>
     </ion-buttons>
-    <ion-title>Post News</ion-title>
+<!--     <ion-title>Post News</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onCreateNews()" [disabled]="!form.valid">
         <ion-icon name="checkmark-outline" slot="icon-only"></ion-icon>
       </ion-button>
-    </ion-buttons>    
+    </ion-buttons>  -->   
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
     <ion-grid>
       <ion-row>
-        <ion-col>
+        <ion-col size-sm="6" offset-sm="3">
+         
+<!--           <ion-item>
+            <ion-label position="floating">날짜</ion-label>
+            <ion-datetime
+              display-format="YYYY/MM/DD"
+              clearInput
+              formControlName="whenCreated"
+            ></ion-datetime>
+          </ion-item>  
+             -->
           <ion-item>
-            <ion-input type="text" placeholder="Title" formControlName="title"></ion-input>
+            <ion-label position="floating">내용</ion-label>
+            <ion-textarea 
+              rows="10" 
+              
+              clearInput
+              formControlName="note">
+            </ion-textarea>
+          </ion-item> 
+          
+          <ion-item>
+            <ion-label position="floating">영상</ion-label>
+            <ion-input 
+              type="text" 
+              clearInput
+              placeholder="https://video-url"
+              formControlName="youtubeLink">
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">공개설정</ion-label>
+            <ion-radio-group [(ngModel)]="status" formControlName="status" >
+              <ion-item>
+                <ion-label>전체공개</ion-label>
+                <ion-radio value="1" ></ion-radio> &nbsp;&nbsp;
+                <ion-label>멤버공개</ion-label>
+                <ion-radio value="2"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
           </ion-item>
         </ion-col>
       </ion-row>
+   
       <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-textarea placeholder="Note"  row="10" formControlName="note"></ion-textarea>
-          </ion-item>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button type="submit" color="primary" 
+            expand="block"
+            [disabled]='!form.valid'>
+            Save
+          </ion-button>
         </ion-col>
-      </ion-row>   
-      <ion-row *ngIf="!form.get('note').valid && form.get('note').touched" >
-        <ion-col>
-          <ion-item>
-            <p>Note must be between 1 to 500 characters.</p>
-          </ion-item>
-        </ion-col>
-      </ion-row>   
+      </ion-row>
     </ion-grid>
   </form>
 </ion-content>

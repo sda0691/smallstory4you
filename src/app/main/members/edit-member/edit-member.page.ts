@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router,  Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { MembersService } from '../members.service';
-import { NavController, LoadingController, Platform, AlertController } from '@ionic/angular';
+import { NavController, LoadingController, Platform, AlertController, ToastController } from '@ionic/angular';
 import { Member } from '../member.model';
 import { Subscription, observable, Observable } from 'rxjs';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
+import { GlobalConstants } from 'src/app/common/global-constants';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireUploadTask } from '@angular/fire/storage/task';
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -41,9 +44,11 @@ export class EditMemberPage implements OnInit, OnDestroy {
   isLoading = false;
   usePicker = false;
   selectedImage: string;
+  selectedFileName: string;
   pickedFile: any;
   private membersSub: Subscription;
-
+  task: AngularFireUploadTask;
+  uploadedFileURL: Observable<string>;
 
 
   constructor(
@@ -53,7 +58,9 @@ export class EditMemberPage implements OnInit, OnDestroy {
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
     private router: Router,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private storage: AngularFireStorage,
+    private toastCtrl: ToastController
   ) {
     if ((
       this.platform.is('mobile') &&
@@ -114,6 +121,7 @@ export class EditMemberPage implements OnInit, OnDestroy {
           .subscribe(data => {
             this.member = data;
             this.selectedImage = data.imageUrl;
+            this.selectedFileName = data.fileName;
             this.isLoading = false;
             loadingEl.dismiss();
           });
@@ -128,11 +136,11 @@ export class EditMemberPage implements OnInit, OnDestroy {
       return;
     }
     Plugins.Camera.getPhoto({
-      quality: 50,
+      quality: 100,
       source: CameraSource.Prompt,
       correctOrientation: true,
-      height: 320,
-      width: 200,
+      height: 500,
+      width: 500,
       resultType: CameraResultType.DataUrl
     }).then(image => {
       this.selectedImage = image.dataUrl;
@@ -160,68 +168,149 @@ export class EditMemberPage implements OnInit, OnDestroy {
       return false;
     });
   }
-  onEditMember(inputData) {
+  /* onEditMember(inputData) {
     const isEdit = true;
-
+    let uploadedFileName = '';
+    const storageFolderName = GlobalConstants.memberCollection + '/'; // 'Members/';
+    if (this.pickedFile) {
+      uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
+    } else {
+      uploadedFileName = this.member.fileName;
+    }
     let record = {};
     record['name'] = inputData.form.value.name;
     record['phone1'] = inputData.form.value.phone;
     record['address'] = inputData.form.value.address;
-    record['imageUrl'] = this.selectedImage;
+    // record['imageUrl'] = this.selectedImage;
     record['fileName'] = this.member.fileName;
     record['id'] = this.member.id;
 
+    record['homePhone'] = inputData.form.value.homePhone === undefined ? '' : inputData.form.value.homePhone ;
+    record['businessPhone'] = inputData.form.value.businessPhone === undefined ? '' : inputData.form.value.businessPhone;
+    record['ageStatus'] = inputData.form.value.ageStatus === undefined ? '' : inputData.form.value.ageStatus ;
+
+    const fullPath = storageFolderName + uploadedFileName;
+    const fileRef = this.storage.ref(fullPath);
+    const customMetadata = { app: 'Media Files' };
+
     this.loadingCtrl.create({message: 'Editing Member...'})
       .then(loadingEl => {
         loadingEl.present();
-        if(!this.pickedFile) {
-          this.membersService.edit_member(record)
-            .then(() => {
+        this.membersService.edit_member(record, uploadedFileName)
+          .subscribe(() => {
+            if (this.pickedFile) {
+              this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
+
+              this.task.then(async res => {
+                const toast = await this.toastCtrl.create({
+                  duration: 3000,
+                  message: 'File upload finished!'
+                });
+
+                if (this.selectedFileName) {
+                  this.membersService.delete_image(this.selectedFileName);
+                }
+
+                toast.present();
+                loadingEl.dismiss();
+                inputData.form.reset();
+                this.router.navigate(['/main/tabs/members']);
+                // this.modalCtrl.dismiss(null, 'media-upload-success');
+              }).catch(error => {
+                loadingEl.dismiss();
+                this.showAlert(error.message);
+              });
+            } else {
               loadingEl.dismiss();
               inputData.form.reset();
               this.router.navigate(['/main/tabs/members']);
-            })
-            .catch(error => {
-              loadingEl.dismiss();
-              this.showAlert(error.message);
-            });
-        } else {
-          this.membersService.uploadImage( record, isEdit, this.pickedFile)
-          .subscribe(() => {
-            loadingEl.dismiss();
-            inputData.form.reset();
-            this.router.navigate(['/main/tabs/members']);
-          }, error => {
+            }
+          }
+          , error => {
             loadingEl.dismiss();
             this.showAlert(error.message);
           });
+        });
+  } */
+  onEditMember(inputData) {
+    const isEdit = true;
+    let uploadedFileName = '';
+    const storageFolderName = GlobalConstants.memberCollection + '/'; // 'Members/';
+    if (this.pickedFile) {
+      uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
+    } else {
+      uploadedFileName = this.member.fileName;
+    }
+    let record = {};
+    record['name'] = inputData.form.value.name;
+    record['phone1'] = inputData.form.value.phone;
+    record['address'] = inputData.form.value.address;
+    // record['imageUrl'] = this.selectedImage;
+    record['fileName'] = uploadedFileName;
+    record['id'] = this.member.id;
 
-        }
-        /* .subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/main/tabs/members']);
-        }); */
-      });
-    /* console.log('test');
-    console.log(this.form.value.address);
+    record['homePhone'] = inputData.form.value.homePhone === undefined ? '' : inputData.form.value.homePhone ;
+    record['businessPhone'] = inputData.form.value.businessPhone === undefined ? '' : inputData.form.value.businessPhone;
+    record['ageStatus'] = inputData.form.value.ageStatus === undefined ? '' : inputData.form.value.ageStatus ;
+
+    const fullPath = storageFolderName + uploadedFileName;
+    const fileRef = this.storage.ref(fullPath);
+    const customMetadata = { app: 'Media Files' };
+    const oldImageFileName = this.member.fileName;
+  
     this.loadingCtrl.create({message: 'Editing Member...'})
       .then(loadingEl => {
         loadingEl.present();
-        this.membersService.EditMember(
-          this.member.id,
-          this.form.value.name,
-          this.form.value.phone,
-          this.form.value.address
-        ).subscribe(() => {
-          loadingEl.dismiss();
-          this.form.reset();
-          this.router.navigate(['/main/tabs/members']);
-        });
-      }); */
 
+        if (this.pickedFile) {
+          this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
+
+          this.task.then(async res => {
+            const toast = await this.toastCtrl.create({
+              duration: 3000,
+              message: 'File upload finished!'
+            });
+
+            this.uploadedFileURL = fileRef.getDownloadURL();
+            this.uploadedFileURL.subscribe(resp => {
+              record['imageUrl'] = resp;
+
+              this.membersService.edit_member(record, uploadedFileName)
+              .subscribe(() => {
+ 
+                if (oldImageFileName) {
+                  this.membersService.delete_image(oldImageFileName);
+                }
+                toast.present();
+                loadingEl.dismiss();
+                inputData.form.reset();
+                this.router.navigate(['/main/tabs/members']);
+              })
+
+            });
+
+
+
+            // this.modalCtrl.dismiss(null, 'media-upload-success');
+          }).catch(error => {
+            loadingEl.dismiss();
+            this.showAlert(error.message);
+          });
+        } else {
+          this.membersService.edit_member(record, uploadedFileName)
+          .subscribe(() => {
+
+            loadingEl.dismiss();
+            inputData.form.reset();
+            this.router.navigate(['/main/tabs/members']);
+          });
+        }
+      }
+      , error => {
+        // loadingEl.dismiss();
+        this.showAlert(error.message);
+      });
   }
-
   private showAlert(message: string) {
     this.alertCtrl.create({
       header: 'Error',
@@ -245,6 +334,12 @@ export class EditMemberPage implements OnInit, OnDestroy {
     fr.readAsDataURL (this.pickedFile);
   }
 
+  onRemovePhoto() {
+    if (!this.pickedFile && this.member.fileName.length > 0) {
+      this.membersService.deletePhoto(this.member, this.member.fileName);
+      this.selectedImage = '';
+    }
+  }
   ngOnDestroy() {
     if (this.membersSub) {
       this.membersSub.unsubscribe();

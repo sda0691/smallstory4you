@@ -6,5 +6,17 @@
     <param name="android-package" value="mx.ferreyra.callnumber.CFCallNumber"/>
   </feature>
 
+  <feature name="ActionSheet">
+    <param name="android-package" value="nl.xservices.plugins.actionsheet.ActionSheet"/>
+  </feature>
+
+  <feature name="Notification">
+    <param name="android-package" value="org.apache.cordova.dialogs.Notification"/>
+  </feature>
+
+  <feature name="LaunchNavigator">
+    <param name="android-package" value="uk.co.workingedge.phonegap.plugin.LaunchNavigatorPlugin"/>
+  </feature>
+
   
 </widget>

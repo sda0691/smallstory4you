@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController, AlertController, ToastController } from '@ionic/angular';
 import { CreateAuthComponent } from './create-auth/create-auth.component';
 import { Observable } from 'rxjs';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @Component({
   selector: 'app-auth',
@@ -14,6 +15,8 @@ import { Observable } from 'rxjs';
 export class AuthComponent implements OnInit {
   isLoading = false;
   isLogin = true;
+  passwordType = 'password';
+  show_hide = 'show';
 
   constructor(
     private authService: AuthService,
@@ -25,7 +28,10 @@ export class AuthComponent implements OnInit {
   ) { }
 
   ngOnInit() {}
-
+  showPassword() {
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
+    this.show_hide = this.show_hide === 'show' ? 'hide' : 'show';
+  }
   onLogin(email: string, password: string) {
     this.isLoading = true;
     this.loadingCtrl.create({message: 'Logging In...'})
@@ -111,6 +117,24 @@ export class AuthComponent implements OnInit {
       // console.log(resultData.data, resultData.role);
     });
   }
+
+  onForgotPassword() {
+    this.modalCtrl.create({
+      component: ResetPasswordComponent,
+      componentProps: {},
+      id: 'forgotpassword'
+    })
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss().then(modalData => {
+        this.modalCtrl.dismiss(null,modalData.role, 'forgotpassword');
+      });
+    })
+    .then(resultData => {
+      // console.log(resultData.data, resultData.role);
+    });
+  }
+
 
   onFormSubmit(form: NgForm) {
     if (!form.value) {

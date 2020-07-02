@@ -21,19 +21,19 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size-sm="4" class="ion-text-center">
+      <ion-col size-sm="2" class="ion-text-center" offset-sm="3">
         <ion-label  class="ion-no-padding" >
           <p class="font-gray-small">설교</p>
           <p>{{selectedMedia.author}}</p>
         </ion-label>
       </ion-col>
-      <ion-col size-sm="4" class="ion-text-center">
+      <ion-col size-sm="2" class="ion-text-center">
         <ion-label  class="ion-no-padding" >
           <p class="font-gray-small">구분</p>
           <p>{{selectedMedia.category}}</p>
         </ion-label>
      </ion-col>
-     <ion-col size-sm="4" class="ion-text-center">
+     <ion-col size-sm="2" class="ion-text-center"  >
       <ion-label  class="ion-no-padding" >
         <p class="font-gray-small">날짜</p>
         <p>{{selectedMedia.whenCreated | date:'yyyy-MM-dd'}}</p>
@@ -51,7 +51,7 @@
         </div>         
       </ion-col>
     </ion-row>    
-    <ion-row *ngIf="selectedMedia.author === '박준영4'">
+    <ion-row *ngIf="selectedMedia.youtubeLink.length > 0 ">
       <ion-col size-sm="6" offset-sm="3">
         
           <!-- <iframe width="100%" height="315" src="https://www.youtube.com/embed/IXI2eRqSUqQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
@@ -59,14 +59,14 @@
 
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="1===1">
+    <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() == 'ADMIN'">
       <ion-col size-sm="6" offset-sm="3">
         <ion-button expand="block" color="primary" (click)="openEdit(selectedMedia)">
          Edit
         </ion-button>   
       </ion-col>
     </ion-row>     
-    <ion-row *ngIf="1!==1">
+    <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() == 'ADMIN'">
       <ion-col size-sm="6" offset-sm="3">
         <ion-button expand="block" color="primary" (click)="onDeleteMedia(selectedMedia)">
          Delete

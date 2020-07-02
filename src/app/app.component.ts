@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authService.userIsAuthenticatedObser.pipe(
+    /* this.authService.userIsAuthenticatedObser.pipe(
       take(1),
       switchMap(isAuthenticated => {
         if (!isAuthenticated) {
@@ -45,31 +45,14 @@ export class AppComponent implements OnInit, OnDestroy {
         } else {
           return of(isAuthenticated);
         }
-      })/* ,
-      tap(isAuthenticated => {
-        if (!isAuthenticated) {
-          this.router.navigateByUrl('/auth');
-        }
-      }) */
+      })
     ).subscribe(resData => {
       this.isUserAuthenticated = resData; 
-    })
-  
-
-/*     this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
-      this.isUserAuthenticated = isAuth;
-    });
- */
-    /* this.authService.userIsAuthenticated.subscribe(isAuth => {
-      this.isUserAuthenticated = isAuth; */
-      /* if (!isAuth && this.previousAuthState !== isAuth) {
-        this.router.navigateByUrl('/auth');
-      }
-      this.previousAuthState = isAuth; */
+    }); */
   }
 
   ionViewWillEnter() {
-    this.authService.userIsAuthenticatedObser.pipe(
+    /* this.authService.userIsAuthenticatedObser.pipe(
       take(1),
       switchMap(isAuthenticated => {
         if (!isAuthenticated) {
@@ -77,26 +60,21 @@ export class AppComponent implements OnInit, OnDestroy {
         } else {
           return of(isAuthenticated);
         }
-      })/* ,
-      tap(isAuthenticated => {
-        if (!isAuthenticated) {
-          this.router.navigateByUrl('/auth');
-        }
-      }) */
+      })
     ).subscribe(resData => {
       this.isUserAuthenticated = resData; 
-    })
+    }); */
   }
 
   onLogout() {
-    this.authService.logout();
-    this.isUserAuthenticated = false;
+/*     this.authService.logout();
+    this.isUserAuthenticated = false; */
 
     // this.router.navigateByUrl('/auth');
   }
 
   onLogin() {
-    this.modelCtrl.create({
+    /* this.modelCtrl.create({
       component: AuthComponent,
       componentProps: {},
       id: 'test'
@@ -112,12 +90,12 @@ export class AppComponent implements OnInit, OnDestroy {
         // this.isUserAuthenticated = true;
         this.router.navigate(['/main/tabs/news']);
       });
-    });
+    }); */
   }
 
   ngOnDestroy() {
-    if (this.authSub) {
+/*     if (this.authSub) {
       this.authSub.unsubscribe();
-    }
+    } */
   }
 }

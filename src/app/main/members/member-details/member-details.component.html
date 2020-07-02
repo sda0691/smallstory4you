@@ -15,22 +15,85 @@
       <ion-col class="ion-text-center">
         <ion-card>
           <ion-card-header>
+ <!--            <ion-item>
+              <ion-avatar *ngIf="selectedMember.imageUrl.length <= 0">
+                <img class="img-thumb"
+                src="../../../assets/images/no-avatar.png">
+              </ion-avatar>
+              <ion-avatar *ngIf="selectedMember.imageUrl.length > 0">
+                <img class="avatar-size"
+                src="{{selectedMember.imageUrl}}">
+              </ion-avatar>
+            </ion-item> -->
+ <!--            <img src="{{selectedMember.imageUrl}}" alt="Avatar" class="avatar"> -->
             <img 
-            class="profilepicsize"
-            src ="{{selectedMember.imageUrl || '../../../assets/images/no-avatar.png' }}"
-            alt="your image"
-        >
+              src ="{{selectedMember.imageUrl || '../../../assets/images/no-avatar.png' }}"
+              alt="your image"
+            > 
           </ion-card-header>
           <ion-card-content>
-            <h2>{{ selectedMember.name }}</h2>
-            <h2>{{ selectedMember.phone1 }}</h2>
+            <p 
+              class="font-black-16" 
+              style="padding-bottom: 4px;">
+              {{ selectedMember.name }}</p>
 
+            <p class="font-gray-14" 
+              style="padding-bottom: 2px;"
+              *ngIf="selectedMember.phone1.length > 0"> 
+              C: {{ selectedMember.phone1 }}</p>
+            <p 
+              class="font-gray-14" 
+              style="padding-bottom: 2px;"
+              *ngIf="selectedMember.homePhone.length > 0"> 
+              H: {{ selectedMember.homePhone }}</p>
+            <p 
+              class="font-gray-14" 
+              style="padding-bottom: 2px;"
+              *ngIf="selectedMember.businessPhone.length > 0"> 
+              B: {{ selectedMember.businessPhone }}</p>
+
+            <p
+              class="font-gray-14" 
+              style="padding-bottom: 2px;"
+              >{{ selectedMember.address }}</p>
           </ion-card-content>
         </ion-card>
 
       </ion-col>
     </ion-row>
     <ion-row>
+      <ion-col size-sm="2" class="ion-text-center" offset-sm="3">
+        <ion-label  class="ion-no-padding" >
+          <ion-icon 
+            (click)="onCall()"
+            name="call" 
+            style="font-size:30px">
+          </ion-icon>
+          <p class="font-gray-14">전화</p>
+        </ion-label>
+      </ion-col>
+      <ion-col size-sm="2" class="ion-text-center">
+        <ion-label  class="ion-no-padding" >
+          <ion-icon 
+           (click)="onText()"
+            name="chatbox-ellipses" 
+            style="font-size:30px">
+          </ion-icon>
+          <p class="font-gray-14">문자</p>
+        </ion-label>
+     </ion-col>
+     <ion-col size-sm="2" class="ion-text-center"  >
+      <ion-label  class="ion-no-padding" >
+        <ion-icon 
+         (click)="onOpenMaps()"
+          name="home" 
+          style="font-size:30px">
+        </ion-icon>
+        <p class="font-gray-14">지도</p>
+      </ion-label>
+   </ion-col>           
+    </ion-row>    
+<!--     <ion-row>
       <ion-col size-sm="3" class="ion-text-right">
         <ion-avatar class="image-center" (click)="onCall()">
           <img src="../../../assets/images/call1.png">
@@ -43,6 +106,13 @@
       </ion-col>      
     </ion-row>
     <ion-row>
+      <ion-col size-sm="3" >
+        <ion-button expand="block" color="primary" (click)="onOpenMaps()"
+         >
+          Map</ion-button>
+      </ion-col>
+    </ion-row>   -->    
+    <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
       <ion-col size-sm="3" >
         <ion-button expand="block" color="primary" (click)="onEdit()"
          >

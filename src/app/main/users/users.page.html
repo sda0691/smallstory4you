@@ -1,0 +1,37 @@
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>사용자관리</ion-title>
+<!--       <ion-buttons 
+        slot="end" 
+        *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
+        <ion-button (click)="onAddPray()">
+          <ion-label>기도록등록</ion-label>&nbsp;
+          <ion-icon name="add-circle" ></ion-icon>
+        </ion-button>
+      </ion-buttons>   -->
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-no-padding" >
+    <ion-grid >
+      <ion-row >
+        <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
+          <ion-list>
+              <ion-item  *ngFor="let user of loadedData" (click)="openUserDetail(user)">
+                <ion-avatar>
+                  <img class="img-thumb"
+                  src="../../../assets/images/no-avatar.png">
+                </ion-avatar>
+                <ion-label class="ion-padding">
+                  <p class="font-black-14-bold"> {{ user.name }} </p>
+                  <p class="font-gray-12"> {{user.email}}</p>
+                  <p class="font-gray-12"> {{user.role}}</p> 
+                </ion-label>
+              </ion-item>
+
+          </ion-list>  
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>

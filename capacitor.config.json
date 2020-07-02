@@ -3,6 +3,7 @@
   "appName": "goodnews4you",
   "bundledWebRuntime": false,
   "npmClient": "npm",
+
   "webDir": "www",
   "cordova": {}
 }

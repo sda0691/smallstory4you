@@ -69,7 +69,7 @@ export class CreateMediaComponent implements OnInit {
     
         
 
-    this.loadingCtrl.create({message: 'Adding a new member...'})
+    this.loadingCtrl.create({message: 'Adding a new media...'})
     .then(loadingEl => {
       loadingEl.present();
       this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
@@ -86,14 +86,22 @@ export class CreateMediaComponent implements OnInit {
         toast.present();
 
         this.mediaService.add_media(inputData.form.value, uploadedFileName)
-          .then(() => {
+        .subscribe(() => {
+          loadingEl.dismiss();
+          this.modalCtrl.dismiss(null, 'media-upload-success');
+          this.router.navigate(['/main/tabs/medias']);
+        }
+        , error => {
+          this.showAlert(error.message);
+        });
+/*           .then(() => {
             loadingEl.dismiss();
             this.modalCtrl.dismiss(null, 'media-upload-success');
             this.router.navigate(['/main/tabs/medias']);
           })
           .catch(error => {
             this.showAlert(error.message);
-          });
+          }); */
 
       }).catch(error => {
         loadingEl.dismiss();

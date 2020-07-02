@@ -1,0 +1,26 @@
+.round-button {
+  border-radius: 50%;
+  text-align: center;
+  height: 50px;
+  width: 50px;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: blue;
+}
+
+.myDiv {
+   background-color:rgb(236, 234, 234);
+  //  border:1px solid  purple ;
+  // background-color: white;
+   margin: 25px;
+  // color: purple;
+  height: 36px;
+  vertical-align: middle;
+  line-height: 36px;       /* The same as your div height */
+}
+
+ion-segment-button{
+  min-height:38px;
+  --color-checked: white;
+  --background-checked:var(--ion-color-primary);
+}

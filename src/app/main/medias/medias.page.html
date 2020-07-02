@@ -1,10 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>미디어등록</ion-title>
-    <ion-buttons slot="end">
+    <ion-title>말씀듣기</ion-title>
+    <ion-buttons 
+      slot="end" 
+      *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
       <ion-button (click)="onAddMedia()">
         <ion-label>미디어등록</ion-label>&nbsp;
-        <ion-icon name="headset" ></ion-icon>
+        <ion-icon name="add-circle" ></ion-icon>
       </ion-button>
     </ion-buttons>  
   </ion-toolbar>
@@ -29,28 +31,7 @@
         <ion-icon name="call"  class="ion-padding"></ion-icon>
       </ion-col> -->
     </ion-row>
-    <!-- <ion-row>
-      <ion-col size-sm="6"   offset-sm="3">
-        <div class="myDiv">
-          <ion-select 
-          class="ion-no-padding"
-          interface="popover"
-          (ionChange)="selectCategory($event)"
-          [ngModel]="'All'" 
-          name="category" 
-          required 
-          #categoryCtrl="ngModel">
-          <ion-select-option value="All">전체</ion-select-option>
-          <ion-select-option 
-            value="{{category.id}}" 
-            *ngFor="let category of loadedMediaCategory" >
-            {{category.name}}
-          </ion-select-option>
-        </ion-select>
-        </div>
-               
-      </ion-col>
-    </ion-row> -->
+    
     <ion-row>
       <ion-col size-sm="6"   offset-sm="3">
         <div class="myDiv">
@@ -76,41 +57,45 @@
 
       </ion-col>
     </ion-row>
-    
+    <ion-row>
+      <ion-col size-sm="6"   offset-sm="3">
+        <ion-list >
+          <ion-item-sliding  *ngFor="let media of renderedMedias" #slidingItem>
+            <ion-item style="padding:0px !important;" (click)="openMediaDetail(media)">
+              <ion-avatar slot="start">
+                <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+              </ion-avatar>
+              <ion-label  class="ion-no-padding" >
+                <p class="font-gray-small" >{{media.category }}&nbsp;|&nbsp;{{media.whenCreated|date:'yyyy-MM-dd'}}&nbsp;|&nbsp;{{ media.author }}</p>
+                <p class="font-bold-black"> {{media.title}}</p> 
+                <p class="font-gray-small">{{media.subTitle}}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item-options *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
+              <ion-item-option
+                color="secondary" 
+                (click)="openEditMedia(media, slidingItem)">
+                <ion-icon slot="icon-only" name="create"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>  
+          </ion-item-sliding>         
+          <ion-item class="ion-text-center">
+            <ion-label>
+            <ion-button 
+              (click)="showMore()"
+              fill="clear"
+              [disabled]="renderedMedias.length===0 || (loadedData && counter >= filteredMedias.length)"
+            >
+              더보기
+            </ion-button>
+            </ion-label>
+          </ion-item>
+        </ion-list>  
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
-  <ion-list>
-    <ion-item-sliding  *ngFor="let media of renderedMedias" #slidingItem>
-      <ion-item style="padding:0px !important;" (click)="openMediaDetail(media)">
-        <ion-avatar slot="start">
-          <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-        </ion-avatar>
-        <ion-label  class="ion-no-padding" >
-          <p class="font-gray-small" >{{media.category }}&nbsp;|&nbsp;{{media.whenCreated|date:'yyyy-MM-dd'}}&nbsp;|&nbsp;{{ media.author }}</p>
-          <p class="font-bold-black"> {{media.title}}</p> 
-          <p class="font-gray-small">{{media.subTitle}}</p>
-        </ion-label>
-      </ion-item>
-      <ion-item-options>
-        <ion-item-option
-          color="secondary" 
-          (click)="openEditMedia(media, slidingItem)">
-          <ion-icon slot="icon-only" name="create"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>  
-    </ion-item-sliding>         
-    <ion-item class="ion-text-center">
-      <ion-label>
-      <ion-button 
-        (click)="getData()"
-        fill="clear"
-        [disabled]="renderedMedias.length===0 || (loadedData && counter >= loadedData.length)"
-      >
-        더보기
-      </ion-button>
-      </ion-label>
-    </ion-item>
-  </ion-list>  
+  
 </ion-content>
 
 

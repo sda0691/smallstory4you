@@ -34,22 +34,314 @@
     background-size: 100% 100%;
   }
 
+  .pray-image {
+    background: url(./assets/images/grass.jpg) no-repeat center ;
+    padding: 0 0 0 0;
+    background-size: 100% 100%;
+    height: 160px;
+  }
+  .pray-image-medium {
+    background: url(./assets/images/grass.jpg) no-repeat center ;
+    padding: 0 0 0 0;
+    background-size: 100% 100%;
+    height: 250px;
+  }
+  .pray-image-large {
+    background: url(./assets/images/grass.jpg) no-repeat center ;
+    padding: 0 0 0 0;
+    background-size: 100% 100%;
+    height: 300px;
+  }
   ion-toolbar, ion-header {
-    --min-height: 40px;
+    --min-height: 46px;
    }
 
    @font-face {
     font-family: 'Noto Sans KR';
-    src: url('../src/assets/fonts/NotoSansKR-Bold.otf');//mine
-    src: url('../src/assets/fonts/NotoSansKR-Regular.otf');//mine
-    src: url('../src/assets/fonts/NotoSansKR-Black.otf');//mine
-
-    src: url('../src/assets/fonts/NotoSansKR-Light.otf');//mine
-    src: url('../src/assets/fonts/NotoSansKR-Medium.otf');//mine
-
     src: url('../src/assets/fonts/NotoSansKR-Thin.otf');//mine
-  }
+    font-style: normal;
+    font-weight: 100;
+   }
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Light.otf');//mine
+    font-style: normal;
+    font-weight: 300;
+   }
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Regular.otf');//mine
+    font-style: normal;
+    font-weight: 400;
+   }
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Medium.otf');//mine
+    font-style: normal;
+    font-weight: 500;
+   }
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Bold.otf');//mine
+    font-style: normal;
+    font-weight: 700;
+   }
+
+   @font-face {
+    font-family: 'Noto Sans KR';
+    src: url('../src/assets/fonts/NotoSansKR-Black.otf');//mine
+    font-style: normal;
+    font-weight: 900;
+   }
+
   
   * {
     font-family: 'Noto Sans KR';
+  }
+  // color
+  p.black {
+    color: black !important;
+  }
+  p.white {
+    color: white !important;
+  }
+  p.gray {
+    color: gray !important;
+  }
+  p.primary {
+    color: var(--ion-color-primary) !important;
+  }
+  p.tertiary {
+    color: var(--ion-color-tertiary) !important;
+  }
+
+  // font size
+  p.size-10 {
+    font-size: 10px;
+  }
+  p.size-12 {
+    font-size: 12px;
+  }
+  p.size-14 {
+    font-size: 14px;
+  }
+  p.size-16 {
+    font-size: 16px;
+  }
+  p.size-18 {
+    font-size: 18px;
+  }
+  p.size-20 {
+    font-size: 20px;
+  }
+  // font bold
+  p.weight-thin {
+    font-weight: 100 !important;
+  }
+  p.weight-light {
+    font-weight: 300 !important;
+  }
+  p.weight-regular {
+    font-weight: 400 !important;
+  }
+  p.weight-medium {
+    font-weight: 500 !important;
+  }
+  p.weight-bold {
+    font-weight: 700 !important;
+  }
+  p.weight-black {
+    font-weight: 900 !important;
+  }
+
+
+  // font black
+  p.font-black-16-bold {
+    font-weight: 100 !important;
+    color: black !important;
+    font-size:16px;
+  }
+  p.font-black-14-bold {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:14px;
+  }
+  p.font-black-12-bold {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:12px;
+  }
+  p.font-black-10-bold {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:10px;
+  }  
+  p.font-black-16 {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:16px;
+  }
+  p.font-black-14 {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:14px;
+  }
+  p.font-black-12 {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:12px;
+  }
+  p.font-black-10 {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:10px;
+  } 
+  // gray
+  p.font-gray-16-bold {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:16px;
+  }
+  p.font-gray-14-bold {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:14px;
+  }
+  p.font-gray-12-bold {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:12px;
+  }
+  p.font-gray-10-bold {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:10px;
+  }    
+  p.font-gray-16{
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:16px;
+  }
+  p.font-gray-14 {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:14px;
+  }
+  p.font-gray-12 {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:12px;
+  }
+  p.font-gray-10 {
+    font-weight: bold !important;
+    color: gray !important;
+    font-size:10px;
+  }   
+  // tertiary
+  p.font-tertiary-16-bold {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:16px;
+  }
+  p.font-tertiary-14-bold {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:14px;
+  }
+  p.font-tertiary-12-bold {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:12px;
+  }
+  p.font-tertiary-10-bold {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:10px;
+  }    
+  p.font-tertiary-16{
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:16px;
+  }
+  p.font-tertiary-14 {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:14px;
+  }
+  p.font-tertiary-12 {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:12px;
+  }
+  p.font-tertiary-10 {
+    font-weight: bold !important;
+    color: var(--ion-color-tertiary) !important;
+    font-size:10px;
+  }   
+// white font
+p.font-white-18-bold {
+  font-weight: 900 !important;
+  color: white !important;
+  font-size:22px;
+}
+p.font-white-16-bold {
+  font-weight: 900 !important;
+  color: white !important;
+  font-size:22px;
+}
+p.font-white-14-bold {
+  font-weight: 900 !important;
+  color: white !important;
+  font-size:22px;
+}
+p.font-white-12-bold {
+  font-weight: 900 !important;
+  color: white !important;
+  font-size:22px;
+}
+p.font-white-16 {
+  color: white !important;
+  font-size:12px;
+}
+p.font-white-14 {
+  color: white !important;
+  font-size:12px;
+}
+p.font-white-12 {
+  color: white !important;
+  font-size:12px;
+}
+// action sheet
+  .action-sheet {
+    color: black !important;
+  }
+  .action-sheet .action-sheet-icon {
+    color: blue !important;
+  }
+
+  p.font-gray-black  {
+    font-weight: bold !important;
+    color: black !important;
+    font-size:16px;
+  }
+  p.font-bold  {
+      font-weight: bold; 
+      color: black !important;
+  }
+  p.font-gray  {
+      color: gray;
+  }
+  p.font-gray-small  {
+      color: gray;
+      font-size:10px;
+  }
+  p.error-message {
+    color: red !important;
+    font-size: 10px;
+  }
+
+
+  p.error-message {
+    color: red !important;
+    font-size: 10px;
   }

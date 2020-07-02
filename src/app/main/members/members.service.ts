@@ -10,6 +10,7 @@ import { GlobalConstants } from '../../common/global-constants';
 import { MemberUploadInfo } from './MemberUploadInfo.model';
 import { HttpClient } from '@angular/common/http';
 
+
 export interface fileInfo {
   filepath: string;
 }
@@ -74,83 +75,37 @@ constructor(
   get memberUploadInfo() {
     return this._MemberUploadInfo.asObservable();
   }
-  /* add_member(member) {
-    let fetchedUserId: string;
-    let fetchedUploadUrl: string;
-    let fetchedFileUrl: string;
-    return this.authService.userId.pipe(
+    
+  add_member(member, fileName, downloadUrl) {
+    // const userid = this.authService.userId1;
+    return this.authService.loggedUser.pipe(
       take(1),
-      switchMap(userId => {
-        if (!userId) {
-          throw new Error('no user found');
-        }
-        fetchedUserId = userId;
-        return userId;
-      }),
-      take(1),
-      switchMap(uploadUrl => {
-        fetchedUploadUrl = uploadUrl;
-        return uploadUrl;
-      }),
-      take(1),
-      switchMap(fileUrl => {
-        fetchedFileUrl = fileUrl;
-        return fileUrl;
-      }),
-      take(1),
-      switchMap(() => {
-        return this.firestore.collection(this.collectionName)
+      map(user => {
+        if (user && user.role.toUpperCase() === 'ADMIN') {
+          this.firestore.collection(this.collectionName)
           .add({
             groupId: this.authService.groupId,
             groupName: GlobalConstants.groupName,
             name: member.name,
             phone1: member.phone1,
-            imageUrl: fetchedUploadUrl,
+            imageUrl: downloadUrl,
             address: member.address,
-            fileName: fetchedFileUrl,
-            whoCreated: fetchedUserId,
-            whenCreated: new Date()
+            fileName: fileName,
+            whoCreated: user.id,
+            whenCreated: new Date(),
+            homePhone: member.homePhone,
+            businessPhone: member.businessPhone,
+            dateOfBirth: new Date(),
+            status: '출석',
+            familyMember: '',
+            ageStatus: member.ageStatus
           });
-      })
-    );
-  } */
-  add_member(member) {
-    const userid = this.authService.userId1;
-    return this.firestore.collection(this.collectionName)
-        .add({
-          groupId: this.authService.groupId,
-          groupName: GlobalConstants.groupName,
-          name: member.name,
-          phone1: member.phone1,
-          imageUrl: member.imageUrl,
-          address: member.address,
-          fileName: member.fileName,
-          whoCreated: userid,
-          whenCreated: new Date()
-        });
-
-    /* return this.authService.userId.pipe(
-      take(1),
-      tap(userid => {
-        return this.firestore.collection(this.collectionName)
-        .add({
-          groupId: this.authService.groupId,
-          groupName: GlobalConstants.groupName,
-          name: member.name,
-          phone1: member.phone1,
-          imageUrl: member.imageUrl,
-          address: member.address,
-          fileName: member.fileName,
-          whoCreated: userid,
-          whenCreated: new Date()
-        })
-      }), */
-    
-    //)
-    
+        }
+        // return user;
+      }));
   }
   fetchMembers() {
-    return this.firestore.collection(this.collectionName).snapshotChanges()
+    return this.firestore.collection(this.collectionName, ref => ref.orderBy('name')).snapshotChanges()
       .pipe(
         map(docArray => {
           let members = [];
@@ -163,7 +118,9 @@ constructor(
               phone1: doc.payload.doc.data()['phone1'],
               imageUrl: doc.payload.doc.data()['imageUrl'],
               address: doc.payload.doc.data()['address'],
-              fileName: doc.payload.doc.data()['fileName']   
+              fileName: doc.payload.doc.data()['fileName'],
+              homePhone: doc.payload.doc.data()['homePhone'] === undefined ? '' : doc.payload.doc.data()['homePhone'],
+              businessPhone: doc.payload.doc.data()['businessPhone'] === undefined ? '' : doc.payload.doc.data()['businessPhone'],
             };
 
           });
@@ -209,7 +166,7 @@ constructor(
     if (fetchedUserId) {
       // return this.firestore.collection(this.collectionName).doc(fetchedUserId).snapshotChanges();
     }
-    this.members1 = this.firestore.collection(this.collectionName).snapshotChanges()
+    this.members1 = this.firestore.collection(this.collectionName, ref => ref.orderBy('name', 'desc')).snapshotChanges()
       .pipe(
         map(docArray => {
           return docArray.map(doc => {
@@ -228,28 +185,6 @@ constructor(
       );
 
     return this.members1;
-
-    /* return this.firestore.collection(this.collectionName)
-      .snapshotChanges()
-      .pipe(
-        map(resData => {
-          const members = [];
-          for (const key in resData) {
-            if(resData.hasOwnProperty(key)) {
-              members.push(
-                new Member(
-                  key,
-                  resData[key].groupid,
-                  resData[key].name,
-                  resData[key].phone1,
-                  resData[key].imageUrl,
-                  resData[key].address
-                )
-              )
-            }
-          }
-        })
-      ) */
   }
 
   get_member(id){
@@ -262,7 +197,6 @@ constructor(
         })
       ); */
 
-
     // #2 works
     return this.firestore.collection(this.collectionName).doc(id).snapshotChanges()
       .pipe(map(action => {
@@ -272,11 +206,36 @@ constructor(
     }));
   }
 
-  edit_member( member) {
-    return this.firestore.doc(this.collectionName + '/' + member.id).update(member);
+  edit_member( member, fileName: string) {
+    const userid = this.authService.userId1;
+    return this.authService.loggedUser.pipe(
+      take(1),
+      map(user => {
+        if (user && user.role.toUpperCase() === 'ADMIN') {
+
+          this.firestore.doc(this.collectionName + '/' + member.id).update(member);
+/*           this.firestore.doc(this.collectionName + '/' + member.id).update({
+            name: member.name,
+            phone1: member.phone1,
+            homePhone: member.homePhone,
+            businessPhone: member.businessPhone,
+            fileName: fileName,
+            address: member.address,
+            ageStatus: member.ageStatus,
+            dateOfBirth: new Date(), // member.dateOfBirth,
+            familyMember: '' , // member.familyMember,
+            groupId : this.authService.groupId,
+            groupName : GlobalConstants.groupName,
+            whoUpdated : userid,
+            whenUpdated : new Date(),
+            status: '' // member.status,
+          }); */
+        }
+      })
+    );
   }
 
-  uploadImage1(file?: File): AngularFireUploadTask {
+/*   uploadImage1(file?: File): AngularFireUploadTask {
 
     const storageFolderName = GlobalConstants.memberCollection + '/'; // 'Members/';
     const uploadedFileName = `${new Date().getTime()}_${file.name}`;
@@ -284,9 +243,9 @@ constructor(
     const fileRef = this.storage.ref(fullPath);
     
     return fileRef.put(file);
-  }
+  } */
 
-  uploadImage(member, isEdit: boolean, file?: File) {
+  /* uploadImage(member, isEdit: boolean, file?: File) {
     // this.baseStorgePath = this.baseStorgePath + file.name;
 
     const storageFolderName = GlobalConstants.memberCollection + '/'; // 'Members/';
@@ -299,6 +258,7 @@ constructor(
 
     this.task = this.storage.upload( fullPath, file, {customMetadata});
 
+
     return this.task.snapshotChanges().pipe(
       finalize(() => {
         // Get uploaded file storage path
@@ -307,37 +267,30 @@ constructor(
           this.uploadedFilePath = resp;
           member.fileName = uploadedFileName;
           member.imageUrl = resp;
-/*           const uploadInfo = new MemberUploadInfo(
-            resp,
-            uploadedFileName
-          ); */
-        // this._MemberUploadInfo.next(uploadInfo);
-        
+
           if (isEdit) {
             console.log('edit member');
             this.edit_member(member);
             console.log('image delete before new image upload');
             this.delete_image(oldFileName);
           } else {
-            this.add_member(member);
+            this.add_member(member, '');
           } 
         }, error => {
           console.error(error);
         });
       })
     );
-  }
+  } */
 
   deleteMember(member: Member) {
-    this.delete_database(member.id)
-      .then(() => {
-        // const storageRef = this.storage.ref('Members/');
-        // storageRef.child('/' + member.fileName).delete();
-        if (member.imageUrl.length > 0) {
-          this.delete_image(member.fileName);
-        }
-      })
-      .catch(error => console.log(error));
+ 
+    if (member.fileName.length > 0) {
+      this.delete_image(member.fileName);
+    }
+    this.delete_database(member.id);
+
+
   }
 
   delete_database(id) {
@@ -345,76 +298,23 @@ constructor(
   }
 
   delete_image(filename: string) {
-    const storageRef = this.storage.ref(this.collectionName + '/');
-    storageRef.child('/' + filename).delete();
-  }
+    const fullPath = this.collectionName + '/' + filename;
+    const fileRef = this.storage.ref(fullPath);
 
-  AddStudent(member: Member) {
-    this.studentsRef.push({
-      groupid: 1,
-      name: member.name,
-      phone1: 'rrr',
-      imageUrl: 'test',
-      address: member.address,
+    fileRef.getDownloadURL()
+    .subscribe(url => {
+      const storageRef = this.storage.ref(this.collectionName + '/');
+      storageRef.child('/' + filename).delete();
+      console.log(url);
+    }, error => {
+      console.log(error);
     });
   }
 
-
-
-/*   getMember(id: number) {
-    return this.members.pipe(
-      take(1),
-      map(members => {
-        return {...members.find(m => m.id === id)};
-      })
-    );
-  } */
-
-/*   AddMember_Old(name: string, phone: string, address: string) {
-    const newMember = new Member(
-      'aaa', // Math.floor((Math.random() * 101)),
-      this.groupId,
-      name,
-      phone,
-      'https://randomuser.me/api/portraits/women/24.jpg',
-      address,
-      'dfdf'
-    );
-    return this.members.pipe(
-      take(1),
-      delay(1000),
-      tap(members => {
-        this._members.next(members.concat(newMember));
-      })
-    );
-  } */
-
-  /* EditMember(memberId: string, name: string, phone: string, address: string) {
-    return this.members.pipe(
-      take(1),
-      delay(1000),
-      tap(members => {
-        const updatedMemberIndex = members.findIndex(m => m.id === memberId);
-        const updatedMembers = [...members];
-        const oldMember = updatedMembers[updatedMemberIndex];
-        updatedMembers[updatedMemberIndex] = new Member(
-          memberId,
-          oldMember.groupid,
-          name,
-          phone,
-          'https://randomuser.me/api/portraits/women/24.jpg',
-          address
-        );
-        this._members.next(updatedMembers);
-      })
-    );
-  } */
-
-  // Store to Firebase: Cloud Firestore
-
-
-
-
-
-
+  deletePhoto(member, fileName) {
+    this.delete_image(fileName);
+    member.fileName = '';
+    member.imageUrl = '';
+    this.firestore.doc(this.collectionName + '/' + member.id).update(member);
+  }
 }

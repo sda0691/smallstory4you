@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/auth/user.model';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-bands',
@@ -12,21 +14,22 @@ export class BandsPage implements OnInit {
   loggedUser: User;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {  }
 
   ngOnInit() {
+    this.authService.loggedUser.subscribe(user => {
+      this.loggedUser = user;
+/*       if (!user || (user && user.role.toUpperCase() === 'GUEST')) {
+        this.router.navigate(['/', 'main', 'tabs', 'medias']);
+      } */
+    });
   }
 
   ionViewWillEnter() {
-    this.authService.loggedUser.subscribe(user => {
-      console.log('user user user');
-      if (user) {
-        this.loggedUser = user;
-        this.isAuth = true;
-      } else {
-        this.isAuth = false;
-      }
+    this.authService.getCurrentUser1().subscribe(user => {
+      console.log(user);
     });
   }
 }

@@ -15,45 +15,87 @@
 <ion-grid>
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
+
       <ion-item>
+        <ion-label position="floating" >이름</ion-label>
         <ion-input 
           type="text" 
-          placeholder="이름" 
+
           ngModel name="name" 
           required 
-          #nameCtrl="ngModel"></ion-input>
+          clearInput
+          #nameCtrl="ngModel">
+        </ion-input>
       </ion-item>
-      <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
+      <p *ngIf="!nameCtrl.valid && nameCtrl.touched"
+        class="error-message"
+        style="text-align: center;">
+        * 이름을 입력하세요
+      </p>   
+      <br>   
+<!--       <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
         <ion-label color="primary">이름을 입력하세요</ion-label>
-      </ion-item>
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
+      </ion-item> -->
+
       <ion-item>
         <ion-input 
           type="text" 
-          placeholder="전화번호" 
+          placeholder="모바일번호" 
           ngModel 
+          clearInput
           name="phone1" 
-          #phoneCtrl="ngModel"
-          required></ion-input>
+          #phoneCtrl="ngModel">
+        </ion-input>
       </ion-item>
-      <ion-item *ngIf="!phoneCtrl.valid && phoneCtrl.touched">
-        <ion-label color="primary">전화번호를 입력하세요</ion-label>
-      </ion-item>      
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
+<!--       <p *ngIf="!phoneCtrl.valid && phoneCtrl.touched"
+        class="error-message"
+        style="text-align: center;">
+        * dfdfdfd
+      </p>  --> 
+      <br>
+      
+      <ion-item>
+        <ion-input 
+          type="text" 
+          placeholder="홈번호" 
+          ngModel 
+          clearInput
+          name="homePhone" 
+          #homePhoneCtrl="ngModel"
+          ></ion-input>
+      </ion-item> 
+      <br>     
+      <ion-item>
+        <ion-input 
+          type="text" 
+          placeholder="직장번호" 
+          ngModel 
+          clearInput
+          name="businessPhone" 
+          #businessPhoneCtrl="ngModel"
+          ></ion-input>
+      </ion-item>
+      <br>
       <ion-item>
         <ion-input 
           type="text" 
           placeholder="주소" 
           ngModel 
+          clearInput
           name="address" 
-          required></ion-input>
+          ></ion-input>
       </ion-item>
+      <br>
+      <ion-item>
+        <ion-label position="floating" >소속</ion-label> 
+        <ion-select ngModel name="ageStatus" #ageStatusCtrl="ngModel"  >
+          <ion-select-option value="장년">장년</ion-select-option>
+          <ion-select-option value="시니어">시니어</ion-select-option>
+          <ion-select-option value="청년">청년</ion-select-option>
+        </ion-select> 
+      </ion-item>
+
+      <br>       
     </ion-col>
   </ion-row>  
  

@@ -9,57 +9,184 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form #f="ngForm" (ngSubmit)="onFormSubmit(f)">
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
     <ion-grid>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-item>
-            <ion-label position="floating">E-Mail</ion-label>
-            <ion-input
+            <ion-label position="floating">EMAIL*</ion-label>
+<!--         <ion-input
+              placeholder="Required"
               type="text"
               ngModel
               name="email"
               required
               #emailCtrl="ngModel"
-            ></ion-input>
-          </ion-item>
-          <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched">
-            <ion-label>Should be a valid email address</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Password</ion-label>
+            ></ion-input> -->
             <ion-input
+              clearInput 
+              type="email"
+              name="email"
+              formControlName="email"
+            ></ion-input>            
+          </ion-item>
+          <p 
+            *ngIf="!form.get('email').valid  && form.get('email').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Email is required
+          </p><br>
+
+<!--           <ion-item lines="none" class="ion-text-right"
+          *ngIf="!form.get('email').valid  && form.get('email').touched">
+          <div class="error"
+              *ngIf="form.get('email').hasError('required') && form.get('email').touched">
+              <p class="error-message">* Email is required</p>
+          </div>
+        </ion-item>  --> 
+          <ion-item>
+            <ion-label position="floating">NAME*</ion-label>
+<!--             <ion-input
+              placeholder="Required"
+              type="text"
+              ngModel
+              name="name"
+              required
+              #nameCtrl="ngModel"
+            ></ion-input> -->
+            <ion-input
+              clearInput
+              type="text"
+              formControlName="name"
+            ></ion-input>            
+          </ion-item>
+
+          <p 
+            *ngIf="!form.get('name').valid  && form.get('name').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Name is required
+          </p><br>
+
+<!--           <ion-item lines="none"
+            *ngIf="!form.get('name').valid  && form.get('name').touched">
+            <div class="error"
+                *ngIf="form.get('name').hasError('required') && form.get('name').touched">
+                <p class="error_message">* Confirm password is required</p>
+            </div>
+          </ion-item>  <br>    -->     
+<!--      <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched">
+            <ion-label>Name is required</ion-label>
+          </ion-item>  -->           
+          <ion-item>
+            <p class="font-bold" style="margin: 0 !important;">Password Policy</p>
+            <p class="font-gray" style="margin: 0 !important;">
+              at least 8 characters long<br>
+              at least 1 character <br>
+              at least 1 number  <br>
+              at least 1 special character
+            </p>
+
+            <ion-label position="floating">PASSWORD*</ion-label>
+<!--             <ion-input
+              placeholder="Required"
               type="password"
               ngModel
               name="password"
               required
               #passwordCtrl="ngModel"
               minlength="6"
-            ></ion-input>
-          </ion-item>
-          <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched">
-            <ion-label>Should at least be 6 characters long</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Name</ion-label>
+            ></ion-input> -->
             <ion-input
-              type="text"
-              ngModel
-              name="name"
-              required
-              #nameCtrl="ngModel"
-            ></ion-input>
+              formControlName="password"
+              clearInput
+              minlength="6"
+              [type]="passwordType"
+            ></ion-input>   
+            <ion-button 
+            
+              fill="clear" slot="end" expand="block" (click)="showPassword()">
+              {{show_hide}}
+            </ion-button>                     
           </ion-item>
-          <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched">
-            <ion-label>Name is required</ion-label>
-          </ion-item>          
+          <p 
+            *ngIf="form.get('password').hasError('required')  && form.get('password').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Password is required
+          </p>
+          <p 
+            *ngIf="form.get('password').hasError('minlength')  && form.get('password').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Password should be at least 6 characters
+          </p>  
+          <p 
+            *ngIf="form.get('password').hasError('pattern')  && form.get('password').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Wrong password format
+          </p>                  
+          <br>
+
+          <ion-item>
+            <ion-label position="floating">COMFIRM PASSWORD*</ion-label>
+<!--             <ion-input
+              placeholder="Required"
+              type="password"
+              ngModel
+              name="confirmPassword"
+              required
+              #confirmPasswordCtrl="ngModel"
+              minlength="6"
+              pattern="{{ passwordCtrl.value }}"
+            ></ion-input> -->
+            <ion-input
+              [type]="confirmPasswordType"
+              clearInput
+              formControlName="confirmPassword"
+            ></ion-input>    
+            <ion-button 
+              fill="clear" slot="end" expand="block" (click)="showConfirmPassword()">
+              {{show_hide_confirm}}
+            </ion-button>                    
+          </ion-item>
+          <p 
+            *ngIf="form.get('confirmPassword').hasError('required')  && form.get('confirmPassword').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Confirm Password is required
+          </p> 
+          <p 
+            *ngIf="form.get('confirmPassword').hasError('equalTo')  && form.get('confirmPassword').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * Password Mismatch
+          </p> 
+          <br>
+<!-- 
+          <ion-item class="ion-no-lines"
+            *ngIf="(form.get('confirmPassword').hasError('equalTo') || form.get('confirmPassword').hasError('required') ) && form.get('confirmPassword').touched">
+
+            <div class="error"
+                *ngIf="form.get('confirmPassword').hasError('required') && form.get('confirmPassword').touched">
+                <p class="error_message">* Confirm password is required</p>
+            </div>
+            <div class="error"
+                *ngIf="form.get('confirmPassword').hasError('equalTo') && form.get('confirmPassword').touched">
+                <p class="error_message">* Password Mismatch</p>
+            </div>
+          </ion-item>    -->       
+<!--      <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched">
+            <ion-label>Should at least be 6 characters long</ion-label>
+          </ion-item> -->       
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-button type="submit" color="primary" 
             expand="block"
-            [disabled]='!f.valid'>
+            [disabled]='!form.valid'>
           Signup
           </ion-button>
         </ion-col>

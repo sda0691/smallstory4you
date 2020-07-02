@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, FormControl, Validators, Validator, ValidatorFn, AbstractControl} from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,6 +11,11 @@ import { Router } from '@angular/router';
 })
 export class CreateAuthComponent implements OnInit {
   isLoading = false;
+  form: FormGroup;
+  passwordType = 'password';
+  show_hide = 'show';
+  confirmPasswordType = 'password';
+  show_hide_confirm = 'show';
 
   constructor(
     private modalCtrl: ModalController,
@@ -20,10 +25,65 @@ export class CreateAuthComponent implements OnInit {
     private alertCtrl: AlertController
   ) { }
 
-  ngOnInit() {}
- 
+  ngOnInit() {
+    this.form = new FormGroup({
+      email: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [Validators.required]
+      }),
+      name: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [Validators.required, Validators.minLength(3)]
+      }),
+      // at least 8 characters, 1 number , 1 letter , 1 special character
+      password: new FormControl(null, {
+        updateOn: 'blur',
+        validators: [
+          Validators.required,
+          // at least 8 characters, 1 number , 1 letter
+          // Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z]{8,}$/)
+          // at least 8 characters, 1 number , 1 letter , 1 special character
+          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$/)
+        ]
+      }),
+      confirmPassword: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(6),
+        this.equalto('password')],
+      })
+    // tslint:disable-next-line: whitespace
+    }
+    /* ,
+    {
+      validator: this.matchingPasswords('password', 'confirmPassword')
+    } */
+    );
 
-  onSignup(email: string, password: string, name: string) {
+
+  }
+
+  equalto(password): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+        const input = control.value;
+        const isValid = control.root.value[password] === input;
+        if (!isValid) {
+          return {'equalTo': {isValid}};
+        } else {
+          return null;
+        }
+    };
+  }
+  showPassword() {
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
+    this.show_hide = this.show_hide === 'show' ? 'hide' : 'show';
+  }
+  showConfirmPassword() {
+    this.confirmPasswordType = this.confirmPasswordType === 'text' ? 'password' : 'text';
+    this.show_hide_confirm = this.show_hide_confirm === 'show' ? 'hide' : 'show';
+  }  
+  onSignup() {
+    const email = this.form.value.email;
+    const name = this.form.value.name;
+    const password = this.form.value.password;
     this.isLoading = true;
     this.loadingCtrl.create({message: 'Logging In...'})
       .then(loadingEl => {
@@ -33,7 +93,7 @@ export class CreateAuthComponent implements OnInit {
             loadingEl.dismiss();
             this.isLoading = false;
             this.modalCtrl.dismiss(null, 'signup-success');
-            this.router.navigateByUrl('/main/tabs/news');
+            this.router.navigateByUrl('/main/tabs/medias');
         })
         .catch (error => {
           loadingEl.dismiss();
@@ -64,15 +124,14 @@ export class CreateAuthComponent implements OnInit {
   }
 
   onFormSubmit(form: NgForm) {
-    if (!form.value) {
+    if (!this.form.value) {
       return;
     }
-
-    const email = form.value.email;
+ /*     const email = form.value.email;
     const password = form.value.password;
     const name = form.value.name;
-
-    this.onSignup(email, password, name);
+ */
+    this.onSignup();
   }
 
   onCancel() {

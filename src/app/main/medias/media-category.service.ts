@@ -26,10 +26,8 @@ export class MediaCategoryService {
         return this.firestore.collection(this.collectionName).snapshotChanges()
           .pipe(
             map(docArray => {
-              console.log(docArray);
               let medias = [];
               medias = docArray.map(doc => {
-                console.log(doc);
                 return {
                   id: doc.payload.doc.id,
                   name: doc.payload.doc.data()['name'],

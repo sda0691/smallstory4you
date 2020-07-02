@@ -23,7 +23,7 @@ export class NewsDetailsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => {
+/*     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('newsId')) {
         this.navCtrl.navigateBack('/main/tabs/news');
         console.log('news details error')
@@ -33,18 +33,18 @@ export class NewsDetailsPage implements OnInit, OnDestroy {
         this.news = news;
       });
       // this.news = this.newsService.getNews(Number(paramMap.get('newsId')));
-    });
+    }); */
   }
 
   onDeleteNews(newsId: number) {
-    this.loadingCtrl.create({message: 'Deleting News...'})
+/*     this.loadingCtrl.create({message: 'Deleting News...'})
       .then(loadingEl => {
         loadingEl.present();
         this.newsService.DeleteNews(newsId).subscribe(() => {
           loadingEl.dismiss();
           this.router.navigate(['/main/tabs/news']);
         });
-      });
+      }); */
   }
 
   ngOnDestroy() {

@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{churchName}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/main/tabs/medias">
+        <ion-icon name="close" ></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>  
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-item>
+          <div>
+            <p class="black size-16 weight-bold">연락처</p>
+            <p class="gray size-14 weight-regular" style="padding-left:10px">647-234-9707</p>
+            <p class="gray size-14 weight-regular" style="padding-left:10px;">647-234-9707</p>
+            <p class="gray size-14 weight-regular" style="padding-left:10px;">647-234-9707</p>   
+          </div>
+        </ion-item>
+        <ion-item>
+          <div>
+            <p class="black size-16 weight-bold" >예배안내</p>
+            <p class="gray size-14 weight-regular" style="padding-left:10px">금요저녁집회: 매주 금요일 오후 8:00</p>
+            <p class="gray size-14 weight-regular" style="padding-left:10px">안식일: 매주 토요일 오전 10:00</p>
+          </div>
+        </ion-item>
+        <ion-item>
+          <div>
+            <p class="black size-16 weight-bold" >위치</p>
+            <p 
+              class="gray size-14 weight-regular" 
+              style="padding-left:10px">{{churchAddress}}</p>
+            <img 
+              src="../../../assets/images/address.png"
+              (click)="onOpenMaps()"
+            />
+          </div>
+        </ion-item>
+      </ion-col>
+    </ion-row>   
+  </ion-grid>
+</ion-content>

@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 export class CreateNewsPage implements OnInit, OnDestroy {
   form: FormGroup;
   private newsSub: Subscription;
-
+  status = 1;
   constructor(
     private newsService: NewsService,
     private router: Router,
@@ -22,13 +22,22 @@ export class CreateNewsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl(null, {
+      youtubeLink: new FormControl(null, {
+        updateOn: 'blur',
+       }),
+       status: new FormControl(null, {
+        updateOn: 'blur',
+       }),       
+/*       whenCreated: new FormControl(null, {
         updateOn: 'blur',
         validators: [Validators.required]
-      }),
+      }),  */     
       note: new FormControl(null, {
         updateOn: 'blur',
-        validators: [Validators.required, Validators.maxLength(500)]
+        validators: [Validators.required, Validators.maxLength(5000)]
+      }),
+      isPublic: new FormControl(null, {
+        updateOn: 'blur'
       })
     });
   }
@@ -40,7 +49,7 @@ export class CreateNewsPage implements OnInit, OnDestroy {
 
     // console.log(this.form);
 
-    this.loadingCtrl.create({message: 'Posting News...'})
+/*     this.loadingCtrl.create({message: 'Posting News...'})
       .then(loadingEl => {
         loadingEl.present();
         this.newsService.postNews(
@@ -51,7 +60,7 @@ export class CreateNewsPage implements OnInit, OnDestroy {
           loadingEl.dismiss();
           this.router.navigate(['/main/tabs/news']);
         });
-      });
+      }); */
   }
 
   ngOnDestroy() {

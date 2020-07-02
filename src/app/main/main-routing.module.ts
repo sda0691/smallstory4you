@@ -48,17 +48,17 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('./members/members.module').then( m => m.MembersPageModule),
-            //canLoad: [AuthGuard]
+            // canLoad: [AuthGuard]
           },
           {
             path: 'new',
             loadChildren: () => import('./members/create-member/create-member.module').then( m => m.CreateMemberPageModule),
-            //canLoad: [AuthGuard]
+            // canLoad: [AuthGuard]
           },
           {
             path: 'edit/:memberId',
             loadChildren: () => import('./members/edit-member/edit-member.module').then( m => m.EditMemberPageModule),
-            //canLoad: [AuthGuard]
+            // canLoad: [AuthGuard]
           }
         ]
       },
@@ -67,7 +67,8 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('./binder/binder.module').then( m => m.BinderPageModule)
+            loadChildren: () => import('./binder/binder.module').then( m => m.BinderPageModule)//,
+            // canLoad: [AuthGuard]
           }
 
         ]
@@ -83,20 +84,62 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'pray',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./pray/pray.module').then( m => m.PrayPageModule)
+          }
+
+        ]
+      },
+      {
+        path: 'user',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./users/users.module').then( m => m.UsersPageModule)
+          }
+
+        ]
+      },
+      {
+        path: 'church',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./church/church.module').then( m => m.ChurchPageModule)
+          }
+
+        ]
+      },      
+      {
         path: '',
-        redirectTo: '/main/tabs/news',
+        redirectTo: '/main/tabs/medias',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/main/tabs/news',
+    redirectTo: '/main/tabs/medias',
     pathMatch: 'full'
   },
   {
     path: 'medias',
     loadChildren: () => import('./medias/medias.module').then( m => m.MediasPageModule)
+  },
+  {
+    path: 'pray',
+    loadChildren: () => import('./pray/pray.module').then( m => m.PrayPageModule)
+  },
+  {
+    path: 'users',
+    loadChildren: () => import('./users/users.module').then( m => m.UsersPageModule)
+  },
+  {
+    path: 'church',
+    loadChildren: () => import('./church/church.module').then( m => m.ChurchPageModule)
   }
 ];
 

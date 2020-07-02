@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MembersService } from '../members.service';
 import { Router } from '@angular/router';
-import { LoadingController, Platform, AlertController } from '@ionic/angular';
+import { LoadingController, Platform, AlertController, ToastController } from '@ionic/angular';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 
 import { finalize, tap } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/fire
 import { Observable } from 'rxjs';
 import { Member } from '../member.model';
 import { AuthService } from 'src/app/auth/auth.service';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 
 
@@ -42,22 +43,28 @@ function base64toBlob(base64Data, contentType) {
 })
 export class CreateMemberPage implements OnInit {
   @ViewChild('filePicker', {static: false}) filePickerRef: ElementRef<HTMLInputElement>;
+
   form: NgForm;
   selectedImage: string;
   usePicker = false;
   pickedFile: any;
   isAuth = false;
-
+  uploadedFileName = '';
+  task: AngularFireUploadTask;
+  uploadedFileURL: Observable<string>;
+  downloadUrl = '';
 
   constructor(
-    private storage: AngularFireStorage, private database: AngularFirestore,
+    private storage: AngularFireStorage, 
+    private database: AngularFirestore,
 
     private platform: Platform,
     private membersService: MembersService,
     private router: Router,
     private loadingCtrl: LoadingController,
     private authService: AuthService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
   ) {  }
 
   ngOnInit() {
@@ -68,11 +75,19 @@ export class CreateMemberPage implements OnInit {
     )) {
       this.usePicker = true; // do not show any time
     }
-    this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
+/*     this.authService.userIsAuthenticated.subscribe(isAuth => {
       this.isAuth = isAuth;
     });
+ */
+    this.authService.loggedUser.subscribe(user => {
+      if (!user || (user && user.role.toUpperCase() !== 'ADMIN')) {
+        this.router.navigate(['/main/tabs/medias']);
+      } else {
+        this.isAuth = true;
+      }
+    });
   }
-  onAddMember1(inputData) {
+  /* onAddMember1(inputData) {
     if (this.pickedFile && this.pickedFile.type.split('/')[0] !== 'image') {
       console.error('unsupported file type :( ');
       return;
@@ -101,10 +116,15 @@ export class CreateMemberPage implements OnInit {
       record['address'] = inputData.form.value.address;
       record['imageUrl'] = ''; //res.task.ref_.uploadUrl;
       record['fileName'] = res.metadata.name;
+
+      record['homePhone'] = inputData.form.value.homePhone;
+      record['businessPhone'] = inputData.form.value.businessPhone;
+      record['ageStatus'] = inputData.form.value.ageStatus;
+
       this.membersService.add_member(record);
-    })
-  }
-  onAddMember(inputData) {
+    });
+  } */
+   onAddMember(inputData) {
 
     // Validation for Images Only
     if (this.pickedFile && this.pickedFile.type.split('/')[0] !== 'image') {
@@ -128,9 +148,66 @@ export class CreateMemberPage implements OnInit {
       });
       return;
     }
+    if (this.pickedFile) {
+      this.uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
+    }
+    const storageFolderName = GlobalConstants.memberCollection + '/'; // 'Members/';
+    
+    const fullPath = storageFolderName + this.uploadedFileName;
+    const fileRef = this.storage.ref(fullPath);
+    const customMetadata = { app: 'Member Files' };
 
-    console.log(inputData.form);
     this.loadingCtrl.create({message: 'Adding a new member...'})
+      .then(loadingEl => {
+        loadingEl.present();
+        if (this.pickedFile) {
+          this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
+          this.task.then(async res => {
+            const toast = await this.toastCtrl.create({
+              duration: 3000,
+              message: 'File upload finished!'
+            });
+            this.uploadedFileURL = fileRef.getDownloadURL();
+            this.uploadedFileURL.subscribe(resp => {
+              this.downloadUrl = resp;
+
+              this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
+              .subscribe(resData => {
+                loadingEl.dismiss();
+                inputData.reset();
+                this.router.navigate(['/main/tabs/members']);
+                }, error  => {
+                  loadingEl.dismiss();
+                  this.showAlert(error.message);
+              });
+              toast.present();
+            });
+
+
+
+          }).catch (error => {
+            this.showAlert(error.message);
+          });
+        } else {
+          this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
+          .subscribe(resData => {
+            loadingEl.dismiss();
+            inputData.reset();
+            this.router.navigate(['/main/tabs/members']);
+            }, error  => {
+              loadingEl.dismiss();
+              this.showAlert(error.message);
+          });
+        }
+
+
+
+
+
+      });
+
+
+    /* this.loadingCtrl.create({message: 'Adding a new member...'})
       .then(loadingEl => {
         loadingEl.present();
         if (!this.pickedFile) {
@@ -141,16 +218,18 @@ export class CreateMemberPage implements OnInit {
           record['imageUrl'] = '';
           record['fileName'] = '';
 
+          record['homePhone'] = inputData.form.value.homePhone;
+          record['businessPhone'] = inputData.form.value.businessPhone;
+          record['ageStatus'] = inputData.form.value.ageStatus;
+
           this.membersService.add_member(record)
-            .then(resData => {
+            .subscribe(resData => {
               loadingEl.dismiss();
               inputData.reset();
               this.router.navigate(['/main/tabs/members']);
-              })
-            .catch (error => {
+              }, error  => {
                 loadingEl.dismiss();
-              }
-            );
+            });
 
         } else {
             this.membersService.uploadImage( inputData.form.value, isEdit, this.pickedFile )
@@ -162,9 +241,9 @@ export class CreateMemberPage implements OnInit {
                 console.log(error);
             });
           }
-      });
+      }); */
   }
-
+ 
   onPickImage() {
     if (!Capacitor.isPluginAvailable('Camera')) {
       this.filePickerRef.nativeElement.click();
@@ -222,5 +301,14 @@ export class CreateMemberPage implements OnInit {
       // this.imagePick.emit(pickedFile);
     };
     fr.readAsDataURL (this.pickedFile);
+  }
+
+  private showAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Authentication failed',
+      message: message,
+      buttons: ['Okay']
+    })
+    .then(alertEl => alertEl.present());
   }
 }

@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>정보수정</ion-title>
+    <ion-buttons slot="end" >
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-item>
+          <ion-label >이름:</ion-label>
+          {{selectedUser.name}}
+        </ion-item>
+        <ion-item>
+          <ion-label  >이메일:</ion-label>
+          {{selectedUser.email}}
+        </ion-item>        
+        <ion-item>
+          <ion-label  >권한:</ion-label>
+          <ion-select 
+          [ngModel] = "selectedUser.role"  
+          name="role" 
+          (ionChange)="onUserRoleChange( $event )"
+          #roleCtrl="ngModel">
+          <ion-select-option value="GUEST">GUEST</ion-select-option>
+          <ion-select-option value="MEMBER">MEMBER</ion-select-option> 
+          <ion-select-option value="ADMIN">ADMIN</ion-select-option> 
+        </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

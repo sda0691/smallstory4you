@@ -7,6 +7,7 @@ import { EditMediaComponent } from '../edit-media/edit-media.component';
 import { MdeiaService } from '../media.service';
 import { Router } from '@angular/router';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { User } from 'src/app/auth/user.model';
 
 @Component({
   selector: 'app-detail-media',
@@ -15,6 +16,7 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 })
 export class DetailMediaComponent implements OnInit {
   @Input() selectedMedia: Media;
+  @Input() loggedUser: User;
   audioUrl: string;
   isLoading = false;
   trustedVideoUrl: SafeResourceUrl;
@@ -55,7 +57,7 @@ export class DetailMediaComponent implements OnInit {
     this.modalCtrl.dismiss();
     this.modalCtrl.create({
       component: EditMediaComponent,
-      componentProps: {selectedMedia: media}
+      componentProps: {selectedMedia: media, loggedUser: this.loggedUser}
     })
     .then(modalEl => {
       modalEl.present();

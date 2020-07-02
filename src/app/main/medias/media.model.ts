@@ -12,7 +12,8 @@ export class Media {
         public whoCreated: string,
         public whoUpdated: string,
         public whenCreated: Date,
-        public whenUpdated: Date
+        public whenUpdated: Date,
+        public youtubeLink: string
 
     ) {}
 }

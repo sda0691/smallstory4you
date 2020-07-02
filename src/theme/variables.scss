@@ -5,6 +5,20 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+  // by John
+  @font-face {
+    font-family: 'NanumGothic';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../assets/fonts/NanumGothicCoding-Bold.ttf');
+  }
+  @font-face {
+    font-family: 'NanumGothic';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../assets/fonts/NanumGothicCoding-Regular.ttf');
+  }
+
 /** Ionic CSS Variables **/
 :root {
   --ion-color-primary: #f72664;
@@ -72,6 +86,9 @@
 
   --ion-toolbar-background: var(--ion-color-primary);
   --ion-toolbar-color: var(--ion-color-primary-contrast);
+
+  // by John
+  --ion-font-family: 'My Custom Font';
 }
 
 ion-toolbar {
@@ -236,4 +253,6 @@ ion-toolbar {
   ion-title.title-large {
     --color: white;
   }
+
+
 }

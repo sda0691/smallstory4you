@@ -25,7 +25,7 @@ export class EditNewsPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap => {
+    /* this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('newsId'))  {
         this.navCtrl.navigateBack('/main/tabs/news');
         return;
@@ -43,14 +43,14 @@ export class EditNewsPage implements OnInit, OnDestroy {
           validators: [Validators.required, Validators.maxLength(500)]
         })
       });
-    });
+    }); */
   }
 
   onEditNews() {
     if (!this.form.valid) {
       return;
     }
-    this.loadingCtrl.create({message: 'Editing News...'})
+/*     this.loadingCtrl.create({message: 'Editing News...'})
       .then(loadingEl => {
         loadingEl.present();
         this.newsService.editNews(
@@ -62,7 +62,7 @@ export class EditNewsPage implements OnInit, OnDestroy {
           loadingEl.dismiss();
           this.router.navigate(['/main/tabs/news']);
         });
-      });
+      }); */
   }
   ngOnDestroy() {
     if (this.newsSub) {

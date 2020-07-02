@@ -50,7 +50,7 @@ export class TopImageComponent implements OnInit {
         }
         this.isLoading = false;
         // this.isUserAuthenticated = true;
-        this.router.navigate(['/main/tabs/news']);
+        this.router.navigate(['/main/tabs/medias']);
       });
     });
   }

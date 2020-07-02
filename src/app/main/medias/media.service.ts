@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { AngularFireUploadTask } from '@angular/fire/storage';
-import { finalize, map, tap } from 'rxjs/operators';
+import { finalize, map, tap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
@@ -45,10 +45,10 @@ export class MdeiaService {
     return query.snapshotChanges()
       .pipe(
         map(docArray => {
-          console.log(docArray);
+
           let medias = [];
           medias = docArray.map(doc => {
-            console.log(doc);
+
             return {
               id: doc.payload.doc.id,
               groupid: doc.payload.doc.data()['groupid'],
@@ -62,6 +62,7 @@ export class MdeiaService {
               // whenCreated: doc.payload.doc.data()['whenCreated'],
 
               downloadUrl: doc.payload.doc.data()['downloadUrl'],
+              youtubeLink: doc.payload.doc.data()['youtubeLink'] === undefined ? '' : doc.payload.doc.data()['youtubeLink'],
             };
 
           });
@@ -74,8 +75,27 @@ export class MdeiaService {
   }
 
   add_media(media, fileName) {
-    const userid = this.authService.userId1;
-    return this.firestore.collection(this.collectionName)
+    // const userid = this.authService.userId1;
+    return this.authService.loggedUser.pipe(
+      take(1),
+      map(user => {
+        this.firestore.collection(this.collectionName)
+        .add({
+          groupId: this.authService.groupId,
+          groupName: GlobalConstants.groupName,
+          author: media.author,
+          title: media.title,
+          subTitle: media.subTitle,
+          fileName: fileName,
+          category: media.category,
+          downloadUrl: '',
+          whoCreated: user.id,
+          whenCreated: new Date(),
+          youtubeLink: media.youtubeLink
+        });
+      })
+    )
+/*     return this.firestore.collection(this.collectionName)
     .add({
       groupId: this.authService.groupId,
       groupName: GlobalConstants.groupName,
@@ -87,17 +107,18 @@ export class MdeiaService {
       downloadUrl: '',
       whoCreated: userid,
       whenCreated: new Date()
-    });
+    }); */
   }
   
   edit_media(media, fileName: string) {
     const userid = this.authService.userId1;
     media.groupId = this.authService.groupId;
     media.groupName = GlobalConstants.groupName;
-    media.fileName = fileName,
+    media.fileName = fileName;
     media.downloadUrl = '';
     media.whoUpdated = userid;
     media.whenUpdated = new Date();
+    media.youtubeLink = media.youtubeLink;
 
     return this.firestore.doc(this.collectionName + '/' + media.id).update(media);
   }

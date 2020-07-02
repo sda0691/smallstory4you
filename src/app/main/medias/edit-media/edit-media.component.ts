@@ -5,6 +5,7 @@ import { MdeiaService } from '../media.service';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
+import { User } from 'src/app/auth/user.model';
 
 @Component({
   selector: 'app-edit-media',
@@ -13,7 +14,8 @@ import { GlobalConstants } from 'src/app/common/global-constants';
 })
 export class EditMediaComponent implements OnInit {
   @Input() selectedMedia: Media;
-
+  @Input() loggedUser: User;
+  
   usePicker = false;
   pickedFile: any;
   task: AngularFireUploadTask;
@@ -39,13 +41,13 @@ export class EditMediaComponent implements OnInit {
     )) {
       this.usePicker = true; // do not show any time
     }
-
-    console.log(this.selectedMedia.fileName);
-/*     this.authService.userIsAuthenticatedObser.subscribe(isAuth => {
-      this.isAuth = isAuth;
-    }); */
   }
-
+  // if user is not admin, return to previous page
+  ionViewWillEnter() {
+    if (this.loggedUser.role.toUpperCase() !== 'ADMIN') {
+      this.modalCtrl.dismiss();
+    }
+  }
   onEditMedia(inputData) {
     if (
         this.pickedFile && this.pickedFile.type.split('/')[0] !== 'audio' &&
@@ -78,7 +80,7 @@ export class EditMediaComponent implements OnInit {
       record['subTitle'] = inputData.form.value.subTitle;
       record['category'] = inputData.form.value.category;
       record['id'] = this.selectedMedia.id;
-
+      record['youtubeLink'] = inputData.form.value.youtubeLink;
 
       this.mediaService.edit_media(record, uploadedFileName)
       .then(data => {

@@ -16,51 +16,89 @@
   <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-item>
+        <ion-label position="floating" >이름</ion-label>
         <ion-input 
           type="text" 
-          placeholder="name" 
           [ngModel]="member.name" 
           name="name" 
+          clearInput
           #nameCtrl="ngModel"
           required></ion-input>
       </ion-item>
-      <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
+<!--       <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
         <ion-label color="primary">이름을 입력하세요</ion-label>
-      </ion-item>      
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
+      </ion-item>  --> 
+      <p *ngIf="!nameCtrl.valid && nameCtrl.touched"
+        class="error-message"
+        style="text-align: center;">
+        * 이름을 입력하세요
+      </p>  
+      <br>        
+
       <ion-item>
+        <ion-label position="floating" >모바일번호</ion-label>
         <ion-input 
           type="text" 
-          placeholder="phone" 
+          clearInput
           [ngModel]="member.phone1" 
           name="phone" 
           #phoneCtrl="ngModel"
-          required></ion-input>
+          ></ion-input>
       </ion-item>
-      <ion-item *ngIf="!phoneCtrl.valid && phoneCtrl.touched">
+      <br>
+<!--       <ion-item *ngIf="!phoneCtrl.valid && phoneCtrl.touched">
         <ion-label color="primary">전화번호를 입력하세요</ion-label>
-      </ion-item>       
-    </ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col size-sm="6" offset-sm="3">
+      </ion-item>   -->     
       <ion-item>
-        <ion-input type="text" placeholder="address" [ngModel]="member.address" name="address" required></ion-input>
+        <ion-label position="floating" >홈번호</ion-label>
+        <ion-input 
+          type="text" 
+          [ngModel]="member.homePhone" 
+          clearInput
+          name="homePhone" 
+          #homePhoneCtrl="ngModel"
+          ></ion-input>
+      </ion-item> 
+      <br>     
+      <ion-item>
+        <ion-label position="floating" >직장번호</ion-label>
+        <ion-input 
+          type="text" 
+          [ngModel]="member.businessPhone"
+          clearInput
+          name="businessPhone" 
+          #businessPhoneCtrl="ngModel"
+          ></ion-input>
       </ion-item>
-    </ion-col>
-  </ion-row>  
-  <ion-row>
-    <ion-col>
+      <br>
+      <ion-item>
+        <ion-label position="floating" >주소</ion-label>        
+        <ion-input 
+        type="text" 
+        [ngModel]="member.address" 
+        clearInput
+        name="address" 
+        ></ion-input>
+      </ion-item>
+      <br>
+      <ion-item>
+        <ion-label position="floating" >소속</ion-label> 
+        <ion-select [ngModel]="member.ageStatus" name="ageStatus" #ageStatusCtrl="ngModel"  >
+          <ion-select-option value="장년">장년</ion-select-option>
+          <ion-select-option value="시니어">시니어</ion-select-option>
+          <ion-select-option value="청년">청년</ion-select-option>
+        </ion-select> 
+      </ion-item>
+
+      <br>       
       <div >
         <ion-img 
 
           role="button"
           (click)="onPickImage()"
           [src]="selectedImage" 
-          *ngIf="selectedImage"></ion-img>
+          *ngIf="selectedImage">
+        </ion-img>
         <ion-button color="primary" 
           (click)="onPickImage()" 
           *ngIf="!selectedImage">
@@ -74,6 +112,19 @@
        *ngIf="usePicker" 
        #filePicker 
        (change) ="onFileChosen($event)"/>
+       
+       <br>
+       
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-sm="6" offset-sm="3">
+      <ion-button 
+        fill="clear" 
+        expand="block" 
+        *ngIf="!pickedFile && member.fileName.length > 0"
+        (click)="onRemovePhoto()">remove photo
+      </ion-button>
     </ion-col>
   </ion-row>
   <ion-row>

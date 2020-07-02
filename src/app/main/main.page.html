@@ -16,25 +16,38 @@
     <ion-tabs>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="news">  <!-- match withrouting setup -->  
-          <ion-label>News</ion-label>
-          <ion-icon name="search"></ion-icon>
+          <ion-label>소식</ion-label>
+          <ion-icon name="chatbubbles-outline"></ion-icon>
         </ion-tab-button>
         <ion-tab-button tab="medias" >
-          <ion-label>Words</ion-label>
-          <ion-icon name="card"></ion-icon>
+          <ion-label>말씀</ion-label>
+          <ion-icon name="book-outline"></ion-icon>
         </ion-tab-button>        
-        <ion-tab-button tab="bands" >
+ <!--         <ion-tab-button tab="bands" >
           <ion-label>Bands</ion-label>
           <ion-icon name="card"></ion-icon>
-        </ion-tab-button>
-        <ion-tab-button tab="members" *ngIf="isAuth">
-          <ion-label>Members</ion-label>
+        </ion-tab-button>  -->
+    
+        <ion-tab-button tab="members" *ngIf="loggedUser && loggedUser.role !== 'GUEST'">
+          <ion-label>교인</ion-label>
           <ion-icon name="person-outline"></ion-icon>
-        </ion-tab-button>     
-        <ion-tab-button tab="binder" >
+        </ion-tab-button>   
+        <ion-tab-button tab="pray">
+          <ion-label>기도록</ion-label>
+          <ion-icon name="calendar-outline"></ion-icon>
+        </ion-tab-button>    
+        <ion-tab-button tab="user" *ngIf="loggedUser && loggedUser.role === 'ADMIN'">
+          <ion-label>사용자</ion-label>
+          <ion-icon name="calendar-outline"></ion-icon>
+        </ion-tab-button>    
+        <ion-tab-button tab="church">
+          <ion-label>소개</ion-label>
+          <ion-icon name="alert-outline"></ion-icon>
+        </ion-tab-button>                           
+<!--         <ion-tab-button tab="binder" >
           <ion-label>Binder</ion-label>
           <ion-icon name="book-outline"></ion-icon>
-        </ion-tab-button>               
+        </ion-tab-button>  -->              
       </ion-tab-bar>
     </ion-tabs>
 

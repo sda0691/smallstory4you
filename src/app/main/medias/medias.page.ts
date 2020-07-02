@@ -19,17 +19,16 @@ import { EditMediaComponent } from './edit-media/edit-media.component';
   styleUrls: ['./medias.page.scss'],
 })
 export class MediasPage implements OnInit, OnDestroy {
-  isLoading = false;
   audioUrl: string;
   loggedUser: User;
   isAuth = false;
   loadedData = []; // Member[];
   renderedMedias = [];
+  filteredMedias = [];  // get from loadedData when user select category
+  indexCount = 0;
   loadedMediaCategory = [];
   counter = 0;
-  isLodading = false;
   segCategory = 'all';
-
 
   private subs: Subscription[] = [];
   
@@ -42,10 +41,6 @@ export class MediasPage implements OnInit, OnDestroy {
     private fireAuth: AngularFireAuth,
     private authService: AuthService
   ) {
-      this.fireAuth.onAuthStateChanged(user => {
-      console.log(user);
-
-    });
   }
 
   ngOnInit() {
@@ -61,27 +56,19 @@ export class MediasPage implements OnInit, OnDestroy {
         this.loadedMediaCategory = data;
       })
     );
-  }
-  getData() {
 
-    if (this.loadedData) {
-      for (let i = this.counter + 1; i <= this.loadedData.length; i++){
-        this.renderedMedias.push(this.loadedData[i - 1]);
-        if (i % 2 === 0) {
-          break;
-        }
-      }
-      this.counter += 2;
-    }
+    this.subs.push(this.authService.loggedUser.subscribe(user => {
+      this.loggedUser = user;
+    }));
   }
-
   ionViewWillEnter() {
-    // this.resetCategory();
-    if (this.segCategory.toUpperCase() !== 'ALL') {
-      this.segCategory = 'all';  // tab
-    } else {
-      this.fetchMedia('All');  // page_load
-    }
+    this.authService.getCurrentUser().subscribe(user => {
+      if (this.segCategory.toUpperCase() !== 'ALL') {
+        this.segCategory = 'all';  // tab
+      } else {
+        this.fetchMedia('All');   // page_load
+      }
+    });
   }
   fetchMedia(category: string) {
     this.loadingCtrl.create({message: 'Loading Media...'})
@@ -90,21 +77,21 @@ export class MediasPage implements OnInit, OnDestroy {
 
         this.subs.push(this.fetchMediaCategory()
           .subscribe(data => {
-            console.log(data);
-
             this.authService.loggedUser.subscribe(user => {
               if (user) {
-                this.loggedUser = user;
                 this.isAuth = true;
               } else {
                 this.isAuth = false;
               }
-              this.subs.push(this.mediaService.fetchMedias(category)
+              this.subs.push(this.mediaService.fetchMedias(category) // get all records, then filter by category
                 .subscribe(media => {
-                  console.log(media);
-                  // data.
+                  if (this.segCategory.toUpperCase() === 'ALL') {
+                    this.filteredMedias = media;
+                  } else {
+                    this.filteredMedias = media.filter(data => data.category === this.segCategory);
+                  }
                   this.resetCategory();
-                  this.getData();
+                  this.showMore();
 
                   loadingEl.dismiss();
                 }, error => {
@@ -132,16 +119,6 @@ export class MediasPage implements OnInit, OnDestroy {
       modalEl.present();
       return modalEl.onDidDismiss();
     })
-/*     .then(resultData => {
-      this.resetCategory();
-      this.segCategory = 'all';
-      // this.fetchMedia('all');
-      // console.log(resultData.data, resultData.role);
-      if (resultData.role === 'confirm') {
-        console.log('BOOKED!');
-      }
-    }); */
-
     .then(resultData => {
       if (resultData.role !== 'cancel') {
         if (this.segCategory !== 'all') {
@@ -159,16 +136,12 @@ export class MediasPage implements OnInit, OnDestroy {
   openMediaDetail(media: Media) {
     this.modalCtrl.create({
       component: DetailMediaComponent,
-      componentProps: {selectedMedia: media}
+      componentProps: {selectedMedia: media, loggedUser: this.loggedUser}
     })
     .then(modalEl => {
       modalEl.present();
       return modalEl.onDidDismiss();
     });
-/*     .then(resultData => {
-      this.resetCategory();
-      this.segCategory = 'all'; // call ionChange
-    }); */
   }
 
   openEditMedia(media: Media, slidingItem: IonItemSliding) {
@@ -191,28 +164,34 @@ export class MediasPage implements OnInit, OnDestroy {
     });
   }
 
-  selectCategory(event) {
-/*     this.resetCategory();
-    this.fetchMedia(event.detail.value); */
-
-
-    // new solution without getting to firebase
+  private showMore() {
     let count = 0;
-    this.resetCategory();
-    if (this.loadedData) {
-      for (let i = this.counter ; i < this.loadedData.length; i++){
-        if (event.detail.value.toUpperCase() === 'ALL' || this.loadedData[i].category === event.detail.value) {
-          this.renderedMedias.push(this.loadedData[i]);
+    if (this.filteredMedias) {
+      for (let i = this.counter + 1 ; i <= this.filteredMedias.length; i++){
+        if (this.segCategory.toUpperCase() === 'ALL' || this.filteredMedias[i - 1].category === this.segCategory) {
+          this.renderedMedias.push(this.filteredMedias[i - 1]);
           count++;
           if (count % 2 === 0) {
             break;
           }
         }
-
       }
       this.counter += 2;
     }
+  }
 
+
+  selectCategory(event) {
+    // new solution without getting to firebase
+    this.indexCount = 0;
+    this.resetCategory();
+    this.segCategory = event.detail.value;
+    if (event.detail.value.toUpperCase() === 'ALL') {
+      this.filteredMedias = this.loadedData;
+    } else {
+      this.filteredMedias = this.loadedData.filter(media => media.category === this.segCategory);
+    }
+    this.showMore();
   }
 
   ngOnDestroy() {

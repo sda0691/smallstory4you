@@ -55,7 +55,17 @@
           </ion-item>
           <ion-item *ngIf="!subTitleCtrl.valid && subTitleCtrl.touched">
             <ion-label>Should't over be 200 characters long</ion-label>
-          </ion-item>  
+          </ion-item>            
+          <ion-item>
+            <ion-label position="floating">youtube</ion-label>
+            <ion-input
+              type="text"
+              [ngModel]="selectedMedia.youtubeLink"
+              name="youtubeLink"
+              #youtubeLinkCtrl="ngModel"
+              maxlength="200"
+            ></ion-input>
+          </ion-item>          
           <ion-item>
             <ion-label position="floating">카테고리</ion-label>
             <ion-select [ngModel]="selectedMedia.category" name="category" required #categoryCtrl="ngModel">

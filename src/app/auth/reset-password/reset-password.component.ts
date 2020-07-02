@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -9,12 +10,35 @@ import { ModalController } from '@ionic/angular';
 export class ResetPasswordComponent implements OnInit {
 
   constructor(
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authService: AuthService,
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {}
 
+  onResetPassword(inputData) {
+    const email = inputData.form.value.email;
+    console.log(email);
+    this.authService.resetPassword(email)
+      .then(() => {
+        this.showAlert('Email has been sent')
+      })
+      .catch(error => {
+        this.showAlert(error.message);
+      })
+  }
+
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }
+  private showAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Error',
+      message: message,
+      buttons: ['Okay']
+    })
+    .then(alertEl => alertEl.present());
+  }
+
 }

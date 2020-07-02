@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, from } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { tap, map } from 'rxjs/operators';
@@ -33,7 +33,9 @@ export interface AuthResponseData1 {
 export class AuthService implements OnDestroy{
 
   private _user = new BehaviorSubject<User>(null);
+  private _users = new BehaviorSubject<User[]>(null); // begin used in users page
   private user: User;
+
   private activeLogoutTimer: any;
   userCollectionName = GlobalConstants.userCollection;
   // private _userId = 'abc';
@@ -41,6 +43,10 @@ export class AuthService implements OnDestroy{
   get loggedUser() {
     // return [...this._places];
     return this._user.asObservable(); // return subscribable data
+  }
+
+  get users() {
+    return this._users.asObservable();
   }
 
   get groupId() {
@@ -69,14 +75,14 @@ export class AuthService implements OnDestroy{
     }
   }
 
-  get userIsAuthenticated() {
+/*   get userIsAuthenticated() {
     if (this.user && this.user.id.length > 0) {
       return this.user.tokenDuration > 0;
     } else {
       return false;
     }
-  }
-  get userIsAuthenticatedObser() {
+  } */
+  get userIsAuthenticated() {
     return this._user.asObservable()
       .pipe(map(user => {
         if (user) {
@@ -96,24 +102,35 @@ export class AuthService implements OnDestroy{
   ) { 
     this.fireAuth.authState.subscribe(user => {
       if (user) {
-        this.testUser = user;
-        console.log('auth.service constructor');
-        console.log(user);
 
       } else {
-        console.log('no user');
-        this.testUser = null;
+
       }
-    })
-    
+    });
   }
 
-  test() {
-    console.log('test');
-    console.log(this.testUser);
+  fetchUsers() {
+    return this.firestore.collection(this.userCollectionName, ref => ref.orderBy('name', 'asc')).snapshotChanges()
+      .pipe(
+        map(docArray => {
+          let users = [];
+          users = docArray.map(doc => {
+            return {
+              id: doc.payload.doc.data()['id'],
+              email: doc.payload.doc.data()['email'],
+              name: doc.payload.doc.data()['name'],
+              role: doc.payload.doc.data()['role'],
+            }
+          });
+          return users;
+        }),
+        tap(users => {
+          this._users.next(users);
+        })
+      );
   }
   autoLogin() {
-    return from(Plugins.Storage.get({ key: 'authData' })).pipe(
+    return from(Plugins.Storage.get({ key: '_cap_authData' })).pipe(
       map(storedData => {
         if (!storedData || !storedData.value) {
           return null;
@@ -138,14 +155,6 @@ export class AuthService implements OnDestroy{
           parsedData.name,
           parsedData.role
         );
-        this.user = new User(
-          parsedData.userId,
-          parsedData.email,
-          parsedData.token,
-          expirationTime,
-          parsedData.name,
-          parsedData.role
-        );
         return user;
       }),
       tap(user => {
@@ -160,9 +169,70 @@ export class AuthService implements OnDestroy{
       })
     );
   }
-  
-  login(email: string, password: string) {
+  // return this.firestore.doc(this.collectionName + '/' + media.id).update(media);
+  updateRole(uid, role: string) {
+    return this.firestore.collection(this.userCollectionName ).doc(uid ).update({
+      role: role
+    });
+  }
+  resetPassword(email: string) {
+    return this.fireAuth.sendPasswordResetEmail(email);
+  }
+  // return observable: not being used;
+  getCurrentUser1(): any {
+    const userObservable = new Observable(observer => {
+      this.fireAuth.onAuthStateChanged(user => {
+        if (user) {
+          const loggedUser = user;
+          this.firestore.collection(this.userCollectionName).doc(user.uid)
+            .get()
+            .subscribe(doc => {
+              const loggedUserDetail = doc.data() as User;
+              const user = new User(
+                loggedUser.uid,
+                loggedUser.email,
+                loggedUserDetail._token,
+                loggedUserDetail.tokenExpirationDate,
+                loggedUserDetail.name,
+                loggedUserDetail.role
+              );
+              this._user.next(user);
+              observer.next(user);
+            });
 
+        } else {
+          this._user.next(null);
+          observer.next(null);
+        }
+      });
+    });
+    return userObservable;
+  }
+  getCurrentUser(): any {
+    const userObservable = new Observable(observer => {
+      this.fireAuth.onAuthStateChanged(user => {
+        if (user) {
+          this.firestore.collection(this.userCollectionName).doc(user.uid)
+            .snapshotChanges().pipe(map(action => {
+              const data = action.payload.data() as User;
+              return data;
+            }))
+            .subscribe(user => {
+              this._user.next(user);
+              observer.next(user);
+            });
+
+        } else {
+          this._user.next(null);
+          observer.next(null);
+        }
+      });
+    });
+    return userObservable;
+
+  }
+
+  login(email: string, password: string) {
     return this.fireAuth.signInWithEmailAndPassword(email, password)
       .then(result => {
         if (result.user) {
@@ -230,7 +300,7 @@ export class AuthService implements OnDestroy{
       if (result.user) {
         result.user.updateProfile({
           displayName: name,
-          photoURL: 'member',
+          photoURL: 'GUEST',
         });
         result.user.getIdTokenResult()
           .then(res => {
@@ -241,7 +311,7 @@ export class AuthService implements OnDestroy{
               res.token,
               new Date(res.expirationTime),
               name,
-              'member'
+              'GUEST'
             );
             this.setUserData1(user);
 
@@ -323,13 +393,6 @@ export class AuthService implements OnDestroy{
       role: role
     });
     Plugins.Storage.set({ key: 'authData', value: data });
-  }
-
-  resetPassword(email: string) {
-    // var auth = this.fireAuth.auth();
-    return this.fireAuth.sendPasswordResetEmail(email)
-      .then(() => console.log("email sent"))
-      .catch((error) => console.log(error))
   }
 
   ngOnDestroy() {
