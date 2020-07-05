@@ -5,28 +5,23 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
-  // by John
-  @font-face {
-    font-family: 'NanumGothic';
-    font-style: normal;
-    font-weight: normal;
-    src: url('../assets/fonts/NanumGothicCoding-Bold.ttf');
-  }
-  @font-face {
-    font-family: 'NanumGothic';
-    font-style: normal;
-    font-weight: normal;
-    src: url('../assets/fonts/NanumGothicCoding-Regular.ttf');
-  }
+  
 
 /** Ionic CSS Variables **/
 :root {
-  --ion-color-primary: #f72664;
-  --ion-color-primary-rgb: 247, 38, 100;
+/*   --ion-color-primary: #7788eb;
+  --ion-color-primary-rgb: 119,136,235;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0,0,0;
+  --ion-color-primary-shade: #6978cf;
+  --ion-color-primary-tint: #8594ed; */
+
+  --ion-color-primary: #1e90ee;
+  --ion-color-primary-rgb: 30,144,238;
   --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #d92158;
-  --ion-color-primary-tint: #f83c74;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #1a7fd1;
+  --ion-color-new-tint: #359bf0;
 
   --ion-color-secondary: #ac0e86;
   --ion-color-secondary-rgb: 172, 14, 134;
@@ -84,11 +79,9 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
-  --ion-toolbar-background: var(--ion-color-primary);
-  --ion-toolbar-color: var(--ion-color-primary-contrast);
+  --ion-toolbar-background: white; // var(--ion-color-primary);
+  --ion-toolbar-color: black; //var(--ion-color-primary-contrast);
 
-  // by John
-  --ion-font-family: 'My Custom Font';
 }
 
 ion-toolbar {

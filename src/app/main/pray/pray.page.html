@@ -1,7 +1,7 @@
 
   <ion-header>
     <ion-toolbar>
-      <ion-title>말씀듣기</ion-title>
+      <ion-title>기도력</ion-title>
       <ion-buttons 
         slot="end" 
         *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
@@ -16,41 +16,177 @@
 
 
     <ion-content class="ion-no-padding" >
-      <div class="myDiv">
-        <ion-segment 
-          (ionChange)="onFilterUpdate($event)" value="장년" 
-          [(ngModel)] = "setCategory"
-          class="ion-no-padding" >
-          <ion-segment-button class="ion-no-padding"  value="장년">
-            장년기도력
-            <!-- <p style="color: purple; font-size:12px">장년기도력</p> -->
-           <!--  <ion-label class="ion-no-padding segment">장년기도력</ion-label> -->
-          </ion-segment-button>
-          <ion-segment-button class="ion-no-padding"  value="어린이">
-            어린이기도력
-            <!-- <p style="color: purple; font-size:12px">어린이기도력</p> -->
-            <!-- <ion-label class="ion-no-padding segment">어린이기도력</ion-label> -->
-          </ion-segment-button>
-        </ion-segment> 
-      </div>
+      
      
       <ion-grid >
-        <ion-row >
+        <ion-row>
+          <ion-col >
+            <div class="myDiv">
+              <ion-segment 
+                (ionChange)="onFilterUpdate($event)" value="장년" 
+                [(ngModel)] = "setCategory"
+                class="ion-no-padding" >
+                <ion-segment-button class="ion-no-padding"  value="장년">
+                  장년기도력
+                  <!-- <p style="color: purple; font-size:12px">장년기도력</p> -->
+                 <!--  <ion-label class="ion-no-padding segment">장년기도력</ion-label> -->
+                </ion-segment-button>
+                <ion-segment-button class="ion-no-padding"  value="어린이">
+                  어린이기도력
+                  <!-- <p style="color: purple; font-size:12px">어린이기도력</p> -->
+                  <!-- <ion-label class="ion-no-padding segment">어린이기도력</ion-label> -->
+                </ion-segment-button>
+              </ion-segment> 
+            </div>
+  
+            
+            <!-- <div class="scrolling-wrapper">
+              <div class="card" *ngFor="let pray of selectedData ; let i=index" style="width:55px;padding: 3px">
+                 
+                  <ion-button color="{{buttonColor}}" fill="clear"  class="round-button"  *ngIf="pray.dateOfPray.getDay() === 0">
+                    <div>
+                      <p class="black size-12">일</p>
+                      <p class="black size-12" style="padding-top: 2px;">{{pray.dateOfPray | date: 'd'}}</p>
+   
+                    </div>
+                  </ion-button>
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 1">
+                    <div>
+                      <p >월</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                      
+                    </div>
+                  </ion-button>   
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 2">
+                    <div>
+                      <p >화</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                
+                    </div>
+                  </ion-button>      
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 3">
+                    <div>
+                      <p >수</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                    
+                    </div>
+                  </ion-button>    
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 4">
+                    <div>
+                      <p >목</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                      
+                    </div>
+                  </ion-button>    
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 5">
+                    <div>
+                      <p >금</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                    
+                    </div>
+                  </ion-button> 
+                  <ion-button color="{{buttonColor}}" fill="clear" class="round-button"  *ngIf="pray.dateOfPray.getDay() === 6">
+                    <div>
+                      <p >토</p>
+                      <p >{{pray.dateOfPray | date: 'd'}}</p>
+                  
+                    </div>
+                  </ion-button> 
+                  
+              </div>
+          </div> -->
+          </ion-col>             
+        </ion-row>  
+  
+        <ion-row *ngIf="selectedPray">
+          <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
+            <div class="pray-image" *ngIf="lenVerseOfPray === 'short'" >
+              <ion-label  class="ion-padding" >
+                <p class="font-white-16-bold" style="padding:3px">{{selectedPray.title}}</p><br>
+                <p class="font-white-12" style="padding:3px"> {{selectedPray.verseOfPray}}</p>
+              </ion-label>            
+            </div>
+            <div class="pray-image-medium" *ngIf="lenVerseOfPray === 'medium'" >
+              <ion-label  class="ion-padding" >
+                <p class="font-white-18-bold">{{selectedPray.title}}</p><br>
+                <p class="font-white-12"> {{selectedPray.verseOfPray}}</p>
+              </ion-label>            
+            </div>
+            <div class="pray-image-large" *ngIf="lenVerseOfPray === 'large'" >
+              <ion-label  class="ion-padding" >
+                <p class="font-white-18-bold">{{selectedPray.title}}</p><br>
+                <p class="font-white-12"> {{selectedPray.verseOfPray}}</p>
+              </ion-label>            
+            </div>                    
+          </ion-col>
+        </ion-row>  
+        <ion-row *ngIf="selectedPray">
+          <ion-col size-sm="6" offset-sm="3">
+            <div *ngIf="selectedPray && audioUrl" >
+              <audio 
+                controls  
+                style="width:100%; background-color:rgb(225, 245, 220);" >
+                <source src="{{audioUrl}}" 
+                  type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio> 
+            </div>         
+          </ion-col>
+        </ion-row>    
+        <ion-row *ngIf="selectedPray" >
+          <ion-col 
+            size-sm="2" 
+            offset-sm="3" 
+            
+            class="ion-text-left">
+  <!--           <ion-icon size="large" name="chevron-back-circle">전날</ion-icon>
+            <p class="black size-14 padding-8">전날</p> -->
+  
+            <ion-button fill="clear" color="dark" (click)="onPreDay()">
+              <ion-icon 
+                size="medium" 
+                color="{{dayPrevIconColor}}"
+                name="chevron-back-circle" >
+              </ion-icon>&nbsp;
+              <ion-label color="{{dayPrevColor}}">전날</ion-label>
+            </ion-button>
+          </ion-col>
+          <ion-col size-sm="2"  class="ion-text-center">
+            <ion-button fill="clear" color="primary" >
+              {{selectedPray.dateOfPray | date: 'M'}}월
+              {{selectedPray.dateOfPray | date: 'd'}}일
+              ({{day}})
+            </ion-button>
+    <!--             <p class="gray padding-8 size-14 weight-bold">
+             
+                  {{selectedPray.dateOfPray | date: 'M'}}월
+                  {{selectedPray.dateOfPray | date: 'd'}}일
+                  ({{day}})
+                </p> -->
+          </ion-col>
+          <ion-col size-sm="2"  class="ion-text-right">
+            <ion-button fill="clear" color="dark" (click)="onNextDay()">
+              <ion-icon size="medium" color="{{dayNextIconColor}}"  name="chevron-forward-circle" ></ion-icon>&nbsp;
+              <ion-label color="{{dayNextColor}}" >다음날</ion-label>
+            </ion-button>
+          </ion-col>        
+        </ion-row>         
+        <ion-row *ngIf="selectedPray">
+          <ion-col size-sm="6" offset-sm="3" class="ion-padding">
+            
+
+              <p 
+                class="black size-14 weight-regular" 
+                style="white-space: pre-wrap; line-height: 2.0;">{{selectedPray.word}}</p>
+  
+                
+          </ion-col>
+        </ion-row>         
+        <!-- <ion-row >
           <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
             <ion-list>
                 <ion-item  *ngFor="let pray of selectedData" (click)="onPrayDetail(pray)">
-<!--                   <ion-button class="round-button">
-                    <div>
-                      <p *ngIf="pray.dateOfPray.getDay() === 0">일</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 1">월</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 2">화</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 3">수</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 4">목</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 5">금</p>
-                      <p *ngIf="pray.dateOfPray.getDay() === 6">토</p>
-                      <p >{{pray.dateOfPray | date: 'd'}}</p>
-                    </div>
-                  </ion-button> -->
+
                   <ion-button class="round-button" color="danger" *ngIf="pray.dateOfPray.getDay() === 0">
                     <div>
                       <p >일</p>
@@ -96,17 +232,13 @@
                   <ion-label class="ion-padding">
                     <p class="font-black-14-bold"> {{ pray.title }} </p>
                     <p class="font-gray-12"> {{pray.verseOfPray}}</p>
-                    <!-- <p class="font-gray-12"> {{pray.dateOfPray | date: 'yyyy'}}/{{pray.dateOfPray | date: 'MM'}}</p> -->
-                  
+           
                   </ion-label>
                 </ion-item>
             </ion-list>  
-<!--             <ion-label  class="ion-no-padding" >
-              <p class="font-bold-black">{{selectedPray.title}}</p>
-              <p class="font-gray"> {{selectedPray.verseOfPray}}</p>
-            </ion-label> -->
+
           </ion-col>
-        </ion-row>
+        </ion-row> -->
         
         
       </ion-grid>

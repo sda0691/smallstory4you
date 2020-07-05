@@ -10,30 +10,9 @@
       </ion-button>
     </ion-buttons>  
   </ion-toolbar>
-</ion-header>
-
-<ion-content>
   <ion-grid class="ion-no-padding">
-    <ion-row >
-      <ion-col class="ion-no-padding" size-sm="6" offset-sm="3">
-        <app-top-image 
-          [isAuth]="isAuth"
-          [loggedUser]="loggedUser"
-          ></app-top-image>
-      </ion-col>
-    </ion-row> 
     <ion-row>
-      <ion-col size-sm="6" class="ion-text-right col-padding"  offset-sm="3">
-        <span class="text" style="color: gray;">방송안내 </span>
-        <ion-icon class="icon" name="chevron-forward"></ion-icon>
-      </ion-col>
-<!--       <ion-col size-sm="3" offset-sm="3">
-        <ion-icon name="call"  class="ion-padding"></ion-icon>
-      </ion-col> -->
-    </ion-row>
-    
-    <ion-row>
-      <ion-col size-sm="6"   offset-sm="3">
+      <ion-col >
         <div class="myDiv">
           <ion-segment 
             class="ion-no-padding" 
@@ -54,21 +33,101 @@
             
           </ion-segment>
         </div>
-
+       </ion-col>
+      </ion-row>
+      <ion-row *ngIf="selectedMedia">
+        <ion-col size-sm="6" offset-sm="3" style="height: 170px ;">
+          <iframe width="100%" height="170px" [src]=trustedVideoUrl frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </ion-col>
+    </ion-row> 
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <div *ngIf="selectedMedia && audioUrl && selectedMedia.youtubeLink.length <= 0" >
+          <audio controls  style="width:100%" >
+            <source src="{{audioUrl}}" 
+              type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio> 
+        </div>         
       </ion-col>
     </ion-row>
+    <ion-row 
+      *ngIf="selectedMedia" 
+      style="padding-top:5px;height:46px;background-color:rgb(236, 234, 234);">
+      <ion-col  
+        size-sm="2" 
+        style="color:gray"
+        class="ion-text-center" 
+        offset-sm="2">
+        <div>
+          <p class="gray size-10">설교</p>
+          <p class="black size-12 weight-medium">{{selectedMedia.author}}</p>
+        </div>
+      </ion-col>
+      <ion-col size-sm="2" class="ion-text-center">
+        <div>
+          <p class="gray size-10">구분</p>
+          <p class="black size-12 weight-regmediumular">{{selectedMedia.category}}</p>
+        </div>
+      </ion-col>
+      <ion-col size-sm="2" class="ion-text-center"  >
+        <div>
+          <p class="gray size-10">날짜</p>
+          <p class="black size-12 weight-medium">{{selectedMedia.whenCreated | date:'yyyy-MM-dd'}}</p>
+        </div>
+      </ion-col>      
+      <ion-col size-sm="2" class="ion-text-center"  >
+        <div>
+          <p class="gray size-10">다운로드</p>
+          <img src="{{audioUrl}}">
+          
+        </div>
+      </ion-col>             
+    </ion-row>          
+  </ion-grid>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row >
+      <ion-col class="ion-no-padding" size-sm="6" offset-sm="3">
+<!--         <app-top-image 
+          [isAuth]="isAuth"
+          [loggedUser]="loggedUser"
+          ></app-top-image> -->
+      </ion-col>
+    </ion-row> 
+   
+<!--     <ion-row>
+      <ion-col 
+        *ngIf="selectedMedia" 
+        size-sm="6" 
+        class="ion-text-right col-padding"  
+        offset-sm="3"
+        >
+
+        <span class="text" style="color: gray;">방송안내 </span>
+        <ion-icon class="icon" name="chevron-forward"></ion-icon>
+      </ion-col>
+    </ion-row> -->
+        
+
     <ion-row>
-      <ion-col size-sm="6"   offset-sm="3">
+      <ion-col size-sm="6"   offset-sm="3" class="ion-no-padding">
         <ion-list >
           <ion-item-sliding  *ngFor="let media of renderedMedias" #slidingItem>
-            <ion-item style="padding:0px !important;" (click)="openMediaDetail(media)">
-              <ion-avatar slot="start">
+            <ion-item style="padding: 6px !important;" (click)="openMediaDetail(media)">
+<!--               <ion-avatar slot="start">
                 <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
-              </ion-avatar>
+              </ion-avatar> -->
+              <div>
+                <p class="gray size-12 padding-2" >{{media.category }}&nbsp;|&nbsp;{{media.whenCreated|date:'yyyy-MM-dd'}}&nbsp;|&nbsp;{{ media.author }}</p>
+                <p class="primary size-16 weight-regular padding-2"> {{media.title}}</p> 
+                <p class="gray size-12 padding-2">{{media.subTitle}}</p>
+              </div>
+
               <ion-label  class="ion-no-padding" >
-                <p class="font-gray-small" >{{media.category }}&nbsp;|&nbsp;{{media.whenCreated|date:'yyyy-MM-dd'}}&nbsp;|&nbsp;{{ media.author }}</p>
-                <p class="font-bold-black"> {{media.title}}</p> 
-                <p class="font-gray-small">{{media.subTitle}}</p>
+
               </ion-label>
             </ion-item>
             <ion-item-options *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">

@@ -114,24 +114,36 @@
   p.tertiary {
     color: var(--ion-color-tertiary) !important;
   }
-
+  p.success {
+    color: var(--ion-color-success) !important;
+  }
+  p {
+    margin: 0;
+    padding: 0;
+  }
   // font size
   p.size-10 {
+    font-family: "Noto Sans KR" !important;
     font-size: 10px;
   }
   p.size-12 {
+    font-family: "Noto Sans KR" !important;
     font-size: 12px;
   }
   p.size-14 {
+    font-family: "Noto Sans KR" !important;
     font-size: 14px;
   }
   p.size-16 {
+    font-family: "Noto Sans KR" !important;
     font-size: 16px;
   }
   p.size-18 {
+    font-family: "Noto Sans KR" !important;
     font-size: 18px;
   }
   p.size-20 {
+    font-family: "Noto Sans KR" !important;
     font-size: 20px;
   }
   // font bold
@@ -153,7 +165,19 @@
   p.weight-black {
     font-weight: 900 !important;
   }
-
+  // font padding
+  p.padding-2 {
+    padding: 2px !important;
+  }
+  p.padding-4 {
+    padding: 4px !important;
+  }
+  p.padding-6 {
+    padding: 6px !important;
+  }
+  p.padding-8 {
+    padding: 8px !important;
+  }
 
   // font black
   p.font-black-16-bold {

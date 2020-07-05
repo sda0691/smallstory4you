@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'src/app/auth/user.model';
-
+import { SegmentChangeEventDetail } from '@ionic/core';
 @Component({
   selector: 'app-members',
   templateUrl: './members.page.html',
@@ -22,7 +22,8 @@ export class MembersPage implements OnInit, OnDestroy {
   private Subs: Subscription[] = [];
   isUserAuthenticated = false;
   loggedUser: User;
-
+  selectedMember: Member;
+  setCategory = 'name';
   constructor(
     private membersService: MembersService,
     private modalCtrl: ModalController,
@@ -38,6 +39,9 @@ export class MembersPage implements OnInit, OnDestroy {
     this.Subs.push(this.membersService.members
       .subscribe(data => {
         this.loadedMembers = data;
+/*         if (this.loadedMembers) {
+          this.selectedMember = this.loadedMembers[0];
+        } */
       }));
 
     this.Subs.push(this.authService.loggedUser.subscribe(user => {
@@ -68,8 +72,8 @@ export class MembersPage implements OnInit, OnDestroy {
   }
 
   onMemberDetail(member: Member) {
-    // this.router.navigateByUrl('/places/tabs/discover');  // angular backward
-    // this.navCtrl.navigateBack('/places/tabs/discover'); // ionic backward
+    // this.selectedMember = member;
+
     this.modalCtrl.create({
       component: MemberDetailsComponent,
       componentProps: {selectedMember: member, loggedUser: this.loggedUser}
@@ -83,7 +87,7 @@ export class MembersPage implements OnInit, OnDestroy {
       if (resultData.role === 'confirm') {
         console.log('BOOKED!');
       }
-    });
+    }); 
   }
 
   onEdit(memberId: number, slidingItem: IonItemSliding) {
@@ -94,7 +98,42 @@ export class MembersPage implements OnInit, OnDestroy {
 /*   onLogout() {
     this.authService.logout();
   } */
-  
+
+  sortByName() {
+    
+  }
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+    /*     if (event.detail.value === '장년') {
+          this.selectedData = this.loadedData.filter(data => data.category === '장년');
+          this.setCategory = '장년';
+        } else {
+          this.selectedData = this.loadedData.filter(data => data.category === '어린이');
+          this.setCategory = '어린이';
+        } */
+        if (event.detail.value === 'name') {
+          this.loadedMembers.sort((a, b): number => { 
+            if (a.name < b.name) {return -1 ; }
+            if (a.name > b.name) {return 1; }
+            return 0;
+          });
+          console.log(this.loadedMembers) ;
+        } else if (event.detail.value === 'group') {
+            this.loadedMembers.sort((a, b): number => { 
+            if (a.ageStatus < b.ageStatus) {return -1 ; }
+            if (a.ageStatus > b.ageStatus) {return 1; }
+            return 0;
+          })
+        }
+        console.log(this.loadedMembers) ;
+ 
+/*         this.selectedData = this.loadedData.filter(data => data.category === event.detail.value);
+        if (this.selectedData) {
+          this.selectedPray = this.selectedData[this.arrayIndex];
+          this.getTodayPray();
+        } */
+    
+      }
+
   ngOnDestroy() {
     this.Subs.forEach(sub => sub.unsubscribe());
 /*     if (this.memberSub) {

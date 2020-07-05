@@ -1,6 +1,58 @@
 
    .img-thumb{
-/*     max-height: 50px;
-    display: inline; */
-    border: 1px solid rgb(224, 42, 103);
+    //max-height: 50px;
+    // display: inline; 
+    // border: 1px solid rgb(224, 42, 103);
 }
+
+.leftbox { 
+
+    // background-color:#f18c16;
+    float: left;
+    height:170px;
+    display:flex;
+    padding: 10px;
+    align-items:center;
+    border: 1px blue solid;
+    margin: 8px;
+    background-color: white;
+    
+    /* Uncomment next line to get horizontal align also */
+    /* justify-content:center; */
+
+} 
+.rightbox { 
+
+    // background-color:#f18c16;
+
+    height:170px;
+    text-align: center;
+    padding: 10px;
+    border: 1px blue solid;
+    margin: 8px;
+
+    /* Uncomment next line to get horizontal align also */
+    /* justify-content:center; */
+
+} 
+.myDiv {
+    background-color: rgb(236, 234, 234);
+   //  border:1px solid  purple ;
+   // background-color: white;
+   // margin: 25px;
+   color: purple;
+   height: 44px;
+   vertical-align: middle;
+   line-height: 44px;       /* The same as your div height */
+ }
+ 
+ ion-segment{
+   height:46px;
+ }
+ ion-segment-button{
+   text-align: center !important;
+   min-height:46px;
+ 
+   --color-checked: white;
+   --background-checked:var(--ion-color-success);
+ }

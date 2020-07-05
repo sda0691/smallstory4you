@@ -22,6 +22,7 @@
               [ngModel] = "selectedMedia.author"
               name="author"
               required
+              clearInput
               #authorCtrl="ngModel"
             ></ion-input>
           </ion-item>
@@ -35,6 +36,7 @@
               [ngModel]="selectedMedia.title"
               name="title"
               required
+              clearInput
               #titleCtrl="ngModel"
               maxlength="200"
             ></ion-input>
@@ -49,6 +51,7 @@
               [ngModel]="selectedMedia.subTitle"
               name="subTitle"
               required
+              clearInput
               #subTitleCtrl="ngModel"
               maxlength="200"
             ></ion-input>
@@ -62,6 +65,7 @@
               type="text"
               [ngModel]="selectedMedia.youtubeLink"
               name="youtubeLink"
+              clearInput
               #youtubeLinkCtrl="ngModel"
               maxlength="200"
             ></ion-input>

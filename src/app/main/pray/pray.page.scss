@@ -5,22 +5,42 @@
   width: 50px;
   padding: 0 !important;
   margin: 0 !important;
-  color: blue;
+
+  border: 1;
+  background-color:rgb(236, 234, 234);
+  // background-color:red;
 }
 
 .myDiv {
-   background-color:rgb(236, 234, 234);
+   background-color: rgb(236, 234, 234);
   //  border:1px solid  purple ;
   // background-color: white;
-   margin: 25px;
-  // color: purple;
-  height: 36px;
+  // margin: 25px;
+  color: purple;
+  height: 44px;
   vertical-align: middle;
-  line-height: 36px;       /* The same as your div height */
+  line-height: 44px;       /* The same as your div height */
 }
 
+ion-segment{
+  height:46px;
+}
 ion-segment-button{
-  min-height:38px;
+  text-align: center !important;
+  min-height:46px;
+
   --color-checked: white;
-  --background-checked:var(--ion-color-primary);
+  --background-checked:var(--ion-color-success);
+}
+.scrolling-wrapper {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+.card {
+  display: inline-block;
+}
+
+audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
+  background-color: rgb(225, 245, 220);
 }

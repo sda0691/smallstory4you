@@ -49,7 +49,7 @@ export class DetailMediaComponent implements OnInit {
 
   youtubeSanitizer(){
 
-    const path = 'https://www.youtube.com/embed/UPUkbZk0nGA' ;
+    const path = 'https://www.youtube.com/embed/' + this.selectedMedia.youtubeLink; // 'https://www.youtube.com/embed/UPUkbZk0nGA' ;
     this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(path);
 
   }

@@ -21,6 +21,7 @@
               name="dateOfPray"
               [(ngModel)] = "newDate"
               required
+              clearInput
               #dateOfPrayCtrl="ngModel"
             ></ion-datetime>
 <!--             <ion-input
@@ -41,6 +42,7 @@
               [ngModel] = "selectedPray.title"
               name="title"
               required
+              clearInput
               #titleCtrl="ngModel"
               maxlength="500"
             ></ion-input>
@@ -55,6 +57,7 @@
               [ngModel] = "selectedPray.verseOfPray"
               name="verseOfPray"
               required
+              clearInput
               #verseOfPrayCtrl="ngModel"
             ></ion-input>
           </ion-item>
@@ -81,6 +84,7 @@
               [ngModel] = "selectedPray.word"
               row="30"
               ngModel
+              clearInput
               name="word"
               required
               #wordCtrl="ngModel"

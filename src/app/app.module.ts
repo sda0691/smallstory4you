@@ -28,7 +28,6 @@ import { ResetPasswordComponent } from './auth/reset-password/reset-password.com
 import { EditMediaComponent } from './main/medias/edit-media/edit-media.component';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
 
-
 @NgModule({
   declarations: [
     AppComponent, 
@@ -51,14 +50,16 @@ import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-na
     AngularFireStorageModule,
     AngularFireAuthModule,
     NewsPageModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ],
 
   providers: [
     StatusBar,
     SplashScreen,
     CallNumber,
-    LaunchNavigator
+    LaunchNavigator,
+    
   ],
   bootstrap: [AppComponent]
 })

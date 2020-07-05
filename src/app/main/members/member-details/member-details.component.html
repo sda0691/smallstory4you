@@ -54,7 +54,7 @@
 
             <p
               class="font-gray-14" 
-              style="padding-bottom: 2px;"
+              style="padding-bottom: 2px;white-space: pre-wrap;"
               >{{ selectedMember.address }}</p>
           </ion-card-content>
         </ion-card>
@@ -67,6 +67,7 @@
           <ion-icon 
             (click)="onCall()"
             name="call" 
+            color="primary"
             style="font-size:30px">
           </ion-icon>
           <p class="font-gray-14">전화</p>
@@ -77,6 +78,7 @@
           <ion-icon 
            (click)="onText()"
             name="chatbox-ellipses" 
+            color="primary"
             style="font-size:30px">
           </ion-icon>
           <p class="font-gray-14">문자</p>
@@ -87,6 +89,7 @@
         <ion-icon 
          (click)="onOpenMaps()"
           name="home" 
+          color="primary"
           style="font-size:30px">
         </ion-icon>
         <p class="font-gray-14">지도</p>

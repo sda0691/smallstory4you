@@ -121,6 +121,7 @@ constructor(
               fileName: doc.payload.doc.data()['fileName'],
               homePhone: doc.payload.doc.data()['homePhone'] === undefined ? '' : doc.payload.doc.data()['homePhone'],
               businessPhone: doc.payload.doc.data()['businessPhone'] === undefined ? '' : doc.payload.doc.data()['businessPhone'],
+              ageStatus: doc.payload.doc.data()['ageStatus'] === undefined ? '' : doc.payload.doc.data()['ageStatus'],
             };
 
           });

@@ -12,6 +12,8 @@ import { Media } from './media.model';
 import { DetailMediaComponent } from './detail-media/detail-media.component';
 import { UpperCasePipe } from '@angular/common';
 import { EditMediaComponent } from './edit-media/edit-media.component';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 @Component({
   selector: 'app-medias',
@@ -29,6 +31,8 @@ export class MediasPage implements OnInit, OnDestroy {
   loadedMediaCategory = [];
   counter = 0;
   segCategory = 'all';
+  selectedMedia: Media;
+  trustedVideoUrl: SafeResourceUrl;
 
   private subs: Subscription[] = [];
   
@@ -39,7 +43,9 @@ export class MediasPage implements OnInit, OnDestroy {
     private mediaService: MdeiaService,
     private mediaCategoryService: MediaCategoryService,
     private fireAuth: AngularFireAuth,
-    private authService: AuthService
+    private authService: AuthService,
+    private domSanitizer: DomSanitizer,
+    private storage: AngularFireStorage,
   ) {
   }
 
@@ -48,6 +54,12 @@ export class MediasPage implements OnInit, OnDestroy {
       .subscribe(data => {
         if (data) {
           this.loadedData = data;
+          this.selectedMedia = this.loadedData[0];
+          if (this.selectedMedia) {
+             this.youtubeSanitizer(this.selectedMedia.youtubeLink);
+             this.getDownloadUrl();
+          }
+          console.log(this.selectedMedia.youtubeLink);
         }
       })
     );
@@ -60,6 +72,10 @@ export class MediasPage implements OnInit, OnDestroy {
     this.subs.push(this.authService.loggedUser.subscribe(user => {
       this.loggedUser = user;
     }));
+  }
+  youtubeSanitizer(youtubeLink){
+    const path =  'https://www.youtube.com/embed/' + youtubeLink ;
+    this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(path);
   }
   ionViewWillEnter() {
     this.authService.getCurrentUser().subscribe(user => {
@@ -90,6 +106,7 @@ export class MediasPage implements OnInit, OnDestroy {
                   } else {
                     this.filteredMedias = media.filter(data => data.category === this.segCategory);
                   }
+
                   this.resetCategory();
                   this.showMore();
 
@@ -133,15 +150,31 @@ export class MediasPage implements OnInit, OnDestroy {
     this.renderedMedias = [];
     this.counter = 0;
   }
+  getDownloadUrl() {
+    const storageFolderName = GlobalConstants.mediaCollection + '/'; // 'Members/';
+    const uploadedFileName = this.selectedMedia.fileName;
+    const fullPath = storageFolderName + uploadedFileName;
+    const fileRef = this.storage.ref(fullPath);
+
+    fileRef.getDownloadURL()
+    .subscribe(url => {
+      this.audioUrl = url;
+      console.log(url);
+    });
+  }
   openMediaDetail(media: Media) {
-    this.modalCtrl.create({
+    this.selectedMedia = media;
+    this.youtubeSanitizer(this.selectedMedia.youtubeLink);
+    this.getDownloadUrl();
+
+/*     this.modalCtrl.create({
       component: DetailMediaComponent,
       componentProps: {selectedMedia: media, loggedUser: this.loggedUser}
     })
     .then(modalEl => {
       modalEl.present();
       return modalEl.onDidDismiss();
-    });
+    }); */
   }
 
   openEditMedia(media: Media, slidingItem: IonItemSliding) {
@@ -179,7 +212,6 @@ export class MediasPage implements OnInit, OnDestroy {
       this.counter += 2;
     }
   }
-
 
   selectCategory(event) {
     // new solution without getting to firebase
