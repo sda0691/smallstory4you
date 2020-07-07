@@ -6,6 +6,7 @@ import { LoadingController, ModalController, AlertController, ToastController } 
 import { CreateAuthComponent } from './create-auth/create-auth.component';
 import { Observable } from 'rxjs';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { GlobalConstants } from '../common/global-constants';
 
 @Component({
   selector: 'app-auth',
@@ -17,7 +18,7 @@ export class AuthComponent implements OnInit {
   isLogin = true;
   passwordType = 'password';
   show_hide = 'show';
-
+  churchName = GlobalConstants.churchName;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -27,7 +28,9 @@ export class AuthComponent implements OnInit {
     private toastCtrl: ToastController
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
   showPassword() {
     this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
     this.show_hide = this.show_hide === 'show' ? 'hide' : 'show';
@@ -57,11 +60,13 @@ export class AuthComponent implements OnInit {
                code === 'auth/user-disabled' ||
                code === 'auth/user-not-found' ||
                code === 'auth/wrong-password') {
-                  message = 'Email and password is not correct.';
+                  message = '입력하신 정보가 정확하지 않습니다';
                } else {
                  message = error.message;
                }
-            this.presentToast(message);
+            // use alert than toast
+            // this.presentToast(message);
+            this.showAlert(message);
           }
         );
         /* authObs = this.authService.login(email, password);
@@ -153,9 +158,9 @@ export class AuthComponent implements OnInit {
 
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
-      buttons: ['Okay']
+      buttons: ['확인']
     })
     .then(alertEl => alertEl.present());
   }

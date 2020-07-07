@@ -6,6 +6,7 @@ export class Media {
         public author: string,
         public title: string,
         public subTitle: string,
+        public dateOfMedia: Date,
         public fileName: string,
         public category: string,
         public downloadUrl: string,

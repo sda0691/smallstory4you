@@ -68,7 +68,7 @@
     </ion-row>     
     <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() == 'ADMIN'">
       <ion-col size-sm="6" offset-sm="3">
-        <ion-button expand="block" color="primary" (click)="onDeleteMedia(selectedMedia)">
+        <ion-button expand="block" color="primary" (click)="onDeleteMedia()">
          Delete
         </ion-button>   
       </ion-col>

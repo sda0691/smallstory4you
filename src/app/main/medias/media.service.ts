@@ -36,9 +36,9 @@ export class MdeiaService {
     let query: AngularFirestoreCollection;
     if (category.toUpperCase() !== 'ALL') {
       query = this.firestore.collection<Media[]>(this.collectionName, ref => 
-        ref.where('category', '==', category).orderBy('whenCreated','desc').limit(500));
+        ref.where('category', '==', category).orderBy('dateOfMedia','desc').limit(500));
     } else {
-      query = this.firestore.collection(this.collectionName, ref => ref.orderBy('whenCreated','desc').limit(500));
+      query = this.firestore.collection(this.collectionName, ref => ref.orderBy('dateOfMedia','desc').limit(500));
     }
 
     // return this.firestore.collection(this.collectionName).snapshotChanges()
@@ -48,7 +48,6 @@ export class MdeiaService {
 
           let medias = [];
           medias = docArray.map(doc => {
-
             return {
               id: doc.payload.doc.id,
               groupid: doc.payload.doc.data()['groupid'],
@@ -56,6 +55,8 @@ export class MdeiaService {
               author: doc.payload.doc.data()['author'],
               title: doc.payload.doc.data()['title'],
               subTitle: doc.payload.doc.data()['subTitle'],
+              dateOfMedia: doc.payload.doc.data()['dateOfMedia'] === undefined ? undefined : 
+                new Date(doc.payload.doc.data()['dateOfMedia'].seconds * 1000),
               fileName: doc.payload.doc.data()['fileName'],
               category: doc.payload.doc.data()['category'],
               whenCreated: new Date(doc.payload.doc.data()['whenCreated'].seconds * 1000),
@@ -79,6 +80,8 @@ export class MdeiaService {
     return this.authService.loggedUser.pipe(
       take(1),
       map(user => {
+        const newDate = new Date(media.dateOfMedia);
+        newDate.setHours(0, 0, 0, 0);
         this.firestore.collection(this.collectionName)
         .add({
           groupId: this.authService.groupId,
@@ -86,6 +89,7 @@ export class MdeiaService {
           author: media.author,
           title: media.title,
           subTitle: media.subTitle,
+          dateOfMedia: newDate ,
           fileName: fileName,
           category: media.category,
           downloadUrl: '',

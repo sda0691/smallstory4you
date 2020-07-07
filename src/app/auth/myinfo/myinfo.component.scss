@@ -1,10 +1,39 @@
 ion-content{
 
-    --ion-background-color:rgb(236, 234, 234);
+    // --ion-background-color:rgb(236, 234, 234);
 }
 
 ion-col {
-    border-bottom: 1px solid rgb(236, 234, 234) ;
+    border-bottom: 1px solid var(--ion-color-success) ;
     background-color: white;
-    height: 40px;
-  }
+    height: 60px;
+    font-family: "Nato Sans KR";
+}
+
+// ion-header shadow image
+ion-header::after {
+    background-image: none;
+}
+
+.leftDiv
+{
+    // background-color: #efefef;
+    // color: #000;
+    position:relative;
+    // height: 50px;
+        width: 48%;
+    float: left;
+    line-height: 50px;
+}
+.rightDiv
+{
+    // background-color: #efefef;
+    //color: #000;
+    // height: 60px;
+    position:relative;
+    text-align: right;
+        width: 48%;
+    float: right;
+    line-height: 50px;
+    vertical-align: middle
+}

@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'src/app/auth/user.model';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
 @Component({
   selector: 'app-members',
   templateUrl: './members.page.html',

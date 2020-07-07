@@ -10,14 +10,15 @@ import { MembersPage } from './members.page';
 
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { NewsPageModule } from '../news/news.module';
-
+import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
+import { MediasPageModule } from '../medias/medias.module';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     MembersPageRoutingModule,
-    NewsPageModule
+    MediasPageModule
   ],
   declarations: [MembersPage, MemberDetailsComponent],
   entryComponents: [MemberDetailsComponent]

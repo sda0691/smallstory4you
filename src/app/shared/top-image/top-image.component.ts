@@ -15,7 +15,6 @@ import { User } from 'src/app/auth/user.model';
   styleUrls: ['./top-image.component.scss'],
 })
 export class TopImageComponent implements OnInit {
-  @Input() isAuth: boolean;
   @Input() loggedUser: User;
   
   isLoading = false;
@@ -42,13 +41,13 @@ export class TopImageComponent implements OnInit {
         if
           ((resData.role === 'login-success') || 
           (resData.role === 'signup-success')) {
-          this.isAuth = true;
+
         } else {
           if (resData.role === 'logout') {
-            this.isAuth = false;
+
           }
         }
-        this.isLoading = false;
+
         // this.isUserAuthenticated = true;
         this.router.navigate(['/main/tabs/medias']);
       });
@@ -67,10 +66,10 @@ export class TopImageComponent implements OnInit {
         if
           ((resData.role === 'login-success') || 
           (resData.role === 'signup-success')) {
-          this.isAuth = true;
+
         } else {
           if (resData.role === 'logout') {
-            this.isAuth = false;
+
             this.authService.logout();
           }
         }

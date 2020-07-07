@@ -11,16 +11,17 @@ import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
 import { TopImageComponent } from 'src/app/shared/top-image/top-image.component';
 import { CreateNewsComponent } from './create-news/create-news.component';
 import { DetailNewsComponent } from './detail-news/detail-news.component';
+import { MediasPageModule } from '../medias/medias.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NewsPageRoutingModule
+    NewsPageRoutingModule,
+    MediasPageModule
   ],
-  declarations: [NewsPage, MyinfoComponent, TopImageComponent, CreateNewsComponent, DetailNewsComponent],
-  entryComponents: [MyinfoComponent, TopImageComponent, CreateNewsComponent, DetailNewsComponent],
-  exports: [TopImageComponent]
+  declarations: [NewsPage,   CreateNewsComponent, DetailNewsComponent],
+  entryComponents: [  CreateNewsComponent, DetailNewsComponent],
 })
 export class NewsPageModule {}

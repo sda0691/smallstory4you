@@ -6,3 +6,15 @@
 .card {
     display: inline-block;
 }
+
+.news-top {
+    background: url(../../../assets/images/news-top.jpg) no-repeat center ;
+    padding: 0 0 0 0;
+    background-size: 100% 100%;
+    height: 160px;
+  }
+ion-content{
+    background-color: lightyellow; 
+    height: 100%;
+    width: 100%;
+}

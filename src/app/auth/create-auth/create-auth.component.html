@@ -1,9 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Login</ion-title>
+    <ion-title>멤버등록</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onCancel()">
-        <ion-icon name="close" slot="icon-only"></ion-icon>
+        <!-- <ion-icon name="close" slot="icon-only"></ion-icon> -->
+        <ion-icon name="exit-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -13,8 +14,9 @@
     <ion-grid>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
+          <div style="padding:0px 35px 0px 35px">
           <ion-item>
-            <ion-label position="floating">EMAIL*</ion-label>
+            <!-- <ion-label position="floating">EMAIL*</ion-label> -->
 <!--         <ion-input
               placeholder="Required"
               type="text"
@@ -24,17 +26,19 @@
               #emailCtrl="ngModel"
             ></ion-input> -->
             <ion-input
+              placeholder="이메일*"
               clearInput 
               type="email"
               name="email"
               formControlName="email"
             ></ion-input>            
           </ion-item>
+
           <p 
             *ngIf="!form.get('email').valid  && form.get('email').touched"
             class="error-message" 
             style="text-align: center;">
-            * Email is required
+            * 이메일을 입력하세요
           </p><br>
 
 <!--           <ion-item lines="none" class="ion-text-right"
@@ -45,7 +49,7 @@
           </div>
         </ion-item>  --> 
           <ion-item>
-            <ion-label position="floating">NAME*</ion-label>
+            <!-- <ion-label position="floating">NAME*</ion-label> -->
 <!--             <ion-input
               placeholder="Required"
               type="text"
@@ -55,6 +59,7 @@
               #nameCtrl="ngModel"
             ></ion-input> -->
             <ion-input
+              placeholder="이름*"
               clearInput
               type="text"
               formControlName="name"
@@ -65,7 +70,7 @@
             *ngIf="!form.get('name').valid  && form.get('name').touched"
             class="error-message" 
             style="text-align: center;">
-            * Name is required
+            * 이름을 입력하세요
           </p><br>
 
 <!--           <ion-item lines="none"
@@ -79,15 +84,15 @@
             <ion-label>Name is required</ion-label>
           </ion-item>  -->           
           <ion-item>
-            <p class="font-bold" style="margin: 0 !important;">Password Policy</p>
-            <p class="font-gray" style="margin: 0 !important;">
+<!--             <p class="black size-12" style="margin: 0 !important;">Password Policy</p>
+            <p class="gray size-12" style="margin: 0 !important;">
               at least 8 characters long<br>
               at least 1 character <br>
               at least 1 number  <br>
               at least 1 special character
-            </p>
+            </p> -->
 
-            <ion-label position="floating">PASSWORD*</ion-label>
+            <!-- <ion-label position="floating">PASSWORD*</ion-label> -->
 <!--             <ion-input
               placeholder="Required"
               type="password"
@@ -99,8 +104,10 @@
             ></ion-input> -->
             <ion-input
               formControlName="password"
+              placeholder="비밀번호*"
               clearInput
               minlength="6"
+              maxlength="20"
               [type]="passwordType"
             ></ion-input>   
             <ion-button 
@@ -109,28 +116,38 @@
               {{show_hide}}
             </ion-button>                     
           </ion-item>
+          <div style="padding-left:15px ">
+            <p class="gray size-12" >6-20자의 영문, 숫자, 특수문자</p>
+          </div>
+          
           <p 
             *ngIf="form.get('password').hasError('required')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * Password is required
+            * 비밀번호를 입력하세요
           </p>
           <p 
             *ngIf="form.get('password').hasError('minlength')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * Password should be at least 6 characters
+            * 비밀번호는 4-20 이어야 합니다
           </p>  
+          <p 
+            *ngIf="form.get('password').hasError('maxlength')  && form.get('password').touched"
+            class="error-message" 
+            style="text-align: center;">
+            * 비밀번호는 4-20 이어야 합니다.
+          </p>           
           <p 
             *ngIf="form.get('password').hasError('pattern')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * Wrong password format
+            * 6-20자의 영문, 숫자, 특수문자를 사용하세요
           </p>                  
           <br>
 
           <ion-item>
-            <ion-label position="floating">COMFIRM PASSWORD*</ion-label>
+            <!-- <ion-label position="floating">COMFIRM PASSWORD*</ion-label> -->
 <!--             <ion-input
               placeholder="Required"
               type="password"
@@ -143,6 +160,7 @@
             ></ion-input> -->
             <ion-input
               [type]="confirmPasswordType"
+              placeholder="비밀번호확인*"
               clearInput
               formControlName="confirmPassword"
             ></ion-input>    
@@ -151,19 +169,21 @@
               {{show_hide_confirm}}
             </ion-button>                    
           </ion-item>
+          
           <p 
             *ngIf="form.get('confirmPassword').hasError('required')  && form.get('confirmPassword').touched"
             class="error-message" 
             style="text-align: center;">
-            * Confirm Password is required
+            * 비밀번호 확인을 입력하세요
           </p> 
           <p 
             *ngIf="form.get('confirmPassword').hasError('equalTo')  && form.get('confirmPassword').touched"
             class="error-message" 
             style="text-align: center;">
-            * Password Mismatch
+            * 비밀번호와 일치하지 않습니다
           </p> 
           <br>
+        </div>
 <!-- 
           <ion-item class="ion-no-lines"
             *ngIf="(form.get('confirmPassword').hasError('equalTo') || form.get('confirmPassword').hasError('required') ) && form.get('confirmPassword').touched">
@@ -184,10 +204,13 @@
       </ion-row>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
-          <ion-button type="submit" color="primary" 
+          <ion-button 
+            type="submit" 
+            color="primary" 
             expand="block"
-            [disabled]='!form.valid'>
-          Signup
+            [disabled]='!form.valid'
+            style="padding:0px 35px 0px 35px">
+          확인
           </ion-button>
         </ion-col>
       </ion-row>

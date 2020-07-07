@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>말씀듣기</ion-title>
+    <ion-title>교회소식</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="onCancel()">
         <ion-icon name="close" ></ion-icon>
@@ -15,12 +15,14 @@
   <ion-grid >
     <ion-row>
       <ion-col size-sm="6" offset-sm="3" >
-        <p class="font-black-14-bold">{{selectedNews.author}}</p>
-        <p class="font-gray-10">{{selectedNews.whenCreated | date: 'y'}}년
+        <p class="black size-16 weight-bold">{{selectedNews.author}}</p>
+        <p class="gray size-12">{{selectedNews.whenCreated | date: 'y'}}년
            {{selectedNews.whenCreated | date: 'M'}}월
            {{selectedNews.whenCreated | date: 'd'}}일
         </p>
-        <p class="font-black-12" style="white-space: pre-wrap;">
+        <p 
+          class="black size-14 weight-reglular" 
+          style="white-space: pre-wrap;line-height: 2.0;">
           {{selectedNews.note}}
         </p>
         <div *ngIf="selectedNews.downloadUrl.length > 0">
@@ -33,7 +35,7 @@
     </ion-row>  
     <ion-row>
       <ion-col size-sm="6" offset-sm="3" class="ion-text-center">
-        <ion-button expand="block" color="primary" (click)="onDeleteNews(selectedNews)">
+        <ion-button expand="block" color="primary" (click)="onDeleteNews()">
           Delete
          </ion-button> 
       </ion-col>

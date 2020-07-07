@@ -1,54 +1,78 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>토론토 서부교회 내정보 </ion-title>
+    <ion-title>내정보 </ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onCancel()">
-        <ion-icon name="close"></ion-icon>
+        <!-- <ion-icon name="close"></ion-icon> -->
+        <ion-icon name="exit-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-label>기본정보</ion-label>
-  <ion-grid >
-    <ion-row>
-      <ion-col >
-        <ion-label>이메일</ion-label>
+
+  <ion-grid style=" padding:50px 35px 0px 35px">
+    <ion-row style="vertical-align: middle;">
+      <ion-col style="vertical-align: middle;" >
+ 
+          <div class="leftDiv" >
+            <p class="gray size-16">이메일</p>
+          </div>
+          
+          <div class="rightDiv" >
+            {{loggedUser.email}}
+          </div>
+     
       </ion-col>
-      <ion-col class="ion-text-right">
-        <ion-label> {{loggedUser.email}}</ion-label>
-      </ion-col>      
+<!--       <ion-col class="ion-text-right">
+        <p class="black size-16"> {{loggedUser.email}}</p>
+      </ion-col>   -->    
     </ion-row>    
-    <ion-row>
+    <ion-row class="ion-text-justify ion-text-center">
       <ion-col >
-        <ion-label>이름</ion-label>
-      </ion-col>
-      <ion-col class="ion-text-right">
-        <ion-label> {{loggedUser.name}}</ion-label>
+        <div class="leftDiv"  >
+          <p class="gray size-16">이름</p>
+        </div>
+        <div class="rightDiv" >
+          {{loggedUser.name}}
+        </div>
       </ion-col>        
     </ion-row>   
+<!--     <ion-row>
+      <ion-col >
+        <div class="leftDiv" >
+          <p class="gray size-16">생년월일</p>
+        </div>
+        <div class="rightDiv" >
+          {{loggedUser.name}}
+        </div>
+      </ion-col>   
+    </ion-row>  -->  
     <ion-row>
       <ion-col >
-        <ion-label>생년월일</ion-label>
-      </ion-col>
-      <ion-col class="ion-text-right">
-        <ion-label> </ion-label>
-      </ion-col>       
-    </ion-row>   
-    <ion-row>
-      <ion-col >
-        <ion-label>비밀번호</ion-label>
-      </ion-col>
-      <ion-col class="ion-text-right">
-        <ion-button 
+
+        <div class="leftDiv"  >
+          <p class="gray size-16">비밀번호</p>
+        </div>
+        
+        <div class="rightDiv" >
+          <ion-button 
           color="primary" 
-          size="small" 
-          fill="outline" (click)="onResetPassword()">변경</ion-button>
-      </ion-col>        
+          slot="end"
+          size="medium" 
+          fill="clear" (click)="onResetPassword()">
+          변경</ion-button>
+        </div>
+      </ion-col> 
     </ion-row>       
   </ion-grid>
+<br>
 
-    <ion-button expand="full" color="primary" (click) = "onLogout()">Logout</ion-button>
+<div style="padding:0px 35px 0px 35px">
+  <ion-button expand="full" 
+   color="primary" (click) = "onLogout()">로그아웃</ion-button>
+</div>
+
 
 </ion-content>

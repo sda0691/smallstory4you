@@ -16,6 +16,17 @@
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-item>
+            <ion-label position="floating">날짜</ion-label>
+            <ion-datetime
+              display-format="YYYY/MM/DD"
+              name="dateOfMedia"
+              [(ngModel)] = "newDate"
+              required
+              clearInput
+              #dateOfMediaCtrl="ngModel"
+            ></ion-datetime>
+          </ion-item>          
+          <ion-item>
             <ion-label position="floating">설교자</ion-label>
             <ion-input
               type="text"
@@ -118,7 +129,14 @@
         <ion-col size-sm="6" offset-sm="3">
             <ion-button type="submit" [disabled]='!f.valid' expand="full" color="primary" >Save</ion-button>
         </ion-col>
-      </ion-row>       
+      </ion-row>     
+      <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() == 'ADMIN'">
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button expand="block" color="primary" (click)="onDeleteMedia()">
+           Delete
+          </ion-button>   
+        </ion-col>
+      </ion-row>          
     </ion-grid>
   </form>
 </ion-content>

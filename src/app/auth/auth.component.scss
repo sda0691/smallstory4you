@@ -3,3 +3,27 @@
   margin-top: 20px;
   text-align: center;
 }
+// ion-header shadow image
+ion-header::after {
+  background-image: none;
+}
+
+ion-input,
+ion-input[type="email"],
+ion-input[type="textarea"]
+{   
+    font-size:14px !important;
+    color: black !important;
+}
+
+
+  // The underline is actually a part of the ion-item, not the ion-input
+   ion-item {
+    --border-color: transparent!important;
+    --highlight-height: 0;
+      // border: 1px solid var(--ion-color-success);
+      border-bottom: 1px solid var(--ion-color-success);
+      border-radius: 0px;
+    
+  }
+ 

@@ -71,7 +71,7 @@
       </ion-row>     
       <ion-row *ngIf="loggedUser && loggedUser.role.toUpperCase() == 'ADMIN'">
         <ion-col size-sm="6" offset-sm="3">
-          <ion-button expand="block" color="primary" (click)="onDeletePray(selectedPray)">
+          <ion-button expand="block" color="primary" (click)="onDeletePray()">
            Delete
           </ion-button>   
         </ion-col>

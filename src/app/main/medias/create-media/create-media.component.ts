@@ -92,16 +92,9 @@ export class CreateMediaComponent implements OnInit {
           this.router.navigate(['/main/tabs/medias']);
         }
         , error => {
+          loadingEl.dismiss();
           this.showAlert(error.message);
         });
-/*           .then(() => {
-            loadingEl.dismiss();
-            this.modalCtrl.dismiss(null, 'media-upload-success');
-            this.router.navigate(['/main/tabs/medias']);
-          })
-          .catch(error => {
-            this.showAlert(error.message);
-          }); */
 
       }).catch(error => {
         loadingEl.dismiss();

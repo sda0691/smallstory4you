@@ -123,7 +123,7 @@ export class CreateAuthComponent implements OnInit {
     .then(alertEl => alertEl.present());
   }
 
-  onFormSubmit(form: NgForm) {
+  onFormSubmit() {
     if (!this.form.value) {
       return;
     }

@@ -1,11 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>교인주소록</ion-title> 
-    <ion-buttons 
-      *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'"
-      slot="end">
-      <ion-button [routerLink]="['/','main','tabs','members','new']">
-        <ion-label>등록하기</ion-label>&nbsp;
+    <ion-buttons slot="end">
+        <app-top-image [loggedUser]="loggedUser">
+        </app-top-image> 
+      <ion-button 
+        *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'"
+        [routerLink]="['/','main','tabs','members','new']">
+        <ion-label>등록</ion-label>&nbsp;
         <ion-icon name="add-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -19,7 +21,9 @@
             [(ngModel)] = "setCategory"
             class="ion-no-padding" >
             <ion-segment-button class="ion-no-padding"  value="name">
-              이름으로 정렬
+              <ion-label class="segment">이름으로 정렬</ion-label>
+            
+              
               <!-- <p style="color: purple; font-size:12px">장년기도력</p> -->
              <!--  <ion-label class="ion-no-padding segment">장년기도력</ion-label> -->
             </ion-segment-button>

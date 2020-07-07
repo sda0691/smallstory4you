@@ -14,6 +14,8 @@ import { UpperCasePipe } from '@angular/common';
 import { EditMediaComponent } from './edit-media/edit-media.component';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { GlobalConstants } from 'src/app/common/global-constants';
+import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
+import { AuthComponent } from 'src/app/auth/auth.component';
 
 @Component({
   selector: 'app-medias',
@@ -33,6 +35,7 @@ export class MediasPage implements OnInit, OnDestroy {
   segCategory = 'all';
   selectedMedia: Media;
   trustedVideoUrl: SafeResourceUrl;
+  selectVideoFormat = 'fullvideo';
 
   private subs: Subscription[] = [];
   
@@ -162,6 +165,10 @@ export class MediasPage implements OnInit, OnDestroy {
       console.log(url);
     });
   }
+  onChangeVideoFormat(event) {
+    this.selectVideoFormat = event.detail.value;
+    console.log(this.selectVideoFormat);
+  }
   openMediaDetail(media: Media) {
     this.selectedMedia = media;
     this.youtubeSanitizer(this.selectedMedia.youtubeLink);
@@ -181,7 +188,7 @@ export class MediasPage implements OnInit, OnDestroy {
     slidingItem.close();
     this.modalCtrl.create({
       component: EditMediaComponent,
-      componentProps: {selectedMedia: media}
+      componentProps: {selectedMedia: media, loggedUser: this.loggedUser}
     })
     .then(modalEl => {
       modalEl.present();
@@ -197,19 +204,19 @@ export class MediasPage implements OnInit, OnDestroy {
     });
   }
 
-  private showMore() {
+  showMore() {
     let count = 0;
     if (this.filteredMedias) {
       for (let i = this.counter + 1 ; i <= this.filteredMedias.length; i++){
         if (this.segCategory.toUpperCase() === 'ALL' || this.filteredMedias[i - 1].category === this.segCategory) {
           this.renderedMedias.push(this.filteredMedias[i - 1]);
           count++;
-          if (count % 2 === 0) {
+          if (count % 10 === 0) {
             break;
           }
         }
       }
-      this.counter += 2;
+      this.counter += 10;
     }
   }
 
@@ -225,6 +232,7 @@ export class MediasPage implements OnInit, OnDestroy {
     }
     this.showMore();
   }
+
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());

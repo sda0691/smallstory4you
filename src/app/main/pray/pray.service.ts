@@ -29,7 +29,7 @@ export class PrayService {
   }
 
   fetchPrays() {
-    return this.firestore.collection(this.collectionName, ref => ref.orderBy('dateOfPray', 'desc').limit(7))
+    return this.firestore.collection(this.collectionName, ref => ref.orderBy('dateOfPray', 'desc').limit(50))
       .snapshotChanges()
       .pipe(
         map ( docArray  => {

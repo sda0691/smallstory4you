@@ -7,21 +7,32 @@
      <ion-buttons slot="primary">
       <ion-label *ngIf="isUserAuthenticated">내정보</ion-label>
     </ion-buttons>  -->
-    <ion-title>교회소식</ion-title> 
-    <ion-buttons 
-      slot="end" 
-      *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
-      <ion-button (click)="openAddNews()">
-        <ion-label>소식등록</ion-label>&nbsp;
+    <ion-title>교회소식</ion-title>
+    <ion-buttons slot="end" >
+      <app-top-image 
+        [loggedUser]="loggedUser">
+      </app-top-image> 
+      <ion-button 
+        (click)="openAddNews()"
+        *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'">
+        <ion-label>등록</ion-label>&nbsp;
         <ion-icon name="add-circle" ></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <div class="news-top" >
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-header>
 
-<ion-content>
-<ion-grid class="ion-no-padding">
-  <ion-row >
+<ion-content color="light" >
+<ion-grid >
+<!--   <ion-row >
     <ion-col class="ion-no-padding" size-sm="6" offset-sm="3">
       <app-top-image 
       [isAuth]="isAuth"
@@ -29,38 +40,103 @@
       >
       </app-top-image>
     </ion-col>
-  </ion-row>
-<!--   <ion-row>
-    <ion-col size-sm="6" offset-sm="3" class=" ion-no-padding">
-      <ion-button 
-      color="primary" 
-      class="ion-no-padding" 
-      expand="full" routerLink="/main/tabs/news/new">Post News</ion-button>
-    </ion-col>
   </ion-row> -->
-  <ion-row *ngFor="let news of loadedData">
+  <ion-row *ngFor="let news of renderedNews">
+    <ion-col size-sm="6" offset-sm="3"  >
+      <div style="background-color: rgb(139, 195, 245); height: 36px; ">
+        <p 
+          class="white size-16 weight-bold "
+          style="vertical-align: middle;line-height:36px;padding-left:6px">
+          유튜브 예언 세미나</p>
+
+      </div>
+      <div style="padding:6px;background-color: white">
+       
+<!--           <p class="black size-14 weight-medium padding-2S; float:right">
+            {{news.author}}
+          </p -->
+          <div>
+            <span 
+              style="float: right;"
+              class="black size-14 weight-medium padding-6;"
+              >{{news.author}}
+              <span 
+              class="gray size-10 padding-2"
+              style="float:right">
+              ({{news.whenCreated | date: 'M'}} 월
+              {{news.whenCreated | date: 'd'}} 일 )
+            </span> 
+            </span>
+             
+          </div>
+          
+
+
+
+        <p 
+          class="black size-14 weight-light padding-8"
+          style="white-space: pre-wrap;line-height: 2.0;"
+        >{{(news.note)?.substring(0,60)}}</p>
+        <p></p>
+      </div>
+
+      <div style="text-align: center;background-color: white">
+        <ion-button
+          fill="clear"
+          color="primary"
+          (click)='openNewsDetail(news)'
+        >
+        내용 더보기
+        </ion-button>          
+      </div>
+      <div 
+        *ngIf="news.downloadUrl.length === 1"
+        style="background-color: white; height: 200px; padding: 10px ">
+        <img src="{{news.downloadUrl[0]}}"  height="180" width="100%" ><p></p> 
+      </div>        
+      <div 
+        *ngIf="news.downloadUrl.length > 1"
+        class="scrolling-wrapper" 
+        style="background-color: white; height: 100px; ">
+        <div 
+          class="card" *ngFor="let url of news.downloadUrl ; let i=index" 
+          style="width:100px;padding: 1px; ">
+            <img src="{{url}}"  height="100" width="100%" ><p></p> 
+        </div>
+      </div>          
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-button 
+        (click)="showMore()"
+        fill="clear"
+        [disabled]="renderedNews.length===0 || (loadedData && counter >= loadedData.length)"
+      >
+        더보기
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row *ngFor="let news of loadedData">
     <ion-col size-sm="6" offset-sm="3"  >
       <ion-card class="ion-no-padding">
         <ion-card-header>
           <ion-card-title>
-            <p class="font-black-14-bold">{{news.author}}</p>
-            <p class="font-gray-10">
+            <p class="black size-14 weight-medium padding-2S">{{news.author}}</p>
+            <p class="gray size-10 padding-2">
               {{news.whenCreated | date: 'M'}} 월
               {{news.whenCreated | date: 'd'}} 일
             </p>
           </ion-card-title>
         </ion-card-header>
-        <ion-card-content style="white-space: pre-wrap;">
-          <p class="font-black-12">{{(news.note)?.substring(0,30)}}</p>
+        <ion-card-content style="white-space: pre-wrap;line-height: 10.0;">
+          <p 
+            class="black size-14 weight-light"
+            style="white-space: pre-wrap;line-height: 2.0;"
+          >{{(news.note)?.substring(0,60)}}</p>
+          <p></p>
         </ion-card-content>
         <div>
-<!--           <ion-button
-            fill="clear"
-            color="primary"
-            [routerLink]="['/', 'main','tabs','news', news.id]"
-          >
-          More
-          </ion-button> -->
           <ion-button
             fill="clear"
             color="primary"
@@ -69,18 +145,13 @@
           내용 더보기
           </ion-button>          
         </div>
-<!--           <div >
-            <div  *ngFor="let file of news.fileName ; let i=index" style="width:120px;padding: 1px">
-                <p>{{file}}</p>
-            </div>
-          </div> -->
         <div class="scrolling-wrapper">
           <div class="card" *ngFor="let url of news.downloadUrl ; let i=index" style="width:120px;padding: 1px">
-              <img src="{{url}}"  height="120" width="100%" ><p></p> 
+              <img src="{{url}}"  height="100" width="100%" ><p></p> 
           </div>
         </div>          
       </ion-card>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
 </ion-grid>
 </ion-content>

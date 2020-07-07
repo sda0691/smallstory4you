@@ -5,3 +5,24 @@
     text-align: center;
 }
 
+// ion-header shadow image
+ion-header::after {
+    background-image: none;
+}
+ion-input,
+ion-input[type="email"],
+ion-input[type="textarea"]
+{   
+    // --placeholder-color: var(--ion-color-success) ;
+    font-size:14px ;
+    color: black ;
+    font-family: "Noto Sans KR";
+}
+ion-item {
+    --border-color: transparent!important;
+    --highlight-height: 0;
+      // border: 1px solid var(--ion-color-success);
+      border-bottom: 1px solid var(--ion-color-success);
+      border-radius: 0px;
+    
+  }

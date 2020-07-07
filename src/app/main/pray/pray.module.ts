@@ -10,13 +10,17 @@ import { PrayPage } from './pray.page';
 import { CreatePrayComponent } from './create-pray/create-pray.component';
 import { DetailPrayComponent } from './detail-pray/detail-pray.component';
 import { EditPrayComponent } from './edit-pray/edit-pray.component';
+import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
+import { AuthComponent } from 'src/app/auth/auth.component';
+import { MediasPageModule } from '../medias/medias.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    PrayPageRoutingModule
+    PrayPageRoutingModule,
+    MediasPageModule
   ],
   declarations: [PrayPage, CreatePrayComponent, DetailPrayComponent, EditPrayComponent],
   entryComponents: [CreatePrayComponent, DetailPrayComponent, EditPrayComponent]

@@ -1,5 +1,26 @@
-<!-- <ion-img class="test"></ion-img> -->
-<div class="hero-image" style="height: 160px;" >
+<ion-button
+  (click) ="onMyInfo()"
+  *ngIf="loggedUser" 
+>
+  <P class="size-14 weight-bold">내정보<P>
+<!--   <ion-icon 
+    name="person-circle-outline"
+    style="font-size:25px"
+    >
+  </ion-icon> -->
+</ion-button> 
+
+<ion-button
+  *ngIf="!loggedUser"
+  (click)="onLogin()"
+>
+  <P class="black size-14 weight-bold">로그인<P></P>
+<!--   <ion-icon                   
+    style="font-size:25px"
+    name="power-outline">
+  </ion-icon> -->
+</ion-button>
+<!-- <div class="hero-image" style="height: 160px;" >
   <ion-grid>
     <ion-row>
       <ion-col class="ion-text-right">
@@ -12,6 +33,5 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  
-</div> 
+</div>  -->
 

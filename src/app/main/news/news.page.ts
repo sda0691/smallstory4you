@@ -30,7 +30,9 @@ export class NewsPage implements OnInit, OnDestroy {
   downloadUrls = [];
   fileRef: AngularFireStorageReference;
   isLoading = false;
-  
+  renderedNews = [];
+  counter = 0;
+
   constructor(
     private newsService: NewsService,
     private modalCtrl: ModalController,
@@ -85,8 +87,12 @@ export class NewsPage implements OnInit, OnDestroy {
             }
             this.subs.push(this.newsService.fetchNews() // get all records, then filter by category
               .subscribe(news => {
-                console.log(news);
                 this.loadedData = news;
+
+                this.counter = 0;
+                this.renderedNews = [];
+                this.showMore();
+                
                 loadingEl.dismiss();
               }, error => {
                 loadingEl.dismiss();
@@ -96,6 +102,21 @@ export class NewsPage implements OnInit, OnDestroy {
           }));
       });
     }));
+  }
+  showMore() {
+    let count = 0;
+    if (this.loadedData) {
+      for (let i = this.counter + 1 ; i <= this.loadedData.length; i++){
+        
+          this.renderedNews.push(this.loadedData[i - 1]);
+          count++;
+          if (count % 2 === 0) {
+            break;
+          }
+
+      }
+      this.counter += 2;
+    }
   }
   openAddNews() {
     this.modalCtrl.create({

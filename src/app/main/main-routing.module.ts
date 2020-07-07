@@ -16,20 +16,20 @@ const routes: Routes = [
             path: '',
             loadChildren: () => import('./news/news.module').then( m => m.NewsPageModule)
           },
-          {
+/*           {
             // new should be before :newsId
             path: 'new',
             loadChildren: () => import('./news/create-news/create-news.module').then( m => m.CreateNewsPageModule)
-          },
-          {
+          }, */
+/*           {
             // new should be before :newsId
             path: 'edit/:newsId',
             loadChildren: () => import('./news/edit-news/edit-news.module').then( m => m.EditNewsPageModule)
-          },
-          {
+          }, */
+/*           {
             path: ':newsId',
             loadChildren: () => import('./news/news-details/news-details.module').then( m => m.NewsDetailsPageModule)
-          },
+          }, */
         ]
       },
       {

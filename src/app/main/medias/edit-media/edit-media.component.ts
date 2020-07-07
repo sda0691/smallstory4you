@@ -21,7 +21,7 @@ export class EditMediaComponent implements OnInit {
   task: AngularFireUploadTask;
   selectedFile: string;
   uploadProgress = 0;
-
+  newDate = '';
   constructor(
     private platform: Platform,
     private mediaService: MdeiaService,
@@ -34,6 +34,10 @@ export class EditMediaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.selectedMedia.dateOfMedia !== undefined) {
+      this.newDate = this.selectedMedia.dateOfMedia.toISOString();
+    }
+    
     if ((
       this.platform.is('mobile') &&
       !this.platform.is('hybrid') ||
@@ -75,6 +79,7 @@ export class EditMediaComponent implements OnInit {
 
       // update database
       let record = {};
+      record['dateOfMedia'] = new Date( inputData.form.value.dateOfMedia);
       record['author'] = inputData.form.value.author;
       record['title'] = inputData.form.value.title;
       record['subTitle'] = inputData.form.value.subTitle;
@@ -122,6 +127,32 @@ export class EditMediaComponent implements OnInit {
     }); 
   }
 
+  onDeleteMedia() {
+    console.log('member media');
+    this.alertCtrl.create({
+      header: 'Warning',
+      message: 'Are you sure to delete?',
+      buttons: [{text: 'Okey',
+        handler: () => {
+          this.mediaService.delete_media(this.selectedMedia);
+          this.modalCtrl.dismiss();
+          this.router.navigate(['/main/tabs/medias']);
+        }
+      },
+      {
+        text: 'No',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+      }
+    ]
+    }). then (alertEl => {
+      alertEl.present();
+    });
+    // this.membersService.delete_student(this.selectedMember.id);
+
+  }
+  
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }

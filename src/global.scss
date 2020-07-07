@@ -99,6 +99,9 @@
     font-family: 'Noto Sans KR';
   }
   // color
+  p {
+    margin:0px;
+  }
   p.black {
     color: black !important;
   }
@@ -117,10 +120,7 @@
   p.success {
     color: var(--ion-color-success) !important;
   }
-  p {
-    margin: 0;
-    padding: 0;
-  }
+
   // font size
   p.size-10 {
     font-family: "Noto Sans KR" !important;
@@ -166,6 +166,9 @@
     font-weight: 900 !important;
   }
   // font padding
+  p.padding-0 {
+    padding: 0px !important;
+  }
   p.padding-2 {
     padding: 2px !important;
   }
@@ -178,6 +181,94 @@
   p.padding-8 {
     padding: 8px !important;
   }
+  p.padding-10 {
+    padding: 10px !important;
+  }
+  // span color
+  span.black {
+    color: black !important;
+  }
+  span.white {
+    color: white !important;
+  }
+  span.gray {
+    color: gray !important;
+  }
+  span.primary {
+    color: var(--ion-color-primary) !important;
+  }
+  span.tertiary {
+    color: var(--ion-color-tertiary) !important;
+  }
+  span.success {
+    color: var(--ion-color-success) !important;
+  }
+
+  // font size
+  span.size-10 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 10px;
+  }
+  span.size-12 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 12px;
+  }
+  span.size-14 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 14px;
+  }
+  span.size-16 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 16px;
+  }
+  span.size-18 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 18px;
+  }
+  span.size-20 {
+    font-family: "Noto Sans KR" !important;
+    font-size: 20px;
+  }
+  // font bold
+  span.weight-thin {
+    font-weight: 100 !important;
+  }
+  span.weight-light {
+    font-weight: 300 !important;
+  }
+  span.weight-regular {
+    font-weight: 400 !important;
+  }
+  span.weight-medium {
+    font-weight: 500 !important;
+  }
+  span.weight-bold {
+    font-weight: 700 !important;
+  }
+  span.weight-black {
+    font-weight: 900 !important;
+  }
+  // font padding
+  span.padding-2 {
+    padding: 2px !important;
+  }
+  span.padding-4 {
+    padding: 4px !important;
+  }
+  span.padding-6 {
+    padding: 6px !important;
+  }
+  span.padding-8 {
+    padding: 8px !important;
+  }
+
+  p.error-message {
+    color: red !important;
+    font-size: 12px;
+    font-family: "Noto Sans KR";
+  }
+
+
 
   // font black
   p.font-black-16-bold {
@@ -359,13 +450,6 @@ p.font-white-12 {
       color: gray;
       font-size:10px;
   }
-  p.error-message {
-    color: red !important;
-    font-size: 10px;
-  }
 
 
-  p.error-message {
-    color: red !important;
-    font-size: 10px;
-  }
+ 

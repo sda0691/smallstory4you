@@ -63,7 +63,10 @@ export class PrayPage implements OnInit, OnDestroy {
         if (data) {
           this.loadedData = data;
           this.selectedData = this.loadedData.filter(data => data.category === this.setCategory);
+          this.selectedData = this.selectedData.slice(0, 7);
           this.selectedPray = this.selectedData[this.arrayIndex];
+          console.log(this.loadedData);
+          console.log(this.selectedData);
           this.getTodayPray();
         }
       })
@@ -89,6 +92,7 @@ export class PrayPage implements OnInit, OnDestroy {
     }
   }
   getDownloadUrl() {
+    this.audioUrl = '';
     const storageFolderName = GlobalConstants.prayCollection + '/'; // 'Members/';
     const uploadedFileName = this.selectedPray.fileName;
     const fullPath = storageFolderName + uploadedFileName;
@@ -116,6 +120,7 @@ export class PrayPage implements OnInit, OnDestroy {
       this.dayNextIconColor = 'black';
     }
     this.selectedPray = this.selectedData[this.arrayIndex];
+    this.getTodayPray();
   }
   onNextDay() {
     if (this.arrayIndex  === 0) {
@@ -134,8 +139,9 @@ export class PrayPage implements OnInit, OnDestroy {
       this.dayNextIconColor = 'black';        
     }
     this.selectedPray = this.selectedData[this.arrayIndex];
+    this.getTodayPray();
   }
-  
+
   ionViewWillEnter() {
     this.arrayIndex = 0;
     this.authService.getCurrentUser().subscribe(user => {
@@ -205,6 +211,7 @@ export class PrayPage implements OnInit, OnDestroy {
     this.dayNextIconColor = 'light';
 
     this.selectedData = this.loadedData.filter(data => data.category === event.detail.value);
+    this.selectedData = this.selectedData.slice(0, 7);
     if (this.selectedData) {
       this.selectedPray = this.selectedData[this.arrayIndex];
       this.getTodayPray();

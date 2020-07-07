@@ -25,19 +25,31 @@ import { TopImageComponent } from './shared/top-image/top-image.component';
 import { NewsPageModule } from './main/news/news.module';
 // import { ChangePasswordComponent } from './auth/change-password/change-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+
 import { EditMediaComponent } from './main/medias/edit-media/edit-media.component';
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { MyinfoComponent } from './auth/myinfo/myinfo.component';
 
 @NgModule({
   declarations: [
     AppComponent, 
-    AuthComponent, 
+  
     CreateAuthComponent, 
-    // ChangePasswordComponent,
     ResetPasswordComponent, 
-    EditMediaComponent
+    EditMediaComponent,
+    // MyinfoComponent,
+    // AuthComponent,
+    // TopImageComponent
   ],
-  entryComponents: [AuthComponent, CreateAuthComponent, ResetPasswordComponent, EditMediaComponent],
+  entryComponents: [ 
+    CreateAuthComponent, 
+    ResetPasswordComponent, 
+    EditMediaComponent, 
+    // MyinfoComponent, 
+    // AuthComponent, 
+    // TopImageComponent
+  ],
 
   imports: [
     BrowserModule,
@@ -51,6 +63,7 @@ import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-na
     AngularFireAuthModule,
     NewsPageModule,
     ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     
   ],
 

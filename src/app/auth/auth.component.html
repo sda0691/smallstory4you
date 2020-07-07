@@ -1,65 +1,86 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Login</ion-title>
+    <ion-title>{{churchName}}</ion-title>
     <ion-buttons slot="primary">
       <ion-button (click)="onCancel()">
-        <ion-icon name="close" slot="icon-only"></ion-icon>
+        <!-- <ion-icon name="close" slot="icon-only"></ion-icon> -->
+        <ion-icon name="exit-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <form #f="ngForm" (ngSubmit)="onFormSubmit(f)">
-    <ion-grid>
-      <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <!-- <ion-label position="floating">E-Mail</ion-label> -->
-            <ion-input
-              placeholder="EMAIL"
-              clearInput
-              type="text"
-              ngModel
-              name="email"
-              required
-              #emailCtrl="ngModel"
-            ></ion-input>
-          </ion-item>
-          <p 
-            *ngIf="!emailCtrl.valid && emailCtrl.touched"
-            class="error-message" 
-            style="text-align: center;">
-            * Email is required
-          </p> 
-          <br>
-<!--           <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched">
-            <ion-label>Should be a valid email address</ion-label>
-          </ion-item> -->
+    <ion-grid class="ion-text-center "  
+      style="padding:70px 35px 0px 35px">
+      
+      <ion-row >
+        <ion-col  >
+          <div style="padding-bottom:20px;">
+            <p 
+              class="black size-20 weight-bold padding-6"
+              style="color:var(--ion-color-success) !important"
+              >로그인</p>
+          </div>
+          <div >
+            <p class="black size-14 weight-regular ">
+              안녕하세요!
+            </p>
+            <p class="black size-14 weight-regular padding-4">
+              {{churchName}} 홈페이지에 오신 것을 환영합니다
+            </p>            
+          </div>  
 
-          <ion-item>
-<!--             <ion-label position="floating">Password</ion-label> -->
-            <ion-input
-              placeholder="PASSWORD"
-              clearInput
-              [type]="passwordType"
-              ngModel
-              name="password"
-              required
-              #passwordCtrl="ngModel"
-              minlength="6"
-            ></ion-input>
-            <ion-button 
+          <div >
+            <ion-item >
             
-              fill="clear" slot="end" expand="block" (click)="showPassword()">
-              {{show_hide}}
-            </ion-button>
-          </ion-item>
-          <p 
-            *ngIf="!passwordCtrl.valid && passwordCtrl.touched"
-            class="error-message" 
-            style="text-align: center;">
-            * Password is required
-          </p> 
+              <ion-input
+                placeholder="이메일"
+                clearInput
+                type="email"
+                ngModel
+                name="email"
+                required
+                #emailCtrl="ngModel"
+              ></ion-input>
+            </ion-item>
+            <p 
+              *ngIf="!emailCtrl.valid && emailCtrl.touched"
+              class="error-message" 
+              style="text-align: center;padding:0px 30px 0px 30px">
+              * 이메일을 입력하세요
+            </p> 
+            <br>
+  <!--           <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched">
+              <ion-label>Should be a valid email address</ion-label>
+            </ion-item> -->
+  
+            <ion-item >
+  <!--             <ion-label position="floating">Password</ion-label> -->
+              <ion-input
+                placeholder="비밀번호 입력"
+                clearInput
+                [type]="passwordType"
+                ngModel
+                name="password"
+                required
+                #passwordCtrl="ngModel"
+                minlength="6"
+              ></ion-input>
+              <ion-button 
+              
+                fill="clear" slot="end" expand="block" (click)="showPassword()">
+                {{show_hide}}
+              </ion-button>
+            </ion-item>
+            <p 
+              *ngIf="!passwordCtrl.valid && passwordCtrl.touched"
+              class="error-message" 
+              style="text-align: center;">
+              * 비밀번호를 입력하세요
+            </p> 
+          </div>      
+          
           <br>
 
 <!--           <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched">
@@ -68,22 +89,36 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col size-sm="6" offset-sm="3">
+        <ion-col  >
           <ion-button type="submit" color="primary" 
             expand="block"
             [disabled]='!f.valid'>
-          Login
+          로그인
           </ion-button>
         </ion-col>
       </ion-row>
       <ion-row class="rowBottom">
-        <ion-col size-sm="3" offset-sm="3" >
-          <ion-button color="light" expand="block" (click)="onSignup()" >SIGN-UP</ion-button>
+        <ion-col size-sm="3" offset-sm="3"  >
+          <ion-button color="success" fill="clear" (click)="onSignup()" >
+            <ion-icon name="person-add"></ion-icon>
+          <ion-label>멤버등록</ion-label>
+        </ion-button> 
         </ion-col>
-        <ion-col size-sm="3" >
-          <ion-button color="light" expand="block" (click)="onForgotPassword()">FIND PASSWORD</ion-button>
+        <ion-col size-sm="3"  >
+          <ion-button color="success" fill="clear" (click)="onForgotPassword()">
+            <ion-icon name="lock-closed" ></ion-icon>
+          <ion-label>비밀번호찾기</ion-label>
+          </ion-button>
         </ion-col>        
-      </ion-row>
+      </ion-row>      
+      <!-- <ion-row class="rowBottom">
+        <ion-col size-sm="3" offset-sm="3"  style="padding: 0px 30px 0px 30px">
+          <ion-button color="light" expand="block" (click)="onSignup()" >멤버등록</ion-button>
+        </ion-col>
+        <ion-col size-sm="3" style="padding: 0px 30px 0px 30px" >
+          <ion-button color="light" expand="block" (click)="onForgotPassword()">비밀번호찾기</ion-button>
+        </ion-col>        
+      </ion-row> -->
     </ion-grid>
   </form>
 </ion-content>

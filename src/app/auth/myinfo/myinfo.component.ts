@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ModalController, AlertController } from '@ionic/angular';
 import { User } from '../user.model';
 import { Subscription } from 'rxjs';
-import { ResetPasswordComponent } from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-myinfo',
@@ -35,6 +34,7 @@ export class MyinfoComponent implements OnInit {
   }
 
   onLogout() {
+   this.authService.logout();
    this.modalCtrl.dismiss(null, 'logout');
   }
 
@@ -67,7 +67,7 @@ export class MyinfoComponent implements OnInit {
 
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Error',
+      // header: 'Error',
       message: message,
       buttons: ['Okay']
     })
