@@ -43,6 +43,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'praise',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./praise/praise.module').then( m => m.PraisePageModule)
+          }
+
+        ]
+      },
+      {
         path: 'members',
         children: [
           {
@@ -140,6 +150,10 @@ const routes: Routes = [
   {
     path: 'church',
     loadChildren: () => import('./church/church.module').then( m => m.ChurchPageModule)
+  },
+  {
+    path: 'praise',
+    loadChildren: () => import('./praise/praise/praise.module').then( m => m.PraisePageModule)
   }
 ];
 

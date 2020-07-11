@@ -45,14 +45,14 @@
    vertical-align: middle;
    line-height: 44px;       /* The same as your div height */
  }
- 
+
  ion-segment{
    height:46px;
  }
  ion-segment-button{
    text-align: center !important;
    min-height:46px;
- 
+   max-width: 500px;
    --color-checked: white;
    --background-checked:var(--ion-color-success);
  }
@@ -60,4 +60,8 @@
  ion-label.segment{
   font-size: 14px !important;
   font-family: "Noto Sans KR";
+}
+// remove shadow image in ion-header. it doesn't work in global.scss
+ion-header::after {
+  background-image: none;
 }

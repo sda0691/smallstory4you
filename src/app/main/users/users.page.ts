@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from 'src/app/auth/auth.service';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { SegmentChangeEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-users',
@@ -14,10 +15,10 @@ export class UsersPage implements OnInit, OnDestroy {
   loggedUser: User;
   private subs: Subscription[] = [];
   loadedData = []; // Pray[];
-  
-
   audioUrl: string;
   isLoading = false;
+  setCategory = 'name';
+
   constructor(
         private modalCtrl: ModalController,
         private loadingCtrl: LoadingController,
@@ -34,6 +35,7 @@ export class UsersPage implements OnInit, OnDestroy {
       .subscribe(data => {
         if (data) {
           this.loadedData = data;
+          console.log(this.loadedData);
           // this.selectedData = this.loadedData.filter(data => data.category === this.setCategory);
         }
       })
@@ -71,11 +73,33 @@ export class UsersPage implements OnInit, OnDestroy {
 
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
       buttons: ['Okay']
     })
     .then(alertEl => alertEl.present());
+  }
+
+  onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
+        if (event.detail.value === 'name') {
+          this.loadedData.sort((a, b): number => { 
+            if (a.name < b.name) {return -1 ; }
+            if (a.name > b.name) {return 1; }
+            return 0;
+          });
+        } else if (event.detail.value === 'role') {
+            this.loadedData.sort((a, b): number => { 
+            if (a.role < b.role) {return -1 ; }
+            if (a.role > b.role) {return 1; }
+            return 0;
+          })
+        } else if (event.detail.value === 'isAdminConfirmed') {
+          this.loadedData.sort((a, b): number => { 
+          if (a.isAdminConfirmed < b.isAdminConfirmed) {return -1 ; }
+          if (a.isAdminConfirmed > b.isAdminConfirmed) {return 1; }
+          return 0;
+        })
+      }
   }
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());

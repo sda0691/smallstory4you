@@ -5,12 +5,15 @@ import { Subscription } from 'rxjs';
 import { User } from 'src/app/auth/user.model';
 import { GlobalConstants } from 'src/app/common/global-constants';
 
+
 @Component({
   selector: 'app-church',
   templateUrl: './church.page.html',
   styleUrls: ['./church.page.scss'],
 })
 export class ChurchPage implements OnInit, OnDestroy {
+  heroes = ['Windstorm', 'Bombasto', 'Magneta', 'Tornado','kdfjdsjflksdfdkfjdfdf'];
+
   private subs: Subscription[] = [];
   loggedUser: User;
   churchName = GlobalConstants.churchName;

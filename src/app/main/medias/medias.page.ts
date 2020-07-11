@@ -62,7 +62,7 @@ export class MediasPage implements OnInit, OnDestroy {
              this.youtubeSanitizer(this.selectedMedia.youtubeLink);
              this.getDownloadUrl();
           }
-          console.log(this.selectedMedia.youtubeLink);
+          // console.log(this.selectedMedia.youtubeLink);
         }
       })
     );

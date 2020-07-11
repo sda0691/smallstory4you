@@ -14,17 +14,26 @@
 
   <ion-grid >
     <ion-row>
-      <ion-col size-sm="6" offset-sm="3" >
+      <ion-col size-sm="6" offset-sm="3"  class="ion-padding">
         <p class="black size-16 weight-bold">{{selectedNews.author}}</p>
         <p class="gray size-12">{{selectedNews.whenCreated | date: 'y'}}년
            {{selectedNews.whenCreated | date: 'M'}}월
            {{selectedNews.whenCreated | date: 'd'}}일
         </p>
+        <br>
+        <p class="size-16 weight-bold" style="color: var(--ion-color-primary)">
+          {{selectedNews.title}}
+        </p>
+        <br>
         <p 
           class="black size-14 weight-reglular" 
           style="white-space: pre-wrap;line-height: 2.0;">
           {{selectedNews.note}}
         </p>
+        <br>
+        <div *ngIf="selectedNews && selectedNews.youtubeLink.length > 0">
+          <iframe width="100%" height="170px" [src]=trustedVideoUrl frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
         <div *ngIf="selectedNews.downloadUrl.length > 0">
           <div  *ngFor="let img of selectedNews.downloadUrl ; let i=index" style="padding: 1px">
               <img src="{{img}}"   ><p></p>

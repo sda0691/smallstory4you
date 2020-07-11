@@ -17,10 +17,10 @@
     <ion-col size-sm="6" offset-sm="3">
 
       <ion-item>
-        <ion-label position="floating" >이름</ion-label>
+        <!-- <ion-label position="floating" >이름</ion-label> -->
         <ion-input 
           type="text" 
-
+          placeholder="*이름"
           ngModel name="name" 
           required 
           clearInput
@@ -32,11 +32,7 @@
         style="text-align: center;">
         * 이름을 입력하세요
       </p>   
-      <br>   
-<!--       <ion-item *ngIf="!nameCtrl.valid && nameCtrl.touched">
-        <ion-label color="primary">이름을 입력하세요</ion-label>
-      </ion-item> -->
-
+  
       <ion-item>
         <ion-input 
           type="text" 
@@ -47,13 +43,6 @@
           #phoneCtrl="ngModel">
         </ion-input>
       </ion-item>
-<!--       <p *ngIf="!phoneCtrl.valid && phoneCtrl.touched"
-        class="error-message"
-        style="text-align: center;">
-        * dfdfdfd
-      </p>  --> 
-      <br>
-      
       <ion-item>
         <ion-input 
           type="text" 
@@ -64,7 +53,7 @@
           #homePhoneCtrl="ngModel"
           ></ion-input>
       </ion-item> 
-      <br>     
+    
       <ion-item>
         <ion-input 
           type="text" 
@@ -75,7 +64,7 @@
           #businessPhoneCtrl="ngModel"
           ></ion-input>
       </ion-item>
-      <br>
+  
       <ion-item>
         <ion-textarea 
           type="text" 
@@ -86,17 +75,20 @@
           name="address" 
           ></ion-textarea>
       </ion-item>
-      <br>
+
       <ion-item>
-        <ion-label position="floating" >소속</ion-label> 
-        <ion-select ngModel name="ageStatus" #ageStatusCtrl="ngModel"  >
+        <!-- <ion-label position="floating" >소속</ion-label>  -->
+        <ion-select 
+          ngModel 
+          name="ageStatus" 
+          placeholder="소속" 
+          #ageStatusCtrl="ngModel"  >
           <ion-select-option value="장년">장년</ion-select-option>
           <ion-select-option value="시니어">시니어</ion-select-option>
           <ion-select-option value="청년">청년</ion-select-option>
         </ion-select> 
       </ion-item>
-
-      <br>       
+   
     </ion-col>
   </ion-row>  
  

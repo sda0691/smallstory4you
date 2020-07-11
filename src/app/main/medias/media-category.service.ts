@@ -23,7 +23,8 @@ export class MediaCategoryService {
   }
 
   fetchMediaCategory() {
-        return this.firestore.collection(this.collectionName).snapshotChanges()
+        return this.firestore.collection(this.collectionName, ref => 
+          ref.orderBy('Id', 'asc')).snapshotChanges()
           .pipe(
             map(docArray => {
               let medias = [];

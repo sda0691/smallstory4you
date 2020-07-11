@@ -41,7 +41,7 @@ export class CreatePrayComponent implements OnInit {
 
 onAddPray(inputData) {
     if (!this.pickedFile) {
-      this.showAlert('Please select audio file');
+      this.showAlert('파일을 선택하세요');
       return;
     }
     if (
@@ -98,7 +98,7 @@ onAddPray(inputData) {
   }
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
       buttons: ['Okay']
     })

@@ -1,0 +1,4 @@
+// remove shadow image in ion-header. it doesn't work in global.scss
+ion-header::after {
+    background-image: none;
+}

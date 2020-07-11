@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { LoadingController, ModalController, AlertController } from '@ionic/angular';
+import { LoadingController, ModalController, AlertController, IonItemSliding } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/auth/user.model';
 import { CreatePrayComponent } from './create-pray/create-pray.component';
@@ -10,6 +10,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { DetailPrayComponent } from './detail-pray/detail-pray.component';
 import { SegmentChangeEventDetail } from '@ionic/core';
+
 
 @Component({
   selector: 'app-pray',
@@ -38,7 +39,7 @@ export class PrayPage implements OnInit, OnDestroy {
   dayPrevIconColor = 'dark';
   dayNextColor = 'light';
   dayNextIconColor = 'light';
-
+  filteredData = [];
   constructor(
     // private storageRef: AngularFireStorage,
     private modalCtrl: ModalController,
@@ -62,15 +63,27 @@ export class PrayPage implements OnInit, OnDestroy {
       .subscribe(data => {
         if (data) {
           this.loadedData = data;
-          this.selectedData = this.loadedData.filter(data => data.category === this.setCategory);
-          this.selectedData = this.selectedData.slice(0, 7);
-          this.selectedPray = this.selectedData[this.arrayIndex];
-          console.log(this.loadedData);
-          console.log(this.selectedData);
-          this.getTodayPray();
+          this.getLatestPrays();
+          console.log(this.filteredData);
         }
       })
     );
+  }
+  getLatestPrays() {
+    this.filteredData = this.loadedData.filter(data => data.category === this.setCategory);
+
+    let today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+    this.selectedData = this.filteredData.filter(function (value) {
+      let newDate = new Date(value.dateOfPray);
+      return newDate <= today;
+     });
+    this.selectedData = this.selectedData.slice(0, 7);
+    this.selectedPray = this.selectedData[0];
+    this.getTodayPray();
   }
   getTodayPray() {
     if (this.selectedPray) {
@@ -141,6 +154,11 @@ export class PrayPage implements OnInit, OnDestroy {
     this.selectedPray = this.selectedData[this.arrayIndex];
     this.getTodayPray();
   }
+  selectPray(pray) {
+    this.selectedPray = pray;
+    this.getTodayPray();
+  }
+
 
   ionViewWillEnter() {
     this.arrayIndex = 0;
@@ -178,8 +196,19 @@ export class PrayPage implements OnInit, OnDestroy {
       }
     }); */
   }
-
-  onPrayDetail(pray: Pray) {
+/*   openEdit(pray: Pray) {
+    this.modalCtrl.dismiss();
+    this.modalCtrl.create({
+      component: EditPrayComponent,
+      componentProps: {selectedPray: pray, loggedUser: this.loggedUser}
+    })
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
+    });
+  } */
+  onPrayDetail(pray: Pray, slidingItem: IonItemSliding) {
+    slidingItem.close();
     this.modalCtrl.create({
       component: DetailPrayComponent,
       componentProps: {selectedPray: pray, loggedUser: this.loggedUser}
@@ -190,34 +219,23 @@ export class PrayPage implements OnInit, OnDestroy {
     })
     .then(resultData => {
       // console.log(resultData.data, resultData.role);
-      if (resultData.role === 'confirm') {
+/*       if (resultData.role === 'confirm') {
         console.log('BOOKED!');
-      }
+      } */
     });
   }
   
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
-/*     if (event.detail.value === '장년') {
-      this.selectedData = this.loadedData.filter(data => data.category === '장년');
-      this.setCategory = '장년';
-    } else {
-      this.selectedData = this.loadedData.filter(data => data.category === '어린이');
-      this.setCategory = '어린이';
-    } */
+
     this.arrayIndex = 0;
     this.dayPrevColor = 'black';
     this.dayPrevIconColor = 'black';
     this.dayNextColor = 'light';
     this.dayNextIconColor = 'light';
-
-    this.selectedData = this.loadedData.filter(data => data.category === event.detail.value);
-    this.selectedData = this.selectedData.slice(0, 7);
-    if (this.selectedData) {
-      this.selectedPray = this.selectedData[this.arrayIndex];
-      this.getTodayPray();
-    }
-    console.log(this.selectedData);
+    this.setCategory = event.detail.value;
+    this.getLatestPrays();
   }
+
 
   private showAlert(message: string) {
     this.alertCtrl.create({

@@ -36,13 +36,14 @@ export class MyinfoComponent implements OnInit {
   onLogout() {
    this.authService.logout();
    this.modalCtrl.dismiss(null, 'logout');
+   // this.router.navigate(['/', 'main', 'tabs', 'medias']);
   }
 
   onResetPassword() {
     if (this.loggedUser) {
       this.authService.resetPassword(this.loggedUser.email)
         .then(() => {
-          this.showAlert('Email has been sent');
+          this.showAlert('비밀번호를 변경하기 위한 이메일이 전송되었습니다.이메일을 확인하세요');
         })
         .catch(error => {
           this.showAlert(error.message);

@@ -1,3 +1,7 @@
+// remove shadow image in ion-header. it doesn't work in global.scss
+ion-header::after {
+    background-image: none;
+}
 .scrolling-wrapper {
     overflow-x: scroll;
     overflow-y: hidden;
@@ -17,4 +21,10 @@ ion-content{
     background-color: lightyellow; 
     height: 100%;
     width: 100%;
+}
+.cell-class {
+    border-color: black; 
+    border-width: .01em; 
+    border-style:solid; margin-bottom : -1px;
+    background-color: lightgrey
 }

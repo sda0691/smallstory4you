@@ -16,74 +16,105 @@
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-item>
-            <ion-label position="floating">날짜</ion-label>
+            <!-- <ion-label position="floating">날짜</ion-label> -->
             <ion-datetime
               display-format="YYYY/MM/DD"
               name="dateOfMedia"
               [(ngModel)] = "newDate"
               required
+              placeholder="*날짜"
               clearInput
               #dateOfMediaCtrl="ngModel"
             ></ion-datetime>
-          </ion-item>          
+          </ion-item>    
+          <p 
+            *ngIf="!dateOfMediaCtrl.valid && dateOfMediaCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *날짜를 입력하세요
+          </p>                 
           <ion-item>
-            <ion-label position="floating">설교자</ion-label>
+            <!-- <ion-label position="floating">설교자</ion-label> -->
             <ion-input
               type="text"
               [ngModel] = "selectedMedia.author"
               name="author"
               required
               clearInput
+              placeholder="*설교자"
               #authorCtrl="ngModel"
             ></ion-input>
           </ion-item>
-          <ion-item *ngIf="!authorCtrl.valid && authorCtrl.touched">
-            <ion-label>Should be a valid author</ion-label>
-          </ion-item>
+          <p 
+            *ngIf="!authorCtrl.valid && authorCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *설교자를 입력하세요
+          </p>  
           <ion-item>
-            <ion-label position="floating">제목</ion-label>
+            <!-- <ion-label position="floating">제목</ion-label> -->
             <ion-input
               type="text"
               [ngModel]="selectedMedia.title"
               name="title"
               required
               clearInput
+              placeholder="*제목"
               #titleCtrl="ngModel"
               maxlength="200"
             ></ion-input>
           </ion-item>
-          <ion-item *ngIf="!titleCtrl.valid && titleCtrl.touched">
-            <ion-label>Should't over be 200 characters long</ion-label>
-          </ion-item>
+          <p 
+            *ngIf="!titleCtrl.valid && titleCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *1 - 200 이내로 사용할 수 있습니다
+          </p>  
           <ion-item>
-            <ion-label position="floating">소제목</ion-label>
+            <!-- <ion-label position="floating">소제목</ion-label> -->
             <ion-input
               type="text"
               [ngModel]="selectedMedia.subTitle"
               name="subTitle"
               required
               clearInput
+              placeholder="*소제목"
               #subTitleCtrl="ngModel"
               maxlength="200"
             ></ion-input>
           </ion-item>
-          <ion-item *ngIf="!subTitleCtrl.valid && subTitleCtrl.touched">
-            <ion-label>Should't over be 200 characters long</ion-label>
-          </ion-item>            
+          <p 
+            *ngIf="!subTitleCtrl.valid && subTitleCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *1 - 200 이내로 사용할 수 없습니다
+          </p>             
           <ion-item>
-            <ion-label position="floating">youtube</ion-label>
+            <!-- <ion-label position="floating">youtube</ion-label> -->
             <ion-input
               type="text"
               [ngModel]="selectedMedia.youtubeLink"
               name="youtubeLink"
               clearInput
+              placeholder="*youtube(https://youtu.be/여기있는 코드만 입력하세요)"  
               #youtubeLinkCtrl="ngModel"
               maxlength="200"
             ></ion-input>
-          </ion-item>          
+          </ion-item>     
+          <p 
+            *ngIf="!youtubeLinkCtrl.valid && youtubeLinkCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *1 - 200 이내로 사용할 수 없습니다
+          </p>                
           <ion-item>
-            <ion-label position="floating">카테고리</ion-label>
-            <ion-select [ngModel]="selectedMedia.category" name="category" required #categoryCtrl="ngModel">
+            <!-- <ion-label position="floating">카테고리</ion-label> -->
+            <ion-select 
+              [ngModel]="selectedMedia.category" 
+              name="category" 
+              required 
+              placeholder="*카테고리"
+              #categoryCtrl="ngModel">
               <ion-select-option value="안식일예배">안식일예배</ion-select-option>
               <ion-select-option value="저녁예배">저녁예배</ion-select-option>
               <ion-select-option value="특별집회">특별집회</ion-select-option>
@@ -91,18 +122,13 @@
               <ion-select-option value="안식일학교">안식일학교</ion-select-option>
               <ion-select-option value="청년예배">청년예배</ion-select-option>
             </ion-select>            
-            <!-- <ion-input
-              type="text"
-              [ngModel]="selectedMedia.category"
-              name="category"
-              required
-              #categoryCtrl="ngModel"
-              maxlength="200"
-            ></ion-input> -->
           </ion-item>
-          <ion-item *ngIf="!categoryCtrl.valid && categoryCtrl.touched">
-            <ion-label>Should't over be 200 characters long</ion-label>
-          </ion-item>   
+          <p 
+            *ngIf="!authorCtrl.valid && authorCtrl.touched"
+            class="error-message" 
+            style="text-align: center;">
+            *카테고리를 선택하세요
+          </p> 
           <ion-item>
             <ion-label >파일이름:</ion-label>
             <p class="font-gray">{{selectedMedia.fileName}}</p>
@@ -111,13 +137,17 @@
       </ion-row>      
       <ion-row>
         <ion-col ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <input
+              type="file"
+              accept="video/*,audio/*"
+              *ngIf="usePicker" 
+              #filePicker 
+              (change) ="onFileChosen($event.target.files)"
+            />
+          </ion-item>
           <!-- Selected File: {{selectedFile}} -->
-          <input
-          type="file"
-          accept="video/*,audio/*"
-          *ngIf="usePicker" 
-          #filePicker 
-          (change) ="onFileChosen($event.target.files)"/>
+
         </ion-col>
       </ion-row>  
       <ion-row>

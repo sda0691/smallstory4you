@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: PrayPage
+  },
+  {
+    path: 'pray-list',
+    loadChildren: () => import('./pray-list/pray-list.module').then( m => m.PrayListPageModule)
   }
 ];
 

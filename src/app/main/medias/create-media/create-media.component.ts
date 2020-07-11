@@ -48,7 +48,7 @@ export class CreateMediaComponent implements OnInit {
 
   onAddMember(inputData) {
     if (!this.pickedFile) {
-      this.showAlert('Please select audio file');
+      this.showAlert('파일을 선택하세요');
       return;
     }
     if (
@@ -134,7 +134,7 @@ export class CreateMediaComponent implements OnInit {
   }
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
       buttons: ['Okay']
     })

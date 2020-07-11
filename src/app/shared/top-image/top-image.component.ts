@@ -37,7 +37,7 @@ export class TopImageComponent implements OnInit {
     }).then(modalEl => {
       modalEl.present();
       return modalEl.onDidDismiss().then(resData => {
-        console.log(resData);
+        // console.log(resData);
         if
           ((resData.role === 'login-success') || 
           (resData.role === 'signup-success')) {
@@ -49,7 +49,7 @@ export class TopImageComponent implements OnInit {
         }
 
         // this.isUserAuthenticated = true;
-        this.router.navigate(['/main/tabs/medias']);
+        // this.router.navigate(['/main/tabs/medias']);
       });
     });
   }
@@ -62,7 +62,7 @@ export class TopImageComponent implements OnInit {
     }).then(modalEl => {
       modalEl.present();
       return modalEl.onDidDismiss().then(resData => {
-        console.log(resData);
+        // console.log(resData);
         if
           ((resData.role === 'login-success') || 
           (resData.role === 'signup-success')) {

@@ -120,6 +120,7 @@ export class AuthService implements OnDestroy{
               email: doc.payload.doc.data()['email'],
               name: doc.payload.doc.data()['name'],
               role: doc.payload.doc.data()['role'],
+              isAdminConfirmed: doc.payload.doc.data()['isAdminConfirmed']
             }
           });
           return users;
@@ -142,6 +143,7 @@ export class AuthService implements OnDestroy{
           email: string;
           name: string;
           role: string;
+          isAdminConfirmed: string
         };
         const expirationTime = new Date(parsedData.tokenExpirationDate);
 /*         if (expirationTime <= new Date()) {
@@ -153,7 +155,8 @@ export class AuthService implements OnDestroy{
           parsedData.token,
           expirationTime,
           parsedData.name,
-          parsedData.role
+          parsedData.role,
+          '' // isAdminConfirmed
         );
         return user;
       }),
@@ -172,7 +175,13 @@ export class AuthService implements OnDestroy{
   // return this.firestore.doc(this.collectionName + '/' + media.id).update(media);
   updateRole(uid, role: string) {
     return this.firestore.collection(this.userCollectionName ).doc(uid ).update({
-      role: role
+      role: role,
+      isAdminConfirmed: 1
+    });
+  }
+  updateAdminConfirmed(uid) {
+    return this.firestore.collection(this.userCollectionName ).doc(uid ).update({
+      isAdminConfirmed: 1
     });
   }
   resetPassword(email: string) {
@@ -194,7 +203,8 @@ export class AuthService implements OnDestroy{
                 loggedUserDetail._token,
                 loggedUserDetail.tokenExpirationDate,
                 loggedUserDetail.name,
-                loggedUserDetail.role
+                loggedUserDetail.role,
+                loggedUserDetail.isAdminConfirmed
               );
               this._user.next(user);
               observer.next(user);
@@ -248,7 +258,8 @@ export class AuthService implements OnDestroy{
                   res.token,
                   new Date(res.expirationTime),
                   loggedUser.name,
-                  loggedUser.role
+                  loggedUser.role,
+                  loggedUser.isAdminConfirmed
                 );
                 this.setUserData1(user);
               });
@@ -311,7 +322,8 @@ export class AuthService implements OnDestroy{
               res.token,
               new Date(res.expirationTime),
               name,
-              'GUEST'
+              'GUEST',
+              '0' // isAdminConfirmed
             );
             this.setUserData1(user);
 

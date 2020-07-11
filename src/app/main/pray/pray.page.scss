@@ -29,6 +29,8 @@ ion-segment-button{
   text-align: center !important;
   min-height:46px;
 
+  max-width: 500px;
+
   --color-checked: white;
   --background-checked:var(--ion-color-success);
 }
@@ -43,4 +45,9 @@ ion-segment-button{
 
 audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
   background-color: rgb(225, 245, 220);
+}
+
+// remove shadow image in ion-header. it doesn't work in global.scss
+ion-header::after {
+  background-image: none;
 }

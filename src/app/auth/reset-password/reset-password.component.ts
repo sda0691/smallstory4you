@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 @Component({
   selector: 'app-reset-password',
@@ -9,6 +10,7 @@ import { AuthService } from '../auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
+  churchName = GlobalConstants.churchName;
   constructor(
     private modalCtrl: ModalController,
     private authService: AuthService,

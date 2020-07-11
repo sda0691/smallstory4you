@@ -11,6 +11,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'src/app/auth/user.model';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
+import { AuthComponent } from 'src/app/auth/auth.component';
 @Component({
   selector: 'app-members',
   templateUrl: './members.page.html',
@@ -50,9 +51,10 @@ export class MembersPage implements OnInit, OnDestroy {
     }));
   }
   ionViewWillEnter() {
-    this.authService.getCurrentUser1().subscribe(user => {
+    this.authService.getCurrentUser().subscribe(user => {
       if (!user || (user && user.role.toUpperCase() === 'GUEST')) {
-        this.router.navigate(['/', 'main', 'tabs', 'medias']);
+        this.openLogin();
+        // this.router.navigate(['/', 'main', 'tabs', 'medias']);
       } else {
         this.isUserAuthenticated = true;
         this.loadingCtrl.create({message: 'Loading members...'})
@@ -60,8 +62,6 @@ export class MembersPage implements OnInit, OnDestroy {
           loadingEl.present();
           this.Subs.push(this.membersService.fetchMembers()
             .subscribe(data => {
-              // this.loadedMembers = data;
-              console.log(data);
               loadingEl.dismiss();
             }, error => {
               loadingEl.dismiss();
@@ -84,11 +84,23 @@ export class MembersPage implements OnInit, OnDestroy {
       return modalEl.onDidDismiss();
     })
     .then(resultData => {
-      // console.log(resultData.data, resultData.role);
-      if (resultData.role === 'confirm') {
-        console.log('BOOKED!');
-      }
     }); 
+  }
+  openLogin() {
+    // this.selectedMember = member;
+
+    this.modalCtrl.create({
+      component: AuthComponent
+    })
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
+    })
+    .then(resultData => {
+      if (resultData.role === 'cancel') {
+        this.router.navigate(['/', 'main', 'tabs', 'medias']);
+      }
+    });
   }
 
   onEdit(memberId: number, slidingItem: IonItemSliding) {
@@ -117,7 +129,6 @@ export class MembersPage implements OnInit, OnDestroy {
             if (a.name > b.name) {return 1; }
             return 0;
           });
-          console.log(this.loadedMembers) ;
         } else if (event.detail.value === 'group') {
             this.loadedMembers.sort((a, b): number => { 
             if (a.ageStatus < b.ageStatus) {return -1 ; }
@@ -125,8 +136,7 @@ export class MembersPage implements OnInit, OnDestroy {
             return 0;
           })
         }
-        console.log(this.loadedMembers) ;
- 
+  
 /*         this.selectedData = this.loadedData.filter(data => data.category === event.detail.value);
         if (this.selectedData) {
           this.selectedPray = this.selectedData[this.arrayIndex];

@@ -110,12 +110,12 @@ export class NewsPage implements OnInit, OnDestroy {
         
           this.renderedNews.push(this.loadedData[i - 1]);
           count++;
-          if (count % 2 === 0) {
+          if (count % 4 === 0) {
             break;
           }
 
       }
-      this.counter += 2;
+      this.counter += 4;
     }
   }
   openAddNews() {

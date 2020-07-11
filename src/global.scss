@@ -268,188 +268,24 @@
     font-family: "Noto Sans KR";
   }
 
-
-
-  // font black
-  p.font-black-16-bold {
-    font-weight: 100 !important;
-    color: black !important;
-    font-size:16px;
-  }
-  p.font-black-14-bold {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:14px;
-  }
-  p.font-black-12-bold {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:12px;
-  }
-  p.font-black-10-bold {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:10px;
-  }  
-  p.font-black-16 {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:16px;
-  }
-  p.font-black-14 {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:14px;
-  }
-  p.font-black-12 {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:12px;
-  }
-  p.font-black-10 {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:10px;
-  } 
-  // gray
-  p.font-gray-16-bold {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:16px;
-  }
-  p.font-gray-14-bold {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:14px;
-  }
-  p.font-gray-12-bold {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:12px;
-  }
-  p.font-gray-10-bold {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:10px;
-  }    
-  p.font-gray-16{
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:16px;
-  }
-  p.font-gray-14 {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:14px;
-  }
-  p.font-gray-12 {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:12px;
-  }
-  p.font-gray-10 {
-    font-weight: bold !important;
-    color: gray !important;
-    font-size:10px;
-  }   
-  // tertiary
-  p.font-tertiary-16-bold {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:16px;
-  }
-  p.font-tertiary-14-bold {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:14px;
-  }
-  p.font-tertiary-12-bold {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:12px;
-  }
-  p.font-tertiary-10-bold {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:10px;
-  }    
-  p.font-tertiary-16{
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:16px;
-  }
-  p.font-tertiary-14 {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:14px;
-  }
-  p.font-tertiary-12 {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:12px;
-  }
-  p.font-tertiary-10 {
-    font-weight: bold !important;
-    color: var(--ion-color-tertiary) !important;
-    font-size:10px;
-  }   
-// white font
-p.font-white-18-bold {
-  font-weight: 900 !important;
-  color: white !important;
-  font-size:22px;
-}
-p.font-white-16-bold {
-  font-weight: 900 !important;
-  color: white !important;
-  font-size:22px;
-}
-p.font-white-14-bold {
-  font-weight: 900 !important;
-  color: white !important;
-  font-size:22px;
-}
-p.font-white-12-bold {
-  font-weight: 900 !important;
-  color: white !important;
-  font-size:22px;
-}
-p.font-white-16 {
-  color: white !important;
-  font-size:12px;
-}
-p.font-white-14 {
-  color: white !important;
-  font-size:12px;
-}
-p.font-white-12 {
-  color: white !important;
-  font-size:12px;
-}
-// action sheet
-  .action-sheet {
-    color: black !important;
-  }
-  .action-sheet .action-sheet-icon {
-    color: blue !important;
-  }
-
-  p.font-gray-black  {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:16px;
-  }
-  p.font-bold  {
-      font-weight: bold; 
+  ion-input,
+ 
+  ion-input[type="email"],
+  ion-input[type="textarea"]
+  {   
+      font-size:14px !important;
       color: black !important;
+      font-family: "Noto Sans KR";
   }
-  p.font-gray  {
-      color: gray;
+  ion-select {
+    padding-left: 0!important;
+    font-size:14px !important;
+    color: black !important;
+    font-family: "Noto Sans KR";
   }
-  p.font-gray-small  {
-      color: gray;
-      font-size:10px;
-  }
-
+  ion-datetime {
+    padding-left: 0!important;
+  } 
+ 
 
  

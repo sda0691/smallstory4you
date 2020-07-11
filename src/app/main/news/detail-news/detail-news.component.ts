@@ -3,7 +3,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { NewsService } from '../news.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { News } from '../News.model';
 import { User } from 'src/app/auth/user.model';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class DetailNewsComponent implements OnInit, OnDestroy{
   @Input() loggedUser: User;
   private subs: Subscription[] = [];
   fileRef: AngularFireStorageReference;
+  trustedVideoUrl: SafeResourceUrl;
   
   constructor(
     private modalCtrl: ModalController,
@@ -32,24 +33,13 @@ export class DetailNewsComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit() {
-/*     const storageFolderName = GlobalConstants.newsCollection + '/'; // 'Members/';
-    let fullPath = '';
-  
-
-    if (this.selectedNews.fileName.length > 0) {
-      for (const file of this.selectedNews.fileName) {
-        fullPath = storageFolderName + file;
-        this.fileRef = this.storage.ref(fullPath);
-
-        this.fileRef.getDownloadURL()
-        .subscribe(url => {
-          this.selectedNews.downloadUrl.push(url);
-        });
-      }
-    } */
+    this.youtubeSanitizer(this.selectedNews.youtubeLink);
 
   }
-
+  youtubeSanitizer(youtubeLink){
+    const path =  'https://www.youtube.com/embed/' + youtubeLink ;
+    this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(path);
+  }
   onDeleteNews() {
     this.alertCtrl.create({
       header: 'Warning',

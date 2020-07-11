@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { ChurchPageRoutingModule } from './church-routing.module';
 
 import { ChurchPage } from './church.page';
+import { MediasPageModule } from '../medias/medias.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ChurchPageRoutingModule
+    ChurchPageRoutingModule,
+    MediasPageModule
   ],
   declarations: [ChurchPage]
 })

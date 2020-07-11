@@ -35,12 +35,25 @@ export class EditUserComponent implements OnInit {
       });
   }
 
+  adminConfirm() {
+    this.loadingCtrl.create({message: '관리자 확인...'})
+    .then(loadingEl => {
+      loadingEl.present();
+      this.authService.updateAdminConfirmed(this.selectedUser.id ).then(data => {
+        loadingEl.dismiss();
+        this.showAlert('관리자 확인이 완료 되었습니다');
+      }).catch (error => {
+        loadingEl.dismiss();
+        this.showAlert(error.message);
+      });
+    });
+  }
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
       buttons: ['Okay']
     })

@@ -44,6 +44,7 @@ export class NewsService {
               isPublic: doc.payload.doc.data()['isPublic'],
               downloadUrl: doc.payload.doc.data()['downloadUrl'],
               fileName: doc.payload.doc.data()['fileName'] === undefined ? '' : doc.payload.doc.data()['fileName'],
+              title: doc.payload.doc.data()['title'] === undefined ? '' : doc.payload.doc.data()['title'],
             };
           });
           return news;
@@ -73,6 +74,7 @@ export class NewsService {
         .add({
           groupId: GlobalConstants.groupId,
           groupName: GlobalConstants.groupName,
+          title: news.title,
           note: news.note,
           author: user.name,
           whoCreated: user.id,

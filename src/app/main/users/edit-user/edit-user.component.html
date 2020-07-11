@@ -34,6 +34,14 @@
           <ion-select-option value="ADMIN">ADMIN</ion-select-option> 
         </ion-select>
         </ion-item>
+        <ion-item *ngIf="selectedUser.isAdminConfirmed === '0'">
+          <ion-label  >관리자 확인:</ion-label>
+            <ion-button (click)="adminConfirm()">확인</ion-button>
+        </ion-item>   
+        <ion-item *ngIf="selectedUser.isAdminConfirmed !== '0'">
+          <ion-label  >관리자 확인:</ion-label>
+            확인
+        </ion-item>                 
       </ion-col>
     </ion-row>
   </ion-grid>

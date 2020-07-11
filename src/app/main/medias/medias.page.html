@@ -9,6 +9,12 @@
                 [loggedUser]="loggedUser"
               >
               </app-top-image> 
+              <ion-button 
+                *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'"
+                (click)="onAddMedia()">
+                <ion-label>미디어등록</ion-label>&nbsp;
+                <ion-icon name="add-circle" ></ion-icon>
+              </ion-button>              
               <!-- <ion-button
                 (click) ="onMyInfo()"
                 *ngIf="loggedUser" 
@@ -184,7 +190,7 @@
             </ion-button>
             </ion-label>
           </ion-item>
-          <ion-item class="ion-text-center">
+          <!-- <ion-item class="ion-text-center">
             <ion-label>
               <ion-button 
                 *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'"
@@ -193,7 +199,7 @@
                 <ion-icon name="add-circle" ></ion-icon>
               </ion-button>
             </ion-label>
-          </ion-item>          
+          </ion-item>      -->     
         </ion-list>  
       </ion-col>
     </ion-row>
