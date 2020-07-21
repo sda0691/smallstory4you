@@ -8,6 +8,7 @@ export class Pray {
         public verseOfPray: string,
         public category: string,
         public word: string,
-        public fileName: string
+        public fileName: string,
+        public downloadUrl: string
     ) {}
 }

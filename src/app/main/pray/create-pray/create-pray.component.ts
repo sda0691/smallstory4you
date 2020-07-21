@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { PrayService } from '../pray.service';
 import { IonicModule } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-pray',
@@ -16,7 +17,9 @@ export class CreatePrayComponent implements OnInit {
   task: AngularFireUploadTask;
   pickedFile: any;
   uploadProgress = 0;
-
+  uploadedFileURL: Observable<string>;
+  downloadUrl = '';
+  
   constructor(
     private platform: Platform,
     private prayService: PrayService,
@@ -52,6 +55,7 @@ onAddPray(inputData) {
         return;
     }
 
+    
     const storageFolderName = GlobalConstants.prayCollection + '/'; // 'Members/';
     const uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
     const fullPath = storageFolderName + uploadedFileName;
@@ -72,16 +76,22 @@ onAddPray(inputData) {
           message: 'File upload finished!'
         });
 
-        toast.present();
+        this.uploadedFileURL = fileRef.getDownloadURL();
+        this.uploadedFileURL.subscribe(resp => {
+          this.downloadUrl = resp;
 
-        this.prayService.add_pray(inputData.form.value, uploadedFileName)
-        .subscribe(() => {
-          loadingEl.dismiss();
-          this.modalCtrl.dismiss(null, 'pray-upload-success');
-        }
-        , error => {
-          loadingEl.dismiss();
-          this.showAlert(error.message);
+          this.prayService.add_pray(inputData.form.value, uploadedFileName, this.downloadUrl)
+          .subscribe(() => {
+            loadingEl.dismiss();
+            inputData.reset();
+            this.modalCtrl.dismiss(null, 'pray-upload-success');
+          }
+          , error => {
+            loadingEl.dismiss();
+            this.showAlert(error.message);
+          });
+
+          toast.present();
         });
       }).catch(error => {
         loadingEl.dismiss();

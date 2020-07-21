@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { take, map, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
@@ -29,6 +29,7 @@ export class PrayService {
   }
 
   fetchPrays() {
+    let query: AngularFirestoreCollection;
     return this.firestore.collection(this.collectionName, ref => ref.orderBy('dateOfPray', 'desc').limit(50))
       .snapshotChanges()
       .pipe(
@@ -45,6 +46,7 @@ export class PrayService {
               verseOfPray: doc.payload.doc.data()['verseOfPray'],
               word: doc.payload.doc.data()['word'],
               fileName: doc.payload.doc.data()['fileName'],
+              downloadUrl: doc.payload.doc.data()['downloadUrl'] === undefined ? '' : doc.payload.doc.data()['downloadUrl']
             }
           })
           return prays;
@@ -55,7 +57,7 @@ export class PrayService {
       );
   }
 
-  add_pray(pray, fileName) {
+  add_pray(pray, fileName, downloadUrl) {
     // const userid = this.authService.userId1;
     return this.authService.loggedUser.pipe(
       take(1),
@@ -72,6 +74,7 @@ export class PrayService {
           category: pray.category,
           word: pray.word,
           fileName: fileName,
+          downloadUrl: downloadUrl
         });
       })
     );

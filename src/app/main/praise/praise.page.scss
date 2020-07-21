@@ -1,0 +1,136 @@
+audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
+    // background-color: rgb(225, 245, 220);
+    // background-color:rgb(208, 229, 247);
+    background-color:var(--ion-color-light);
+}
+
+
+// https://colibriwp.com/blog/scrolling-text/
+  .example1 {
+    height: 17px;  
+    overflow: hidden;
+    position: relative;
+  }
+  .example1 ion-button {
+   // font-size: 3em;
+   font-size: 12px;
+   color: red;
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   margin: 0;
+   //line-height: 50px;
+   line-height: 19px;
+   text-align: center;
+   /* Starting position */
+   -moz-transform:translateX(100%);
+   -webkit-transform:translateX(100%);    
+   transform:translateX(100%);
+   /* Apply animation to this element */  
+   -moz-animation: example1 15s linear infinite;
+   -webkit-animation: example1 15s linear infinite;
+   animation: example1 15s linear infinite;
+  }
+  /* Move it (define the animation) */
+  @-moz-keyframes example1 {
+   0%   { -moz-transform: translateX(100%); }
+   100% { -moz-transform: translateX(-100%); }
+  }
+  @-webkit-keyframes example1 {
+   0%   { -webkit-transform: translateX(100%); }
+   100% { -webkit-transform: translateX(-100%); }
+  }
+  @keyframes example1 {
+   0%   { 
+   -moz-transform: translateX(100%); /* Firefox bug fix */
+   -webkit-transform: translateX(100%); /* Firefox bug fix */
+   transform: translateX(100%);       
+   }
+   100% { 
+   -moz-transform: translateX(-100%); /* Firefox bug fix */
+   -webkit-transform: translateX(-100%); /* Firefox bug fix */
+   transform: translateX(-100%); 
+   }
+  }
+  
+  
+.titleColor {
+    // color: var(--ion-color-primary) !important;
+    color: var(--ion-color-primary) !important;
+}
+.showEqualizer {
+    // color: var(--ion-color-primary) !important;
+    display:block;
+}
+.hideEqualizer {
+    // color: var(--ion-color-primary) !important;
+    display:none;
+}
+
+// audio controler slide left
+.slideHide {
+    position: absolute;
+    left: -500px;
+    top: -100px;
+    //width: 100px;
+    //height: 100px;
+    background: blue;
+    transition: 5s;
+}
+
+.slideShow {
+    transition: 1s;
+    left: 0;
+}
+
+// segment class
+.myDiv {
+    background-color: rgb(236, 234, 234);
+   //  border:1px solid  purple ;
+   // background-color: white;
+   // margin: 25px;
+   color: purple;
+   height: 44px;
+   vertical-align: middle;
+   line-height: 44px;       /* The same as your div height */
+ }
+
+ ion-segment{
+   height:46px;
+ }
+ ion-segment-button{
+   text-align: center !important;
+   min-height:46px;
+   max-width: 500px;
+   --color-checked: white;
+   --background-checked:var(--ion-color-primary);
+ }
+ 
+ ion-label.segment{
+  font-size: 14px !important;
+  font-family: "Noto Sans KR";
+}
+// remove shadow image in ion-header. it doesn't work in global.scss
+ion-header::after {
+  background-image: none;
+}
+//////////////////
+.cn {
+    display: table-cell;
+    width: 400px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: left;
+    
+     border: 1px solid red;
+  }
+  
+  .inner {
+    display: inline-block;
+    width: 100%; height: 30px;
+    border: 1px solid black 
+}
+
+ion-input::shadow input {
+    color: var(--ion-color-primary);
+  }

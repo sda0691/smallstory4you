@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-grid>
     <ion-row>
       <ion-col  size-sm="6" offset-sm="3">
@@ -9,46 +9,76 @@
             [loggedUser]="loggedUser"
             >
             </app-top-image> 
-
           </ion-buttons>  
         </ion-toolbar>
       </ion-col>
     </ion-row>
   </ion-grid>
+</ion-header> -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{churchName}}</ion-title>
+    <ion-buttons slot="end">
+      <app-top-image 
+        [loggedUser]="loggedUser"
+      >
+      </app-top-image> 
+    </ion-buttons>  
+  </ion-toolbar>
+
+   <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col  size-sm="6" offset-sm="3">    
+        <div class="church-top" >
+        </div>
+      </ion-col>
+    </ion-row>    
+  </ion-grid>
 </ion-header>
 
 <ion-content>
   
-  <ion-grid class="ion-padding">
+  <ion-grid class="ion-no-padding">
     <ion-row>
-      <ion-col size-sm="6" offset-sm="3" class="ion-padding">
+      <ion-col size-sm="6" offset-sm="3" >
+        <ion-item>
+          <div >
+            
+            <p class="primary size-18 weight-bold padding-8" >예배안내</p>
+            <div style="padding-left:20px">
+              <p class="black size-14 weight-regular padding-6">금요저녁집회: 매주 금요일 오후 8:00</p>
+              <p class="black size-14 weight-regular padding-6">안식일: 매주 토요일 오전 10:00</p>
+            </div>
+          </div>
+        </ion-item>
+
         <ion-item >
           <div>
-            <p class="black size-16 weight-bold">연락처</p>
-            <p class="gray size-14 weight-regular" style="padding-left:10px">647-234-9707</p>
-            <p class="gray size-14 weight-regular" style="padding-left:10px;">647-234-9707</p>
-            <p class="gray size-14 weight-regular" style="padding-left:10px;">647-234-9707</p>   
-          </div>
+            <p class="primary size-18 weight-bold padding-8">연락처</p>
+            <div style="padding-left:20px">
+              <p class="black size-14 weight-regular padding-6" >Tel:&nbsp;{{contactNumber}}</p>
+              <p class="black size-14 weight-regular padding-6">Site: &nbsp;{{webAddress}}</p>
+            </div>
+          </div><br>
         </ion-item>
+
         <ion-item>
-          <div>
-            <p class="black size-16 weight-bold" >예배안내</p>
-            <p class="gray size-14 weight-regular" style="padding-left:10px">금요저녁집회: 매주 금요일 오후 8:00</p>
-            <p class="gray size-14 weight-regular" style="padding-left:10px">안식일: 매주 토요일 오전 10:00</p>
-          </div>
-        </ion-item>
-        <ion-item>
-          <div style="text-align: center; width:100%;">
-            <p class="black size-16 weight-bold" >위치</p>
-            <p 
-              class="gray size-14 weight-regular" 
-              style="padding-left:10px">{{churchAddress}}</p>
-            <img style="display: block;"
+          <div style="width:100%">
+            <p class="primary size-18 weight-bold padding-8" >위치</p>
+            <div style="padding-left:20px">
+              <p 
+                class="black size-14 weight-regular padding-6" >
+                {{churchAddress}}
+              </p> 
+            </div>
+            <div style="text-align: center; ">
+              <img style="display: block; width:100%"
               src="../../../assets/images/address.png"
-              (click)="onOpenMaps()"
-            />
+              (click)="onOpenMaps()"/>   
+            </div>
           </div>
         </ion-item>
+
       </ion-col>
     </ion-row>   
   </ion-grid>

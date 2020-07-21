@@ -8,6 +8,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { Pray } from '../Pray.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-edit-pray',
@@ -24,6 +25,9 @@ export class EditPrayComponent implements OnInit {
   selectedFile: string;
   uploadProgress = 0;
   newDate = '';
+  audioUrl = '';
+  uploadedFileURL: Observable<string>;
+  
   constructor(
     private platform: Platform,
     private prayService: PrayService,
@@ -73,59 +77,106 @@ export class EditPrayComponent implements OnInit {
     const customMetadata = { app: 'Media Files' };
     // const oldFileName = member.fileName;
 
-    this.loadingCtrl.create({message: 'Edting media...'})
+
+    // update database
+    let record = {};
+    record['dateOfPray'] = new Date( inputData.form.value.dateOfPray);
+    record['title'] = inputData.form.value.title;
+    record['verseOfPray'] = inputData.form.value.verseOfPray;
+    record['category'] = inputData.form.value.category;
+    record['id'] = this.selectedPray.id;
+    record['word'] = inputData.form.value.word;
+
+    this.loadingCtrl.create({message: 'Edting Pray...'})
     .then(loadingEl => {
       loadingEl.present();
 
-      // update database
-      let record = {};
-      record['dateOfPray'] = new Date( inputData.form.value.dateOfPray);
-      record['title'] = inputData.form.value.title;
-      record['verseOfPray'] = inputData.form.value.verseOfPray;
-      record['category'] = inputData.form.value.category;
-      record['id'] = this.selectedPray.id;
-      record['word'] = inputData.form.value.word;
+      if (this.pickedFile) {
+        this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-      this.prayService.edit_pray(record, uploadedFileName)
-      .then(data => {
+        this.task.percentageChanges().subscribe(change => {
+          this.uploadProgress = change;
+        });
 
-
-        if (this.pickedFile) {
-          this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
-
-          this.task.percentageChanges().subscribe(change => {
-            this.uploadProgress = change;
+        this.task.then(async res => {
+          const toast = await this.toastCtrl.create({
+            duration: 3000,
+            message: 'File upload finished!'
           });
 
-          this.task.then(async res => {
-            const toast = await this.toastCtrl.create({
-              duration: 3000,
-              message: 'File upload finished!'
-            });
-            if (this.selectedPray.fileName) {
-              this.prayService.delete_image(this.selectedPray.fileName);
-            }
-            toast.present();
-            loadingEl.dismiss();
-            this.modalCtrl.dismiss(null, 'pray-upload-success');
+          this.uploadedFileURL = fileRef.getDownloadURL();
+          this.uploadedFileURL.subscribe(resp => {
+            record['downloadUrl'] = resp;
 
-          }).catch(error => {
+            this.prayService.edit_pray(record, uploadedFileName )
+            .then(data => {
+              if (this.selectedPray.fileName) {
+                this.prayService.delete_image(this.selectedPray.fileName);
+              }
+              toast.present();
+              loadingEl.dismiss();
+              inputData.form.reset();
+              this.modalCtrl.dismiss(null, 'pray-upload-success');
+            })
+            .catch(error => {
+              this.showAlert(error.message);
+            });
+          });
+        }).catch(error => {
+          loadingEl.dismiss();
+          this.showAlert(error.message);
+        });
+      } else {
+        
+        if (this.selectedPray.downloadUrl === undefined || this.selectedPray.downloadUrl === '') {
+          this.audioUrl = '';
+          const storageFolderName = GlobalConstants.prayCollection + '/'; // 'Members/';
+          const uploadedFileName = this.selectedPray.fileName;
+          const fullPath = storageFolderName + uploadedFileName;
+          const fileRef = this.storage.ref(fullPath);
+      
+          fileRef.getDownloadURL()
+          .subscribe(url => {
+            record['downloadUrl'] = url;
+
+            this.prayService.edit_pray(record, uploadedFileName )
+            .then(() => {
+              loadingEl.dismiss();
+              inputData.form.reset();
+              this.modalCtrl.dismiss(null, 'pray-upload-success');
+            })
+            .catch(error => {
+              this.showAlert(error.message);
+            });            
+          });
+
+        } else {
+          this.prayService.edit_pray(record, uploadedFileName )
+          .then(() => {
             loadingEl.dismiss();
+            inputData.form.reset();
+            this.modalCtrl.dismiss(null, 'pray-upload-success');
+          })
+          .catch(error => {
             this.showAlert(error.message);
           });
-        } else {
-          loadingEl.dismiss();
-          this.modalCtrl.dismiss(null, 'pray-upload-success');
-          // this.router.navigate(['/main/tabs/medias']);
         }
 
-       })
-      .catch(error => {
-        this.showAlert(error.message);
-      }); 
-    }); 
+      }
+    });
   }
+/*   getDownloadUrl() {
+    this.audioUrl = '';
+    const storageFolderName = GlobalConstants.prayCollection + '/'; // 'Members/';
+    const uploadedFileName = this.selectedPray.fileName;
+    const fullPath = storageFolderName + uploadedFileName;
+    const fileRef = this.storage.ref(fullPath);
 
+    fileRef.getDownloadURL()
+    .subscribe(url => {
+      this.audioUrl = url;
+    });
+  } */
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }

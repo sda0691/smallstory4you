@@ -22,7 +22,6 @@ export class MembersPage implements OnInit, OnDestroy {
   loadedMembers = []; // Member[];
   private memberSub: Subscription;
   private Subs: Subscription[] = [];
-  isUserAuthenticated = false;
   loggedUser: User;
   selectedMember: Member;
   setCategory = 'name';
@@ -56,17 +55,22 @@ export class MembersPage implements OnInit, OnDestroy {
         this.openLogin();
         // this.router.navigate(['/', 'main', 'tabs', 'medias']);
       } else {
-        this.isUserAuthenticated = true;
+
         this.loadingCtrl.create({message: 'Loading members...'})
         .then(loadingEl => {
           loadingEl.present();
-          this.Subs.push(this.membersService.fetchMembers()
+          if (!this.loadedMembers || this.loadedMembers.length <= 0) { 
+            this.Subs.push(this.membersService.fetchMembers()
             .subscribe(data => {
               loadingEl.dismiss();
             }, error => {
               loadingEl.dismiss();
               console.log(error);
             }));
+          } else {
+            loadingEl.dismiss();
+          }
+
         });
       }
     });

@@ -53,9 +53,11 @@
     height: 300px;
   }
   ion-toolbar, ion-header {
-    --min-height: 46px;
-   }
-
+    --min-height: 50px;
+  }
+  .test {
+    --min-height:20px !important
+  }
    @font-face {
     font-family: 'Noto Sans KR';
     src: url('../src/assets/fonts/NotoSansKR-Thin.otf');//mine

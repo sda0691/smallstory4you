@@ -64,7 +64,7 @@ export class PrayPage implements OnInit, OnDestroy {
         if (data) {
           this.loadedData = data;
           this.getLatestPrays();
-          console.log(this.filteredData);
+          // console.log(this.filteredData);
         }
       })
     );
@@ -80,7 +80,7 @@ export class PrayPage implements OnInit, OnDestroy {
     this.selectedData = this.filteredData.filter(function (value) {
       let newDate = new Date(value.dateOfPray);
       return newDate <= today;
-     });
+     }); 
     this.selectedData = this.selectedData.slice(0, 7);
     this.selectedPray = this.selectedData[0];
     this.getTodayPray();
@@ -101,10 +101,11 @@ export class PrayPage implements OnInit, OnDestroy {
         case 5: this.day = '금'; break;
         case 6: this.day = '토'; break;
       }
-      this.getDownloadUrl();
+      // this.getDownloadUrl();
+      this.audioUrl = this.selectedPray.downloadUrl;
     }
   }
-  getDownloadUrl() {
+/*   getDownloadUrl() {
     this.audioUrl = '';
     const storageFolderName = GlobalConstants.prayCollection + '/'; // 'Members/';
     const uploadedFileName = this.selectedPray.fileName;
@@ -115,7 +116,7 @@ export class PrayPage implements OnInit, OnDestroy {
     .subscribe(url => {
       this.audioUrl = url;
     });
-  }
+  } */
   onPreDay() {
     if (this.arrayIndex >= this.selectedData.length - 1) {
       return;
@@ -166,14 +167,18 @@ export class PrayPage implements OnInit, OnDestroy {
       this.loadingCtrl.create({message: 'Loading 기도력...'})
       .then(loadingEl => {
           loadingEl.present();
-          this.subs.push(this.prayService.fetchPrays()
-            .subscribe(data => {
-              loadingEl.dismiss();
-            }, error => {
-              loadingEl.dismiss();
-              this.showAlert(error.message);
-            })
-          );
+          if (this.loadedData.length <= 0) {
+            this.subs.push(this.prayService.fetchPrays()
+              .subscribe(data => {
+                loadingEl.dismiss();
+              }, error => {
+                loadingEl.dismiss();
+                this.showAlert(error.message);
+              })
+            );
+          } else {
+            loadingEl.dismiss();
+          }
       });
     });
   }

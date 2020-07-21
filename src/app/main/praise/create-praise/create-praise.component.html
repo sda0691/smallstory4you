@@ -1,0 +1,150 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>찬양등록</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="onAddPraise(f)" #f="ngForm">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+  
+        <ion-item>
+          <!-- <ion-label position="floating" >이름</ion-label> -->
+          <ion-input 
+            type="text" 
+            placeholder="*찬양제목"
+            ngModel name="title" 
+            required 
+            clearInput
+            #titleCtrl="ngModel">
+          </ion-input>
+        </ion-item>
+        <p *ngIf="!titleCtrl.valid && titleCtrl.touched"
+          class="error-message"
+          style="text-align: center;">
+          * 제목을 입력하세요
+        </p>   
+    
+        <ion-item>
+          <ion-input 
+            type="text" 
+            placeholder="가수" 
+            ngModel 
+            required
+            clearInput
+            name="singer" 
+            #singerCtrl="ngModel">
+          </ion-input>
+        </ion-item>
+        <p *ngIf="!singerCtrl.valid && singerCtrl.touched"
+          class="error-message"
+          style="text-align: center;">
+          * 가수를 입력하세요
+        </p>  
+        <ion-item>
+          <!-- <ion-label position="floating" >소속</ion-label>  -->
+          <ion-select 
+            ngModel 
+            name="format" 
+            placeholder="파일 포맷" 
+            required
+            #genreCtrl="ngModel"  >
+            <ion-select-option value="오디오">오디오</ion-select-option>
+            <ion-select-option value="비디오">비디오</ion-select-option>
+          </ion-select> 
+        </ion-item>        
+        <ion-item>
+          <!-- <ion-label position="floating" >소속</ion-label>  -->
+          <ion-select 
+            ngModel 
+            name="genre" 
+            placeholder="장르" 
+            required
+            #genreCtrl="ngModel"  >
+            <ion-select-option value="찬미가">찬미가</ion-select-option>
+            <ion-select-option value="복음성가">복음성가</ion-select-option>
+            <ion-select-option value="찬양곡">찬양곡</ion-select-option>
+          </ion-select> 
+        </ion-item>
+
+        <ion-item>
+          <!-- <ion-label position="floating" >소속</ion-label>  -->
+          <ion-select 
+            ngModel 
+            name="category" 
+            placeholder="카테고리" 
+            required
+            #categoryCtrl="ngModel"  >
+            <ion-select-option value="독창">독창</ion-select-option>
+            <ion-select-option value="듀엣">듀엣</ion-select-option>
+            <ion-select-option value="합창">합창</ion-select-option>
+            <ion-select-option value="여성중창">여성중창</ion-select-option>
+            <ion-select-option value="남성중창">남성중창</ion-select-option>
+            <ion-select-option value="혼성중장">혼성중장</ion-select-option>
+            <ion-select-option value="연주">연주</ion-select-option>
+          </ion-select> 
+        </ion-item>
+        <ion-item>
+          <!-- <ion-label position="floating">youtube</ion-label> -->
+          <ion-input
+            type="text"
+            ngModel
+            placeholder="*youtube(https://youtu.be/여기있는 코드만 입력하세요)"  
+            clearInput            
+            name="youtubeLink"
+            #youtubeLinkCtrl="ngModel"
+            maxlength="200"
+          ></ion-input>
+        </ion-item>   
+        <p 
+          *ngIf="!youtubeLinkCtrl.valid && youtubeLinkCtrl.touched"
+          class="error-message" 
+          style="text-align: center;">
+          *1 - 200 이내로 사용할 수 없습니다
+        </p>              
+        
+     
+      </ion-col>
+    </ion-row>  
+   
+    <ion-row>
+      <ion-col ion-col size-sm="6" offset-sm="3">
+<!--         <div >
+          <ion-img 
+            class="image"
+            role="button"
+            (click)="onPickImage()"
+            [src]="selectedImage" 
+            *ngIf="selectedImage"></ion-img>
+          <ion-button color="primary" 
+            (click)="onPickImage()" 
+            *ngIf="!selectedImage">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            <ion-label>Take Picture</ion-label>
+          </ion-button>
+        </div> -->
+        <input
+         type="file"
+         accept="video/*,audio/*"
+         *ngIf="usePicker" 
+         #filePicker 
+         (change) ="onFileChosen($event.target.files)"/>
+      </ion-col>
+    </ion-row>   
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+          <ion-button type="submit" [disabled]='!f.valid' expand="full" color="primary" >Save</ion-button>
+      </ion-col>
+    </ion-row>   
+  </ion-grid>
+  </form>
+  </ion-content>
+  

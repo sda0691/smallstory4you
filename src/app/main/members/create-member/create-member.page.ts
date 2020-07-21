@@ -305,7 +305,7 @@ export class CreateMemberPage implements OnInit {
 
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Authentication failed',
+      // header: 'Authentication failed',
       message: message,
       buttons: ['Okay']
     })

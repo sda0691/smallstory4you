@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Platform, LoadingController, ToastController, AlertController, ModalController } from '@ionic/angular';
 import { MdeiaService } from '../media.service';
-import { AngularFireUploadTask, AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireUploadTask, AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MediaCategory } from '../media-category.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-media',
@@ -20,8 +21,9 @@ export class CreateMediaComponent implements OnInit {
   selectedFile: string;
   usePicker = false;
   uploadProgress = 0;
-  
-  
+  uploadedFileURL: Observable<string>;
+  downloadUrl = '';
+
   constructor(
     private platform: Platform,
     private mediaService: MdeiaService,
@@ -47,10 +49,10 @@ export class CreateMediaComponent implements OnInit {
   }
 
   onAddMember(inputData) {
-    if (!this.pickedFile) {
+/*     if (!this.pickedFile) {
       this.showAlert('파일을 선택하세요');
       return;
-    }
+    } */
     if (
         this.pickedFile && this.pickedFile.type.split('/')[0] !== 'audio' &&
         this.pickedFile && this.pickedFile.type.split('/')[0] !== 'video'
@@ -58,36 +60,58 @@ export class CreateMediaComponent implements OnInit {
         console.error('unsupported file type :( ');
         return;
     }
-
-    const storageFolderName = GlobalConstants.mediaCollection + '/'; // 'Members/';
-    const uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
-    const fullPath = storageFolderName + uploadedFileName;
-    const fileRef = this.storage.ref(fullPath);
+    let fullPath = '';
+    let fileRef: AngularFireStorageReference;
+    let uploadedFileName = '';
+    if (this.pickedFile) { 
+      const storageFolderName = GlobalConstants.mediaCollection + '/'; // 'Members/';
+      uploadedFileName = `${new Date().getTime()}_${this.pickedFile.name}`;
+      fullPath = storageFolderName + uploadedFileName;
+      fileRef = this.storage.ref(fullPath);
+    }
     const customMetadata = { app: 'Media Files' };
-    // const oldFileName = member.fileName;
-
-    
-        
-
     this.loadingCtrl.create({message: 'Adding a new media...'})
     .then(loadingEl => {
       loadingEl.present();
-      this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
+      if (this.pickedFile) {
+        this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-      this.task.percentageChanges().subscribe(change => {
-        this.uploadProgress = change;
-      });
-      this.task.then(async res => {
-        const toast = await this.toastCtrl.create({
-          duration: 3000,
-          message: 'File upload finished!'
+        this.task.percentageChanges().subscribe(change => {
+          this.uploadProgress = change;
         });
-
-        toast.present();
-
+        this.task.then(async res => {
+          const toast = await this.toastCtrl.create({
+            duration: 3000,
+            message: 'File upload finished!'
+          });
+  
+          this.uploadedFileURL = fileRef.getDownloadURL();
+          this.uploadedFileURL.subscribe(resp => {
+            this.downloadUrl = resp;
+  
+            this.mediaService.add_media(inputData.form.value, uploadedFileName)
+            .subscribe(() => {
+              loadingEl.dismiss();
+              inputData.reset();
+              this.modalCtrl.dismiss(null, 'media-upload-success');
+              this.router.navigate(['/main/tabs/medias']);
+            }
+            , error => {
+              loadingEl.dismiss();
+              this.showAlert(error.message);
+            });
+            toast.present();
+  
+          });
+        }).catch(error => {
+          loadingEl.dismiss();
+          this.showAlert(error.message);
+        });
+      } else {
         this.mediaService.add_media(inputData.form.value, uploadedFileName)
         .subscribe(() => {
           loadingEl.dismiss();
+          inputData.reset();
           this.modalCtrl.dismiss(null, 'media-upload-success');
           this.router.navigate(['/main/tabs/medias']);
         }
@@ -95,25 +119,7 @@ export class CreateMediaComponent implements OnInit {
           loadingEl.dismiss();
           this.showAlert(error.message);
         });
-
-      }).catch(error => {
-        loadingEl.dismiss();
-        this.showAlert(error.message);
-      });
-
-
-
-
-/*       this.mediaService.uploadImage(  true, this.pickedFile )
-      .subscribe(resp => {
-        // inputData.form.reset();
-        loadingEl.dismiss();
-        console.log('upload successed');
-        // this.router.navigate(['/main/tabs/members']);
-      }, error => {
-        loadingEl.dismiss();
-        console.log(error);
-      }); */
+      }
 
     });
   }

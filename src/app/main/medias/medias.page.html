@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header> // this doesn't work with ion-toolbar --min-height
     <ion-grid>
       <ion-row>
         <ion-col  size-sm="6" offset-sm="3">
@@ -15,23 +15,29 @@
                 <ion-label>미디어등록</ion-label>&nbsp;
                 <ion-icon name="add-circle" ></ion-icon>
               </ion-button>              
-              <!-- <ion-button
-                (click) ="onMyInfo()"
-                *ngIf="loggedUser" 
-              >
-                <P class="black size-14 weight-bold">내정보<P>
-                <ion-icon 
-                  name="person-circle-outline"
-                  style="font-size:25px"
-                  ></ion-icon>
-              </ion-button> -->
             </ion-buttons> 
           </ion-toolbar>
         </ion-col>
       </ion-row>
-    </ion-grid>
-    
-     
+    </ion-grid> -->
+<ion-header >
+  <ion-toolbar >
+    <ion-title>말씀듣기</ion-title>
+    <ion-buttons slot="end" >
+      <app-top-image 
+        [loggedUser]="loggedUser"
+      >
+      </app-top-image> 
+      <ion-button 
+        *ngIf="loggedUser && loggedUser.role.toUpperCase() === 'ADMIN'"
+        (click)="onAddMedia()">
+        <ion-label>미디어등록</ion-label>&nbsp;
+        <ion-icon name="add-circle" ></ion-icon>
+      </ion-button>              
+    </ion-buttons> 
+  </ion-toolbar>
+  
+  
  
   <ion-grid class="ion-no-padding">
     <ion-row>
@@ -59,8 +65,18 @@
        </ion-col>
       </ion-row>
       <ion-row *ngIf="selectedMedia && selectVideoFormat ==='fullvideo'">
-        <ion-col size-sm="6" offset-sm="3" style="height: 170px ;">
-          <iframe width="100%" height="170px" [src]=trustedVideoUrl frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <!-- <ion-col size-sm="6" offset-sm="3" style="height: 215px ;"> -->
+          <ion-col size-sm="6" offset-sm="3" >
+          <!-- <iframe width="100%" height="215px" [src]=trustedVideoUrl frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+          <div class="container">
+            <iframe 
+              class="video"
+              [src]=trustedVideoUrl 
+              frameborder="0" 
+              allow="autoplay; encrypted-media" 
+              allowfullscreen>
+            </iframe>
+          </div>
       </ion-col>
     </ion-row> 
     <ion-row  
@@ -70,7 +86,7 @@
         <!-- <div *ngIf="selectedMedia && audioUrl && selectedMedia.youtubeLink.length <= 0" > -->
         <div 
           *ngIf="selectedMedia && audioUrl " 
-          style="margin:0px !important;">
+          style="margin:0px !important;height:700px;">
           <audio controls  
           style="width:100%; background-color:rgb(208, 229, 247) ;margin:0px !important">
             <source src="{{audioUrl}}" 
@@ -85,7 +101,7 @@
       style="padding-top:0px;height:46px;
       ">
       <ion-col 
-        size-sm="1.5" 
+        size-sm="2" 
         offset-sm="3"
         style="background-color:rgb(236, 234, 234);"
         class="ion-text-center" 
@@ -95,24 +111,25 @@
           <p class="black size-12 weight-medium padding-0" style="margin: 0 !important">{{selectedMedia.author}}</p>
         </div> 
       </ion-col>
-      <ion-col size-sm="1.5" class="ion-text-center" 
+      <ion-col size-sm="2" class="ion-text-center" 
       style="background-color:rgb(236, 234, 234);">
         <div>
           <p class="gray size-10 padding-0" style="display: inline;margin: 0 !important">구분</p>
           <p class="black size-12 padding-0 weight-medium" style="margin: 0 !important">{{selectedMedia.category}}</p>
         </div>
       </ion-col>
-      <ion-col size-sm="1.5" class="ion-text-center" 
+      <ion-col size-sm="2" class="ion-text-center" 
       style="background-color:rgb(236, 234, 234);" >
         <div>
           <p class="gray size-10" style="display: inline;margin: 0 !important">날짜</p>
           <p class="black size-12 weight-medium" style="margin: 0 !important">{{selectedMedia.dateOfMedia | date:'yyyy-MM-dd'}}</p>
         </div>
       </ion-col>      
-      <ion-col size-sm="1.5" class="ion-text-center"
-      style="background-color:rgb(236, 234, 234);" >
+<!--       <ion-col 
+        size-sm="1.5" 
+        class="ion-text-center"
+        style="background-color:rgb(236, 234, 234);" >
         <div>
-          <!-- <p class="gray size-10" style="display: inline;margin: 0 !important">선택</p> -->
           <ion-select style="font-size: 14px;color:tomato;margin-top: 3px; "
             ([ngModel])="selectVideoFormat"  
             (ionChange)="onChangeVideoFormat($event)"
@@ -121,9 +138,8 @@
             <ion-select-option value="fullvideo">실황</ion-select-option>
             <ion-select-option value="audio">오디오</ion-select-option>
           </ion-select>           
-          <!-- <p class="gray size-10" style="display: inline;margin: 0 !important">다운로드</p> -->
         </div>
-      </ion-col>             
+      </ion-col>   -->           
     </ion-row>          
   </ion-grid>
 </ion-header>

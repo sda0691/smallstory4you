@@ -104,6 +104,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'praise',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('./praise/praise.module').then( m => m.PraisePageModule)
+          }
+
+        ]
+      },
+      {
         path: 'user',
         children: [
           {
@@ -125,14 +135,14 @@ const routes: Routes = [
       },      
       {
         path: '',
-        redirectTo: '/main/tabs/medias',
+        redirectTo: '/main/tabs/news',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/main/tabs/medias',
+    redirectTo: '/main/tabs/news',
     pathMatch: 'full'
   },
   {
@@ -151,10 +161,11 @@ const routes: Routes = [
     path: 'church',
     loadChildren: () => import('./church/church.module').then( m => m.ChurchPageModule)
   },
-  {
+
+/*    {
     path: 'praise',
-    loadChildren: () => import('./praise/praise/praise.module').then( m => m.PraisePageModule)
-  }
+    loadChildren: () => import('./praise/praise.module').then( m => m.PraisePageModule)
+  }  */
 ];
 
 @NgModule({

@@ -1,32 +1,3 @@
-/* .cell-class {
-    border-color: black; 
-    border-width: .01em; 
-    border-style:solid; margin-bottom : -1px;
-    background-color: lightgrey
-  }
-
-  ion-col.my-thin-col {
-    flex: 0 0 50px;
-    padding:0;
-    margin-right:20px;
-  }
-
-p.font-bold-black  {
-    font-weight: bold !important;
-    color: black !important;
-    font-size:16px;
-}
-p.font-bold  {
-    font-weight: bold; 
-}
-p.font-gray  {
-    color: gray;
-}
-
-p.font-gray-small  {
-    color: gray;
-    font-size:12px;
-} */
 .myDiv {
     background-color:rgb(236, 234, 234);
     // margin-left: 5px;
@@ -71,4 +42,18 @@ audio::-webkit-media-controls-panel, video::-webkit-media-controls-panel {
 // remove shadow image in ion-header. it doesn't work in global.scss
 ion-header::after {
   background-image: none;
+} 
+// iframe
+.container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+}
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

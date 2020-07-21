@@ -18,6 +18,8 @@ export class ChurchPage implements OnInit, OnDestroy {
   loggedUser: User;
   churchName = GlobalConstants.churchName;
   churchAddress = GlobalConstants.churchAddress;
+  contactNumber = GlobalConstants.contactNumber;
+  webAddress = GlobalConstants.webAddress;
   test = 'ddfdf';
   constructor(
     private launchNavigator: LaunchNavigator,

@@ -40,10 +40,12 @@ export class CreateAuthComponent implements OnInit {
         updateOn: 'blur',
         validators: [
           Validators.required,
-          // at least 8 characters, 1 number , 1 letter
+          // 6-20, number and letters
           // Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z]{8,}$/)
+          // Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{6,}$/)
+          Validators.pattern(/^(?=.*\d)(?=.*[A-Za-z])\w{6,20}$/)
           // at least 8 characters, 1 number , 1 letter , 1 special character
-          Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$/)
+          // Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&_])[A-Za-z\d@$!%*#?&_]{8,}$/)
         ]
       }),
       confirmPassword: new FormControl('', {

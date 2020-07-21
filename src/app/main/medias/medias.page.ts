@@ -25,7 +25,7 @@ import { AuthComponent } from 'src/app/auth/auth.component';
 export class MediasPage implements OnInit, OnDestroy {
   audioUrl: string;
   loggedUser: User;
-  isAuth = false;
+  // isAuth = false;
   loadedData = []; // Member[];
   renderedMedias = [];
   filteredMedias = [];  // get from loadedData when user select category
@@ -57,10 +57,11 @@ export class MediasPage implements OnInit, OnDestroy {
       .subscribe(data => {
         if (data) {
           this.loadedData = data;
+          // console.log('init data');
           this.selectedMedia = this.loadedData[0];
           if (this.selectedMedia) {
              this.youtubeSanitizer(this.selectedMedia.youtubeLink);
-             this.getDownloadUrl();
+             // this.getDownloadUrl();
           }
           // console.log(this.selectedMedia.youtubeLink);
         }
@@ -97,28 +98,34 @@ export class MediasPage implements OnInit, OnDestroy {
         this.subs.push(this.fetchMediaCategory()
           .subscribe(data => {
             this.authService.loggedUser.subscribe(user => {
-              if (user) {
+/*               if (user) {
                 this.isAuth = true;
               } else {
                 this.isAuth = false;
+              } */
+              // console.log(this.loadedData);
+              if (this.loadedData.length <= 0) {
+                this.subs.push(this.mediaService.fetchMedias(category) // get all records, then filter by category
+                  .subscribe(media => {
+                    if (this.segCategory.toUpperCase() === 'ALL') {
+                      this.filteredMedias = media;
+                    } else {
+                      this.filteredMedias = media.filter(data => data.category === this.segCategory);
+                    }
+
+                    this.resetCategory();
+                    this.showMore();
+
+                    loadingEl.dismiss();
+                  }, error => {
+                    loadingEl.dismiss();
+                    console.log(error);
+                  })
+                );
+              } else {
+                loadingEl.dismiss();
               }
-              this.subs.push(this.mediaService.fetchMedias(category) // get all records, then filter by category
-                .subscribe(media => {
-                  if (this.segCategory.toUpperCase() === 'ALL') {
-                    this.filteredMedias = media;
-                  } else {
-                    this.filteredMedias = media.filter(data => data.category === this.segCategory);
-                  }
 
-                  this.resetCategory();
-                  this.showMore();
-
-                  loadingEl.dismiss();
-                }, error => {
-                  loadingEl.dismiss();
-                  console.log(error);
-                })
-              );
             });
           }, error => {
             loadingEl.dismiss();

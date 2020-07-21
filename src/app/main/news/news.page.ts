@@ -13,6 +13,7 @@ import { GlobalConstants } from 'src/app/common/global-constants';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { DetailNewsComponent } from './detail-news/detail-news.component';
 
+
 @Component({
   selector: 'app-news',
   templateUrl: './news.page.html',
@@ -21,7 +22,6 @@ import { DetailNewsComponent } from './detail-news/detail-news.component';
 })
 export class NewsPage implements OnInit, OnDestroy {
   
-  isAuth = false;
   private authSub: Subscription;
   private newsSub: Subscription;
   private subs: Subscription[] = [];
@@ -63,7 +63,7 @@ export class NewsPage implements OnInit, OnDestroy {
               }
             }
           }
-          console.log(this.loadedData); 
+          console.log(this.loadedData);
         }
       })
     );
@@ -80,25 +80,27 @@ export class NewsPage implements OnInit, OnDestroy {
       .then(loadingEl => {
           loadingEl.present();
           this.subs.push(this.authService.loggedUser.subscribe(user => {
-            if (user) {
-              this.isAuth = true;
-            } else {
-              this.isAuth = false;
-            }
-            this.subs.push(this.newsService.fetchNews() // get all records, then filter by category
-              .subscribe(news => {
-                this.loadedData = news;
 
-                this.counter = 0;
-                this.renderedNews = [];
-                this.showMore();
-                
-                loadingEl.dismiss();
-              }, error => {
-                loadingEl.dismiss();
-                console.log(error);
-              })
-            );
+            // console.log(this.loadedData);
+            if (this.loadedData.length <= 0) {
+              this.subs.push(this.newsService.fetchNews() // get all records, then filter by category
+                .subscribe(news => {
+                  this.loadedData = news;
+
+                  this.counter = 0;
+                  this.renderedNews = [];
+                  this.showMore();
+
+                  loadingEl.dismiss();
+                }, error => {
+                  loadingEl.dismiss();
+                  console.log(error);
+                })
+              );
+            } else {
+              loadingEl.dismiss();
+            }
+
           }));
       });
     }));

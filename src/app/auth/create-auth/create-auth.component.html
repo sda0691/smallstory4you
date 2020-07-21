@@ -117,7 +117,7 @@
             </ion-button>                     
           </ion-item>
           <div style="padding-left:15px ">
-            <p class="gray size-12" >6-20자의 영문, 숫자, 특수문자</p>
+            <p class="gray size-12" >6-20자의 영문, 숫자</p>
           </div>
           
           <p 
@@ -126,23 +126,23 @@
             style="text-align: center;">
             * 비밀번호를 입력하세요
           </p>
-          <p 
+<!--           <p 
             *ngIf="form.get('password').hasError('minlength')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * 비밀번호는 4-20 이어야 합니다
-          </p>  
-          <p 
+            * 비밀번호는 6-20 이어야 합니다
+          </p> -->  
+<!--           <p 
             *ngIf="form.get('password').hasError('maxlength')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * 비밀번호는 4-20 이어야 합니다.
-          </p>           
+            * 비밀번호는 6-20 이어야 합니다.
+          </p>    -->        
           <p 
             *ngIf="form.get('password').hasError('pattern')  && form.get('password').touched"
             class="error-message" 
             style="text-align: center;">
-            * 6-20자의 영문, 숫자, 특수문자를 사용하세요
+            * 6-20자의 영문, 숫자를 사용하세요
           </p>                  
           <br>
 
