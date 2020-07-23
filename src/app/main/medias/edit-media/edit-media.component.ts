@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ModalController, Platform, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { Media } from '../media.model';
 import { MdeiaService } from '../media.service';
@@ -6,13 +6,14 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { User } from 'src/app/auth/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-media',
   templateUrl: './edit-media.component.html',
   styleUrls: ['./edit-media.component.scss'],
 })
-export class EditMediaComponent implements OnInit {
+export class EditMediaComponent implements OnInit, OnDestroy {
   @Input() selectedMedia: Media;
   @Input() loggedUser: User;
   
@@ -22,6 +23,8 @@ export class EditMediaComponent implements OnInit {
   selectedFile: string;
   uploadProgress = 0;
   newDate = '';
+  private subs: Subscription[] = [];
+  
   constructor(
     private platform: Platform,
     private mediaService: MdeiaService,
@@ -94,9 +97,9 @@ export class EditMediaComponent implements OnInit {
         if (this.pickedFile) {
           this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-          this.task.percentageChanges().subscribe(change => {
+          this.subs.push(this.task.percentageChanges().subscribe(change => {
             this.uploadProgress = change;
-          });
+          }));
 
           this.task.then(async res => {
             const toast = await this.toastCtrl.create({
@@ -171,4 +174,8 @@ export class EditMediaComponent implements OnInit {
     })
     .then(alertEl => alertEl.present());
   }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }  
 }

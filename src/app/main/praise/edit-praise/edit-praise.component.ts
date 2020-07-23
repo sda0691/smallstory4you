@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { User } from 'src/app/auth/user.model';
 import { Praise } from '../praise.model';
 import { AngularFireUploadTask } from '@angular/fire/storage/task';
@@ -7,14 +7,14 @@ import { PraiseService } from '../praise.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-praise',
   templateUrl: './edit-praise.component.html',
   styleUrls: ['./edit-praise.component.scss'],
 })
-export class EditPraiseComponent implements OnInit {
+export class EditPraiseComponent implements OnInit, OnDestroy {
   @Input() selectedPraise: Praise;
   @Input() loggedUser: User;
 
@@ -24,7 +24,8 @@ export class EditPraiseComponent implements OnInit {
   selectedFile: string;
   uploadProgress = 0;
   uploadedFileURL: Observable<string>;
-  
+  private subs: Subscription[] = [];
+
   constructor(
     private platform: Platform,
     private praiseService: PraiseService,
@@ -93,9 +94,9 @@ export class EditPraiseComponent implements OnInit {
       if (this.pickedFile) {
         this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-        this.task.percentageChanges().subscribe(change => {
+        this.subs.push(this.task.percentageChanges().subscribe(change => {
           this.uploadProgress = change;
-        });
+        }));
 
         this.task.then(async res => {
           const toast = await this.toastCtrl.create({
@@ -103,10 +104,10 @@ export class EditPraiseComponent implements OnInit {
             message: 'File upload finished!'
           });
           this.uploadedFileURL = fileRef.getDownloadURL();
-          this.uploadedFileURL.subscribe(resp => {
+          this.subs.push(this.uploadedFileURL.subscribe(resp => {
             record['downloadUrl'] = resp;
 
-            this.praiseService.edit_praise(record, uploadedFileName)
+            this.subs.push(this.praiseService.edit_praise(record, uploadedFileName)
               .subscribe(data => {
                 if (oldFileName) {
                   this.praiseService.delete_image(oldFileName);
@@ -117,21 +118,21 @@ export class EditPraiseComponent implements OnInit {
                 this.modalCtrl.dismiss(null, 'praise-upload-success');
               }, error => {
                 this.showAlert(error.message);
-            });
+            }));
 
           }, error => {
             loadingEl.dismiss();
             this.showAlert(error.message);
-          });
+          }));
         });
 
       } else {
-        this.praiseService.edit_praise(record, uploadedFileName)
+        this.subs.push(this.praiseService.edit_praise(record, uploadedFileName)
           .subscribe(() => {
             loadingEl.dismiss();
             inputData.form.reset();
             this.modalCtrl.dismiss(null, 'praise-upload-success');
-        });
+        }));
       }
     });
   }
@@ -178,4 +179,7 @@ export class EditPraiseComponent implements OnInit {
     })
     .then(alertEl => alertEl.present());
   }
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }  
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Pray } from '../Pray.model';
 import { Member } from '../../members/member.model';
 import { GlobalConstants } from 'src/app/common/global-constants';
@@ -9,18 +9,21 @@ import { EditPrayComponent } from '../edit-pray/edit-pray.component';
 import { PrayService } from '../pray.service';
 import { Route } from '@angular/compiler/src/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-detail-pray',
   templateUrl: './detail-pray.component.html',
   styleUrls: ['./detail-pray.component.scss'],
 })
-export class DetailPrayComponent implements OnInit {
+export class DetailPrayComponent implements OnInit, OnDestroy {
   @Input() selectedPray: Pray;
   @Input() loggedUser: User;
   audioUrl = '';
   isLoading = false;
   lenVerseOfPray = 'short';
+  private subs: Subscription[] = [];
+  
   constructor(
     private storage: AngularFireStorage,
     private alertCtrl: AlertController,
@@ -41,14 +44,14 @@ export class DetailPrayComponent implements OnInit {
     const fullPath = storageFolderName + uploadedFileName;
     const fileRef = this.storage.ref(fullPath);
 
-    fileRef.getDownloadURL()
+    this.subs.push(fileRef.getDownloadURL()
     .subscribe(url => {
       this.audioUrl = url;
       this.isLoading = false;
       console.log(url);
     }, error => {
       this.showAlert(error.message);
-    }) ;
+    })) ;
   }
 
   openEdit(pray: Pray) {
@@ -98,4 +101,10 @@ export class DetailPrayComponent implements OnInit {
     })
     .then(alertEl => alertEl.present());
   }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+  
+  
 }

@@ -69,7 +69,7 @@ export class PraisePage implements OnInit {
     }));
   }
   ionViewWillEnter() {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.Subs.push(this.authService.getCurrentUser().subscribe(user => {
       this.loadingCtrl.create({message: 'Loading members...'})
       .then(loadingEl => {
         loadingEl.present();
@@ -81,7 +81,7 @@ export class PraisePage implements OnInit {
             console.log(error);
           }));
       });
-    });
+    }));
   }
   onAddPraise() {
     this.modalCtrl.create({

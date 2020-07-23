@@ -69,29 +69,7 @@ export class AuthComponent implements OnInit {
             this.showAlert(message);
           }
         );
-        /* authObs = this.authService.login(email, password);
-        authObs.subscribe(
-          resData => {
-            console.log(resData);
-            loadingEl.dismiss();
-            this.isLoading = false;
-            this.modalCtrl.dismiss(null, 'cancel');
-          },
-          errRes => {
-            loadingEl.dismiss();
-            const code = errRes.error.error.message;
-            console.log(errRes);
-            let message = 'Could not sign you up, please try again.';
-            if (code === 'EMAIL_EXISTS') {
-              message = 'This email address exists already!';
-            } else if (code === 'EMAIL_NOT_FOUND') {
-              message = 'E-Mail address could not be found.';
-            } else if (code === 'INVALID_PASSWORD') {
-              message = 'This password is not correct.';
-            }
-            this.showAlert(message);
-          }
-        );  */
+        
       });
   }
   presentToast(message: string) {

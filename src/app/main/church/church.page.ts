@@ -32,8 +32,8 @@ export class ChurchPage implements OnInit, OnDestroy {
     }));
   }
   ionViewWillEnter() {
-    this.authService.getCurrentUser().subscribe(user => {
-    });
+    this.subs.push(this.authService.getCurrentUser().subscribe(user => {
+    }));
   }
   onOpenMaps() {
     let options: LaunchNavigatorOptions = {

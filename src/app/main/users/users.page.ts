@@ -44,7 +44,7 @@ export class UsersPage implements OnInit, OnDestroy {
 
   
   ionViewWillEnter() {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.subs.push(this.authService.getCurrentUser().subscribe(user => {
       this.loadingCtrl.create({message: 'Loading 기도력...'})
       .then(loadingEl => {
           loadingEl.present();
@@ -57,7 +57,7 @@ export class UsersPage implements OnInit, OnDestroy {
             })
           );
       });
-    });
+    }));
   }
 
   openUserDetail(user: User) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MembersService } from '../members.service';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/c
 import { finalize, tap } from 'rxjs/operators';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Member } from '../member.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { GlobalConstants } from 'src/app/common/global-constants';
@@ -41,7 +41,7 @@ function base64toBlob(base64Data, contentType) {
   templateUrl: './create-member.page.html',
   styleUrls: ['./create-member.page.scss'],
 })
-export class CreateMemberPage implements OnInit {
+export class CreateMemberPage implements OnInit, OnDestroy {
   @ViewChild('filePicker', {static: false}) filePickerRef: ElementRef<HTMLInputElement>;
 
   form: NgForm;
@@ -53,7 +53,8 @@ export class CreateMemberPage implements OnInit {
   task: AngularFireUploadTask;
   uploadedFileURL: Observable<string>;
   downloadUrl = '';
-
+  private subs: Subscription[] = [];
+  
   constructor(
     private storage: AngularFireStorage, 
     private database: AngularFirestore,
@@ -79,13 +80,13 @@ export class CreateMemberPage implements OnInit {
       this.isAuth = isAuth;
     });
  */
-    this.authService.loggedUser.subscribe(user => {
+    this.subs.push(this.authService.loggedUser.subscribe(user => {
       if (!user || (user && user.role.toUpperCase() !== 'ADMIN')) {
         this.router.navigate(['/main/tabs/medias']);
       } else {
         this.isAuth = true;
       }
-    });
+    }));
   }
   /* onAddMember1(inputData) {
     if (this.pickedFile && this.pickedFile.type.split('/')[0] !== 'image') {
@@ -168,10 +169,10 @@ export class CreateMemberPage implements OnInit {
               message: 'File upload finished!'
             });
             this.uploadedFileURL = fileRef.getDownloadURL();
-            this.uploadedFileURL.subscribe(resp => {
+            this.subs.push(this.uploadedFileURL.subscribe(resp => {
               this.downloadUrl = resp;
 
-              this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
+              this.subs.push(this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
               .subscribe(resData => {
                 loadingEl.dismiss();
                 inputData.reset();
@@ -179,9 +180,9 @@ export class CreateMemberPage implements OnInit {
                 }, error  => {
                   loadingEl.dismiss();
                   this.showAlert(error.message);
-              });
+              }));
               toast.present();
-            });
+            }));
 
 
 
@@ -189,7 +190,7 @@ export class CreateMemberPage implements OnInit {
             this.showAlert(error.message);
           });
         } else {
-          this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
+          this.subs.push(this.membersService.add_member(inputData.form.value, this.uploadedFileName, this.downloadUrl)
           .subscribe(resData => {
             loadingEl.dismiss();
             inputData.reset();
@@ -197,7 +198,7 @@ export class CreateMemberPage implements OnInit {
             }, error  => {
               loadingEl.dismiss();
               this.showAlert(error.message);
-          });
+          }));
         }
 
 
@@ -310,5 +311,8 @@ export class CreateMemberPage implements OnInit {
       buttons: ['Okay']
     })
     .then(alertEl => alertEl.present());
+  }
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

@@ -106,13 +106,13 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
       loadingEl.present();
 
       if (!this.pickedFiles || this.pickedFiles.length <= 0) {
-        this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
+        this.subs.push(this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
         .subscribe(() => {
           loadingEl.dismiss();
           this.modalCtrl.dismiss(null, 'media-upload-success');
-        });
+        }));
       } else {
-        this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
+        this.subs.push(this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
         .subscribe(() => {
           for (const file of this.pickedFiles) {
             uploadedFileName = `${new Date().getTime()}_${file.name}`;
@@ -139,7 +139,7 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
               }));
             }); 
           }
-        })
+        }));
       }
 
 
@@ -220,7 +220,7 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
 
       }
       if (fileCount === this.pickedFiles.length ) {
-        this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
+        this.subs.push(this.newsService.add_news(inputData.form.value, this.uploadedFileNames, this.downloadUrls)
         .subscribe(async() => {
           const toast = await this.toastCtrl.create({
             duration: 3000,
@@ -231,7 +231,7 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
         }
         , error => {
           this.showAlert(error.message);
-        });
+        }));
       }
       console.log('test');
 
@@ -248,12 +248,13 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
 
       // this.uploadedFileNames.push(uploadedFileName);
       const aaa = this.task.snapshotChanges().pipe(
-        finalize(() => this.fileRef.getDownloadURL().subscribe(data => {
-          console.log('aaa');
-          console.log(data);
-          resolve(data);
-        }))
-      )
+        finalize(() => 
+          this.subs.push(this.fileRef.getDownloadURL().subscribe(data => {
+            console.log('aaa');
+            console.log(data);
+            resolve(data);
+        })))
+      );
   
     });
 

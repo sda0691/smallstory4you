@@ -37,65 +37,22 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    /* this.authService.userIsAuthenticatedObser.pipe(
-      take(1),
-      switchMap(isAuthenticated => {
-        if (!isAuthenticated) {
-          return this.authService.autoLogin();
-        } else {
-          return of(isAuthenticated);
-        }
-      })
-    ).subscribe(resData => {
-      this.isUserAuthenticated = resData; 
-    }); */
+
   }
 
   ionViewWillEnter() {
-    /* this.authService.userIsAuthenticatedObser.pipe(
-      take(1),
-      switchMap(isAuthenticated => {
-        if (!isAuthenticated) {
-          return this.authService.autoLogin();
-        } else {
-          return of(isAuthenticated);
-        }
-      })
-    ).subscribe(resData => {
-      this.isUserAuthenticated = resData; 
-    }); */
+
   }
 
   onLogout() {
-/*     this.authService.logout();
-    this.isUserAuthenticated = false; */
 
-    // this.router.navigateByUrl('/auth');
   }
 
   onLogin() {
-    /* this.modelCtrl.create({
-      component: AuthComponent,
-      componentProps: {},
-      id: 'test'
-    }).then(modalEl => {
-      modalEl.present();
-      return modalEl.onDidDismiss().then(resData => {
-        console.log(resData);
-        if
-          ((resData.role === 'login-success') || 
-          (resData.role === 'signup-success')) {
-          this.isUserAuthenticated = true;
-        }
-        // this.isUserAuthenticated = true;
-        this.router.navigate(['/main/tabs/news']);
-      });
-    }); */
+    
   }
 
   ngOnDestroy() {
-/*     if (this.authSub) {
-      this.authSub.unsubscribe();
-    } */
+
   }
 }

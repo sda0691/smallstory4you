@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Media } from '../media.model';
 import { ModalController, AlertController } from '@ionic/angular';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -8,19 +8,20 @@ import { MdeiaService } from '../media.service';
 import { Router } from '@angular/router';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { User } from 'src/app/auth/user.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-detail-media',
   templateUrl: './detail-media.component.html',
   styleUrls: ['./detail-media.component.scss'],
 })
-export class DetailMediaComponent implements OnInit {
+export class DetailMediaComponent implements OnInit, OnDestroy {
   @Input() selectedMedia: Media;
   @Input() loggedUser: User;
   audioUrl: string;
   isLoading = false;
   trustedVideoUrl: SafeResourceUrl;
-
+  private subs: Subscription[] = [];
   constructor(
     private modalCtrl: ModalController,
     private storage: AngularFireStorage,
@@ -37,12 +38,12 @@ export class DetailMediaComponent implements OnInit {
     const fullPath = storageFolderName + uploadedFileName;
     const fileRef = this.storage.ref(fullPath);
 
-    fileRef.getDownloadURL()
+    this.subs.push(fileRef.getDownloadURL()
     .subscribe(url => {
       this.audioUrl = url;
       console.log(url);
       this.isLoading = false;
-    });
+    }));
 
     this.youtubeSanitizer();
   }
@@ -94,6 +95,8 @@ export class DetailMediaComponent implements OnInit {
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }
-
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
 
 }

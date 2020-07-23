@@ -49,7 +49,7 @@ export class EditMemberPage implements OnInit, OnDestroy {
   private membersSub: Subscription;
   task: AngularFireUploadTask;
   uploadedFileURL: Observable<string>;
-
+  private subs: Subscription[] = [];
 
   constructor(
     private platform: Platform,
@@ -84,7 +84,7 @@ export class EditMemberPage implements OnInit, OnDestroy {
       });
     }); */
 
-    this.route.paramMap.subscribe(parmaMap => {
+    this.subs.push(this.route.paramMap.subscribe(parmaMap => {
       if (!parmaMap.has('memberId')) {
         this.navCtrl.navigateBack('/main/tabs/members');
         return;
@@ -116,17 +116,17 @@ export class EditMemberPage implements OnInit, OnDestroy {
       this.loadingCtrl.create({message: 'Loading Member...'})
         .then(loadingEl => {
           loadingEl.present();
-          this.membersSub = this.membersService
-          .get_member(memberId)
-          .subscribe(data => {
-            this.member = data;
-            this.selectedImage = data.imageUrl;
-            this.selectedFileName = data.fileName;
-            this.isLoading = false;
-            loadingEl.dismiss();
-          });
+          this.subs.push(this.membersSub = this.membersService
+            .get_member(memberId)
+            .subscribe(data => {
+              this.member = data;
+              this.selectedImage = data.imageUrl;
+              this.selectedFileName = data.fileName;
+              this.isLoading = false;
+              loadingEl.dismiss();
+          }));
         });
-    });
+    }));
   }
 
 
@@ -272,10 +272,10 @@ export class EditMemberPage implements OnInit, OnDestroy {
             });
 
             this.uploadedFileURL = fileRef.getDownloadURL();
-            this.uploadedFileURL.subscribe(resp => {
+            this.subs.push(this.uploadedFileURL.subscribe(resp => {
               record['imageUrl'] = resp;
 
-              this.membersService.edit_member(record, uploadedFileName)
+              this.subs.push(this.membersService.edit_member(record, uploadedFileName)
               .subscribe(() => {
  
                 if (oldImageFileName) {
@@ -285,9 +285,9 @@ export class EditMemberPage implements OnInit, OnDestroy {
                 loadingEl.dismiss();
                 inputData.form.reset();
                 this.router.navigate(['/main/tabs/members']);
-              })
+              }));
 
-            });
+            }));
 
 
 
@@ -297,13 +297,13 @@ export class EditMemberPage implements OnInit, OnDestroy {
             this.showAlert(error.message);
           });
         } else {
-          this.membersService.edit_member(record, uploadedFileName)
+          this.subs.push(this.membersService.edit_member(record, uploadedFileName)
           .subscribe(() => {
 
             loadingEl.dismiss();
             inputData.form.reset();
             this.router.navigate(['/main/tabs/members']);
-          });
+          }));
         }
       }
       , error => {
@@ -313,7 +313,7 @@ export class EditMemberPage implements OnInit, OnDestroy {
   }
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Error',
+      // header: 'Error',
       message: message,
       buttons: ['Okay']
     })

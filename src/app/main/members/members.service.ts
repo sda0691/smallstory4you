@@ -1,6 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { Member } from './member.model';
-import { BehaviorSubject, Observable, pipe } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, Subscription } from 'rxjs';
 import { take, delay, map, tap, finalize, switchMap } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
@@ -32,7 +32,7 @@ interface MemberModel {
 @Injectable({
   providedIn: 'root'
 })
-export class MembersService implements OnInit {
+export class MembersService implements OnInit, OnDestroy {
   messageData: any = [];
 
   studentsRef: AngularFireList<any>;    // Reference to Student data list, its an Observable
@@ -59,6 +59,7 @@ export class MembersService implements OnInit {
 
 
   members1: Observable<any>;
+  private subs: Subscription[] = [];
 
 constructor(
   private firestore: AngularFirestore,
@@ -302,14 +303,14 @@ constructor(
     const fullPath = this.collectionName + '/' + filename;
     const fileRef = this.storage.ref(fullPath);
 
-    fileRef.getDownloadURL()
+    this.subs.push(fileRef.getDownloadURL()
     .subscribe(url => {
       const storageRef = this.storage.ref(this.collectionName + '/');
       storageRef.child('/' + filename).delete();
       console.log(url);
     }, error => {
       console.log(error);
-    });
+    }));
   }
 
   deletePhoto(member, fileName) {
@@ -317,5 +318,9 @@ constructor(
     member.fileName = '';
     member.imageUrl = '';
     this.firestore.doc(this.collectionName + '/' + member.id).update(member);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }

@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { User } from 'src/app/auth/user.model';
 import { AngularFireUploadTask } from '@angular/fire/storage/task';
 import { GlobalConstants } from 'src/app/common/global-constants';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AngularFireStorageReference } from '@angular/fire/storage/ref';
 import { AngularFireStorage } from '@angular/fire/storage/';
 import { Platform, LoadingController, AlertController, ToastController, ModalController } from '@ionic/angular';
@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './create-praise.component.html',
   styleUrls: ['./create-praise.component.scss'],
 })
-export class CreatePraiseComponent implements OnInit {
+export class CreatePraiseComponent implements OnInit, OnDestroy {
   @Input() loggedUser: User;
 
   usePicker = false;
@@ -23,7 +23,8 @@ export class CreatePraiseComponent implements OnInit {
   pickedFile: any;
   uploadedFileURL: Observable<string>;
   downloadUrl = '';
-
+  private subs: Subscription[] = [];
+  
   constructor(
     private storage: AngularFireStorage,
     private platform: Platform,
@@ -84,10 +85,10 @@ export class CreatePraiseComponent implements OnInit {
             message: 'File upload finished!'
           });
           this.uploadedFileURL = fileRef.getDownloadURL();
-          this.uploadedFileURL.subscribe(resp => {
+          this.subs.push(this.uploadedFileURL.subscribe(resp => {
             this.downloadUrl = resp;
 
-            this.praiseService.add_praise(inputData.form.value, uploadedFileName, this.downloadUrl)
+            this.subs.push(this.praiseService.add_praise(inputData.form.value, uploadedFileName, this.downloadUrl)
             .subscribe(resData => {
               loadingEl.dismiss();
               inputData.reset();
@@ -96,14 +97,14 @@ export class CreatePraiseComponent implements OnInit {
               }, error  => {
                 loadingEl.dismiss();
                 this.showAlert(error.message);
-            });
+            }));
             toast.present();
-          });
+          }));
         }).catch (error => {
           this.showAlert(error.message);
         });
       } else {
-        this.praiseService.add_praise(inputData.form.value, uploadedFileName, this.downloadUrl)
+        this.subs.push(this.praiseService.add_praise(inputData.form.value, uploadedFileName, this.downloadUrl)
         .subscribe(resData => {
           loadingEl.dismiss();
           inputData.reset();
@@ -112,7 +113,7 @@ export class CreatePraiseComponent implements OnInit {
           }, error  => {
             loadingEl.dismiss();
             this.showAlert(error.message);
-        });
+        }));
       }
     });
   }
@@ -133,4 +134,8 @@ export class CreatePraiseComponent implements OnInit {
    onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
   }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }  
 }

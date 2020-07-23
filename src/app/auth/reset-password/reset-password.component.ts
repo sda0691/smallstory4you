@@ -36,7 +36,7 @@ export class ResetPasswordComponent implements OnInit {
   }
   private showAlert(message: string) {
     this.alertCtrl.create({
-      header: 'Error',
+      // header: 'Error',
       message: message,
       buttons: ['Okay']
     })

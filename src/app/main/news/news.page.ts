@@ -56,10 +56,10 @@ export class NewsPage implements OnInit, OnDestroy {
                 fullPath = storageFolderName + file;
                 this.fileRef = this.storage.ref(fullPath);
                 
-                this.fileRef.getDownloadURL()
+                this.subs.push(this.fileRef.getDownloadURL()
                 .subscribe(url => {
                   news.downloadUrl.push(url);
-                });
+                }));
               }
             }
           }

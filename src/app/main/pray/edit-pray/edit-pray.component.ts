@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Media } from '../../medias/media.model';
 import { User } from 'src/app/auth/user.model';
 import { AngularFireUploadTask } from '@angular/fire/storage/task';
@@ -8,14 +8,14 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { Pray } from '../Pray.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-pray',
   templateUrl: './edit-pray.component.html',
   styleUrls: ['./edit-pray.component.scss'],
 })
-export class EditPrayComponent implements OnInit {
+export class EditPrayComponent implements OnInit, OnDestroy {
   @Input() selectedPray: Pray;
   @Input() loggedUser: User;
   
@@ -27,7 +27,8 @@ export class EditPrayComponent implements OnInit {
   newDate = '';
   audioUrl = '';
   uploadedFileURL: Observable<string>;
-  
+  private subs: Subscription[] = [];
+
   constructor(
     private platform: Platform,
     private prayService: PrayService,
@@ -94,9 +95,9 @@ export class EditPrayComponent implements OnInit {
       if (this.pickedFile) {
         this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-        this.task.percentageChanges().subscribe(change => {
+        this.subs.push(this.task.percentageChanges().subscribe(change => {
           this.uploadProgress = change;
-        });
+        }));
 
         this.task.then(async res => {
           const toast = await this.toastCtrl.create({
@@ -105,7 +106,7 @@ export class EditPrayComponent implements OnInit {
           });
 
           this.uploadedFileURL = fileRef.getDownloadURL();
-          this.uploadedFileURL.subscribe(resp => {
+          this.subs.push(this.uploadedFileURL.subscribe(resp => {
             record['downloadUrl'] = resp;
 
             this.prayService.edit_pray(record, uploadedFileName )
@@ -121,7 +122,7 @@ export class EditPrayComponent implements OnInit {
             .catch(error => {
               this.showAlert(error.message);
             });
-          });
+          }));
         }).catch(error => {
           loadingEl.dismiss();
           this.showAlert(error.message);
@@ -135,7 +136,7 @@ export class EditPrayComponent implements OnInit {
           const fullPath = storageFolderName + uploadedFileName;
           const fileRef = this.storage.ref(fullPath);
       
-          fileRef.getDownloadURL()
+          this.subs.push(fileRef.getDownloadURL()
           .subscribe(url => {
             record['downloadUrl'] = url;
 
@@ -148,7 +149,7 @@ export class EditPrayComponent implements OnInit {
             .catch(error => {
               this.showAlert(error.message);
             });            
-          });
+          }));
 
         } else {
           this.prayService.edit_pray(record, uploadedFileName )
@@ -195,4 +196,9 @@ export class EditPrayComponent implements OnInit {
     })
     .then(alertEl => alertEl.present());
   }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+  
 }

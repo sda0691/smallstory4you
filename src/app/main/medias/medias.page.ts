@@ -82,13 +82,13 @@ export class MediasPage implements OnInit, OnDestroy {
     this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(path);
   }
   ionViewWillEnter() {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.subs.push(this.authService.getCurrentUser().subscribe(user => {
       if (this.segCategory.toUpperCase() !== 'ALL') {
         this.segCategory = 'all';  // tab
       } else {
         this.fetchMedia('All');   // page_load
       }
-    });
+    }));
   }
   fetchMedia(category: string) {
     this.loadingCtrl.create({message: 'Loading Media...'})
@@ -97,7 +97,7 @@ export class MediasPage implements OnInit, OnDestroy {
 
         this.subs.push(this.fetchMediaCategory()
           .subscribe(data => {
-            this.authService.loggedUser.subscribe(user => {
+            this.subs.push(this.authService.loggedUser.subscribe(user => {
 /*               if (user) {
                 this.isAuth = true;
               } else {
@@ -126,7 +126,7 @@ export class MediasPage implements OnInit, OnDestroy {
                 loadingEl.dismiss();
               }
 
-            });
+            }));
           }, error => {
             loadingEl.dismiss();
           })
@@ -166,11 +166,11 @@ export class MediasPage implements OnInit, OnDestroy {
     const fullPath = storageFolderName + uploadedFileName;
     const fileRef = this.storage.ref(fullPath);
 
-    fileRef.getDownloadURL()
+    this.subs.push(fileRef.getDownloadURL()
     .subscribe(url => {
       this.audioUrl = url;
       console.log(url);
-    });
+    }));
   }
   onChangeVideoFormat(event) {
     this.selectVideoFormat = event.detail.value;

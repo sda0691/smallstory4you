@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModalController, Platform, ToastController, AlertController, LoadingController } from '@ionic/angular';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Router } from '@angular/router';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { PrayService } from '../pray.service';
 import { IonicModule } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-pray',
   templateUrl: './create-pray.component.html',
   styleUrls: ['./create-pray.component.scss'],
 })
-export class CreatePrayComponent implements OnInit {
+export class CreatePrayComponent implements OnInit, OnDestroy {
   usePicker = false;
   task: AngularFireUploadTask;
   pickedFile: any;
   uploadProgress = 0;
   uploadedFileURL: Observable<string>;
   downloadUrl = '';
-  
+  private subs: Subscription[] = [];
+
   constructor(
     private platform: Platform,
     private prayService: PrayService,
@@ -67,9 +68,9 @@ onAddPray(inputData) {
       loadingEl.present();
       this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-      this.task.percentageChanges().subscribe(change => {
+      this.subs.push(this.task.percentageChanges().subscribe(change => {
         this.uploadProgress = change;
-      });
+      }));
       this.task.then(async res => {
         const toast = await this.toastCtrl.create({
           duration: 3000,
@@ -77,10 +78,10 @@ onAddPray(inputData) {
         });
 
         this.uploadedFileURL = fileRef.getDownloadURL();
-        this.uploadedFileURL.subscribe(resp => {
+        this.subs.push(this.uploadedFileURL.subscribe(resp => {
           this.downloadUrl = resp;
 
-          this.prayService.add_pray(inputData.form.value, uploadedFileName, this.downloadUrl)
+          this.subs.push(this.prayService.add_pray(inputData.form.value, uploadedFileName, this.downloadUrl)
           .subscribe(() => {
             loadingEl.dismiss();
             inputData.reset();
@@ -89,10 +90,10 @@ onAddPray(inputData) {
           , error => {
             loadingEl.dismiss();
             this.showAlert(error.message);
-          });
+          }));
 
           toast.present();
-        });
+        }));
       }).catch(error => {
         loadingEl.dismiss();
         this.showAlert(error.message);
@@ -114,4 +115,8 @@ onAddPray(inputData) {
     })
     .then(alertEl => alertEl.present());
   }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }  
 }

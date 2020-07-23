@@ -21,9 +21,6 @@ export class MainPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-/*     this.authService.userIsAuthenticated.subscribe(isAuth => {
-      this.isAuth = isAuth;
-    }); */
     // when page refreshed in web.
     this.subs.push(this.authService.loggedUser.subscribe(user => {
       this.loggedUser = user;
@@ -31,8 +28,7 @@ export class MainPage implements OnInit, OnDestroy {
   }
 
   ionViewWillEnter() {
-/*     this.subs.push(this.authService.getCurrentUser().subscribe(user => {
-    })); */
+
   }
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());

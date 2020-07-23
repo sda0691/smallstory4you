@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Platform, LoadingController, ToastController, AlertController, ModalController } from '@ionic/angular';
 import { MdeiaService } from '../media.service';
 import { AngularFireUploadTask, AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -6,14 +6,14 @@ import { GlobalConstants } from 'src/app/common/global-constants';
 import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MediaCategory } from '../media-category.model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-media',
   templateUrl: './create-media.component.html',
   styleUrls: ['./create-media.component.scss'],
 })
-export class CreateMediaComponent implements OnInit {
+export class CreateMediaComponent implements OnInit, OnDestroy {
   @Input() loadedMediaCategory: MediaCategory;
 
   task: AngularFireUploadTask;
@@ -23,7 +23,8 @@ export class CreateMediaComponent implements OnInit {
   uploadProgress = 0;
   uploadedFileURL: Observable<string>;
   downloadUrl = '';
-
+  private subs: Subscription[] = [];
+  
   constructor(
     private platform: Platform,
     private mediaService: MdeiaService,
@@ -76,9 +77,9 @@ export class CreateMediaComponent implements OnInit {
       if (this.pickedFile) {
         this.task = this.storage.upload( fullPath, this.pickedFile, {customMetadata});
 
-        this.task.percentageChanges().subscribe(change => {
+        this.subs.push(this.task.percentageChanges().subscribe(change => {
           this.uploadProgress = change;
-        });
+        }));
         this.task.then(async res => {
           const toast = await this.toastCtrl.create({
             duration: 3000,
@@ -86,10 +87,10 @@ export class CreateMediaComponent implements OnInit {
           });
   
           this.uploadedFileURL = fileRef.getDownloadURL();
-          this.uploadedFileURL.subscribe(resp => {
+          this.subs.push(this.uploadedFileURL.subscribe(resp => {
             this.downloadUrl = resp;
   
-            this.mediaService.add_media(inputData.form.value, uploadedFileName)
+            this.subs.push(this.mediaService.add_media(inputData.form.value, uploadedFileName)
             .subscribe(() => {
               loadingEl.dismiss();
               inputData.reset();
@@ -99,16 +100,16 @@ export class CreateMediaComponent implements OnInit {
             , error => {
               loadingEl.dismiss();
               this.showAlert(error.message);
-            });
+            }));
             toast.present();
   
-          });
+          }));
         }).catch(error => {
           loadingEl.dismiss();
           this.showAlert(error.message);
         });
       } else {
-        this.mediaService.add_media(inputData.form.value, uploadedFileName)
+        this.subs.push(this.mediaService.add_media(inputData.form.value, uploadedFileName)
         .subscribe(() => {
           loadingEl.dismiss();
           inputData.reset();
@@ -118,7 +119,7 @@ export class CreateMediaComponent implements OnInit {
         , error => {
           loadingEl.dismiss();
           this.showAlert(error.message);
-        });
+        }));
       }
 
     });
@@ -145,5 +146,8 @@ export class CreateMediaComponent implements OnInit {
       buttons: ['Okay']
     })
     .then(alertEl => alertEl.present());
+  }
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 }
