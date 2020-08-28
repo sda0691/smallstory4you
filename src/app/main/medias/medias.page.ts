@@ -16,6 +16,7 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
 import { AuthComponent } from 'src/app/auth/auth.component';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'app-medias',
@@ -49,6 +50,7 @@ export class MediasPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private domSanitizer: DomSanitizer,
     private storage: AngularFireStorage,
+    private notificationService: NotificationService
   ) {
   }
 
@@ -90,7 +92,15 @@ export class MediasPage implements OnInit, OnDestroy {
       }
     }));
   }
+/*   showToken() {
+    this.notificationService.saveToken('1234aaaa');
+  } */
   fetchMedia(category: string) {
+/*     this.subs.push(this.authService.fetchVersion()
+      .subscribe(data => {
+
+      })
+    );  */
     this.loadingCtrl.create({message: 'Loading Media...'})
     .then(loadingEl => {
         loadingEl.present();
@@ -136,7 +146,13 @@ export class MediasPage implements OnInit, OnDestroy {
   fetchMediaCategory() {
     return this.mediaCategoryService.fetchMediaCategory();
   }
-
+/*   test() {
+    
+    this.subs.push(this.authService.currnetVersion.subscribe(data => {
+      console.log('aaaaaaaaaa');
+      //window.parent.location.reload();
+    }));
+  } */
   onAddMedia() {
     this.modalCtrl.create({
       component: CreateMediaComponent,

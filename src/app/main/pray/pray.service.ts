@@ -79,7 +79,7 @@ export class PrayService {
       })
     );
   }
-  edit_pray(pray, fileName: string) {
+  edit_pray(pray, fileName: string) { 
     pray.groupId = this.authService.groupId;
     pray.groupName = GlobalConstants.groupName;
     pray.fileName = fileName;

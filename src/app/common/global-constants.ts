@@ -11,5 +11,8 @@ export class GlobalConstants {
     public static mediaCategoryCollection: string = GlobalConstants.groupName + '-' + 'MEDIA-CATEGORY';
     public static prayCollection: string = GlobalConstants.groupName + '-' + 'PRAY';
 	public static newsCollection: string = GlobalConstants.groupName + '-' + 'NEWS';
-	public static praiseCollection: string = GlobalConstants.groupName + '-' + 'PRAISE';
+    public static praiseCollection: string = GlobalConstants.groupName + '-' + 'PRAISE';
+    public static albumCollection: string = 'Album';
+    public static versionCollection: string = 'VersionControl';
+    public static pushNotification_news = false;
 }

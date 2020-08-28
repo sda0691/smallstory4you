@@ -30,6 +30,7 @@ import { EditMediaComponent } from './main/medias/edit-media/edit-media.componen
 import { LaunchNavigator, LaunchNavigatorOptions } from '@ionic-native/launch-navigator/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MyinfoComponent } from './auth/myinfo/myinfo.component';
+import { EditAlbumComponent } from './main/praise/edit-album/edit-album.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MyinfoComponent } from './auth/myinfo/myinfo.component';
     CreateAuthComponent, 
     ResetPasswordComponent, 
     EditMediaComponent,
+    EditAlbumComponent
     // MyinfoComponent,
     // AuthComponent,
     // TopImageComponent
@@ -46,6 +48,7 @@ import { MyinfoComponent } from './auth/myinfo/myinfo.component';
     CreateAuthComponent, 
     ResetPasswordComponent, 
     EditMediaComponent, 
+    EditAlbumComponent
     // MyinfoComponent, 
     // AuthComponent, 
     // TopImageComponent
@@ -72,7 +75,6 @@ import { MyinfoComponent } from './auth/myinfo/myinfo.component';
     SplashScreen,
     CallNumber,
     LaunchNavigator,
-    
   ],
   bootstrap: [AppComponent]
 })

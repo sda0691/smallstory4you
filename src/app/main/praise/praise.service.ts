@@ -4,15 +4,18 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { BehaviorSubject } from 'rxjs';
-import { Praise } from './praise.model';
+import { Praise, Album } from './praise.model';
 import { take, map, tap } from 'rxjs/operators';
 
+import * as firebase from 'firebase/app';
 @Injectable({
   providedIn: 'root'
 })
 export class PraiseService {
   collectionName = GlobalConstants.praiseCollection;
+  collectionName_Album = GlobalConstants.albumCollection;
   private _praise = new BehaviorSubject<Praise[]>(null);
+  private _album = new BehaviorSubject<Album[]>(null);
   
   constructor(
     private authService: AuthService,
@@ -23,7 +26,9 @@ export class PraiseService {
   get praises() {
     return this._praise.asObservable();
   }
-
+  get albums() {
+    return this._album.asObservable();
+  }
   add_praise(praise, fileName, downloadUrl) {
     return this.authService.loggedUser.pipe(
       take(1),
@@ -48,6 +53,16 @@ export class PraiseService {
         });
       })
     );
+  }
+  add_album(albumName, userid) {
+    return this.firestore.collection(this.collectionName_Album)
+    .add({
+      groupId: GlobalConstants.groupId,
+      groupName: GlobalConstants.groupName,
+      albumName: albumName,
+      userid: userid,
+      songList : ''
+    });
   }
   fetchMembers() {
     return this.firestore.collection(this.collectionName, ref => ref.orderBy('whenCreated', 'desc')).snapshotChanges()
@@ -80,6 +95,39 @@ export class PraiseService {
       );
   }
 
+  
+  getPraiseById(id: string) {
+    return this.firestore.collection(this.collectionName).doc(id).snapshotChanges()
+      .pipe(map(action => {
+        const data = action.payload.data() as Praise;
+        return { id, ...data };
+    }));
+  }
+  
+  fetchAlbum(userid) {
+    return this.firestore.collection(this.collectionName_Album, ref => 
+        ref.where('userid', '==', userid)).snapshotChanges()
+      .pipe(
+        map(docArray => {
+          let albums = [];
+          albums = docArray.map(doc => {
+            return {
+              id: doc.payload.doc.id,
+              userid: doc.payload.doc.data()['userid'],
+              albumName: doc.payload.doc.data()['albumName'],
+              songList: doc.payload.doc.data()['songList'],
+              songList1: doc.payload.doc.data()['songList1'],
+              refField: doc.payload.doc.data()['refField'],
+            };
+
+          });
+          return albums;
+        }),
+        tap(albums => {
+          this._album.next(albums);
+        })
+      );
+  }
   edit_praise(praise, fileName: string) {
     return this.authService.loggedUser.pipe(
       take(1),
@@ -90,7 +138,42 @@ export class PraiseService {
       })
     );
   }
+  updateAlbumSongList(uid, songList) {
+     return this.firestore.collection(this.collectionName_Album )
+      .doc(uid)
+      .set(
+        { songList: songList},
+        { merge: true }
+      );
 
+    /*       
+    // should use each item or hardcode array as below.
+    return this.firestore.collection(this.collectionName_Album )
+      .doc(uid)
+      .update(
+        { songList: firebase.firestore.FieldValue.arrayUnion('a','b') },
+        ); 
+    */
+  }
+  updateAlbumName(albumId, albumName) {
+    return this.firestore.collection(this.collectionName_Album )
+    .doc(albumId )
+    .update({
+      albumName: albumName,
+    });
+  }
+  removeAlbum(albumId) {
+    return this.firestore.doc(this.collectionName_Album + '/' + albumId).delete();
+
+  }
+  removeFromAlbum(albumId, songid) {
+    console.log(albumId, songid)
+    return this.firestore.collection(this.collectionName_Album )
+    .doc(albumId)
+    .update(
+      { songList: firebase.firestore.FieldValue.arrayRemove(songid) },
+    );
+  }
   delete_praise(praise: Praise) {
     return this.firestore.doc(this.collectionName + '/' + praise.id).delete()
       .then(() => {

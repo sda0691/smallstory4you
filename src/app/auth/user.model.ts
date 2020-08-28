@@ -23,3 +23,4 @@ export class User {
         return this.tokenExpirationDate.getTime() - new Date().getTime();
       }
 }
+

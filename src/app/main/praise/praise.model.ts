@@ -18,4 +18,14 @@ export class Praise {
         public whenUpdated: Date
     ) {}
 }
+export class Album {
+    constructor(
+        public id: string,
+        public groupId: number,
+        public groupName: string,        
+        public userid: string,
+        public albumName: string,
+        public songList: Array<string>,
 
+    ) {}
+}

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1060800278244",
+    "firebase_url": "https://smallstory4you.firebaseio.com",
+    "project_id": "smallstory4you",
+    "storage_bucket": "smallstory4you.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060800278244:android:0bfafc8477f869970186f1",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060800278244-1mp2drh7ntf7h1gpbrf9fi3rkuhot0gt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvLu1hNNVf2VyndCFPjIpwkkOAWmF3gOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060800278244-1mp2drh7ntf7h1gpbrf9fi3rkuhot0gt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

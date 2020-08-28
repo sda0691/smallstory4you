@@ -2,13 +2,19 @@ import { Component, OnInit, ElementRef, ViewChild, Input, OnDestroy } from '@ang
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { NewsService } from '../news.service';
-import { CameraOptions, Capacitor, Plugins, CameraSource, CameraResultType } from '@capacitor/core';
+import { CameraOptions, Capacitor, Plugins, CameraSource, CameraResultType, PushNotification } from '@capacitor/core';
 import { User } from 'src/app/auth/user.model';
 import { AngularFireStorage, AngularFireStorageReference, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { resolve } from 'url';
 import { async } from '@angular/core/testing';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CommonService } from 'src/app/common/common.service';
+import { FCM } from '@capacitor-community/fcm';
+import { NotificationService } from '../../notification/notification.service';
+const fcm = new FCM();
+const isPushNotificationsAvailable = Capacitor.isPluginAvailable('PushNotifications');
 
 function base64toBlob(base64Data, contentType) {
   contentType = contentType || '';
@@ -52,7 +58,12 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
   task: AngularFireUploadTask;
   uploadedFileURL: Observable<string>;
   private subs: Subscription[] = [];
-  
+  pushNotificationToggle = GlobalConstants.pushNotification_news;
+  pushNotificationToggleValue = 0;
+
+  pushMyNotificationToggle = false;
+  pushMyNotificationToggleValue = 0;
+  remoteToken: string;
   constructor(
     private storage: AngularFireStorage,
     private alertCtrl: AlertController,
@@ -61,6 +72,9 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private platform: Platform,
     private toastCtrl: ToastController,
+    private httpClient: HttpClient,
+    private commonService: CommonService,
+    private pushNotificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -71,6 +85,31 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
     )) {
       this.usePicker = true; // do not show any time
     }
+    Plugins.Storage.get({ key: 'pushNotificationNews' }).then( data => {
+      if(data) {
+        if (data.value === '1') {
+          this.pushNotificationToggle = true;
+        } else {
+          this.pushNotificationToggle = false;
+        }
+        console.log(data);
+      } else {
+        this.pushNotificationToggle = false;
+      }
+    });
+
+    Plugins.Storage.get({ key: 'pushMyNotification' }).then( data => {
+      if(data) {
+        if (data.value === '1') {
+          this.pushMyNotificationToggle = true;
+        } else {
+          this.pushMyNotificationToggle = false;
+        }
+        console.log(data);
+      } else {
+        this.pushMyNotificationToggle = false;
+      }
+    });
   }
 
   onAddNews2(inputData) {
@@ -226,6 +265,12 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
             duration: 3000,
             message: 'File upload finished!'
           });
+
+          if (this.pushNotificationToggleValue === 1) {
+            this.PushNotification('[소식] ' + inputData.form.value.title.substring(0, 300), '/main/tabs/news');
+            // this.commonService.PushNotification('[소식] ' + inputData.form.value.title.substring(0, 300), '/main/tabs/news');
+          }
+
           loadingEl.dismiss();
           this.modalCtrl.dismiss(null, 'media-upload-success');
         }
@@ -356,7 +401,63 @@ export class CreateNewsComponent implements OnInit, OnDestroy {
     console.log(this.pickedFiles);
   }
   onCancel() {
+    // GlobalConstants.pushNotification_news = this.pushNotificationToggleValue;
     this.modalCtrl.dismiss(null, 'cancel');
+  }
+  PushNotification(title, landding_page) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'key=AAAA9vyfruQ:APA91bFOKqRKLjpJDoscfaEZM1BMntUzPuANWCs-2vYU6VTH_KfCBuKD0hIrACxBf3y5tkPXEKaSFAX_pCEmahVHWhBHvyWxbesOL9BMIP1FkWsovU-4tx0XjwCZsyGUuBNJN1prSle4'
+      })
+    };
+
+    const postData = {
+        // 'to': 'topics/super-awesome-topic',
+        'to': 'fYCaIYfTRQKtc59SH6Dm1t:APA91bFju-DbyampVxGHbGTfGqpznSdUFAUjGocgJGYbs2QE-OYbU2naHYQW3eC4SUg2i4kR4V6ilTleZiCWXzKNvklgLAhSAk7PEdJn6t4tKpOCx8uSwyRmG2pfaTsc4Yaml9Wa9sxB',
+        //'condition': "!('anytopicyoudontwanttouse' in topics)",
+        'notification': {
+        'body': title,
+        'title': GlobalConstants.churchName // '토론토 서부교회'
+      },
+        "data":{
+        "landing_page": landding_page // "/main/tabs/medias",
+      },
+    };
+    return this.httpClient.post('https://fcm.googleapis.com/fcm/send', postData, httpOptions)
+       .subscribe(data => {
+        console.log(data);
+        }, error => {
+        console.log(error);
+      });
+  }
+  onPushNotificationToggle(event) {
+    console.log(event.detail.value);
+    this.pushNotificationToggleValue = this.pushNotificationToggleValue === 1 ? 0 : 1;
+    Plugins.Storage.set({ key: 'pushNotificationNews', value: this.pushNotificationToggleValue.toString() });
+   }
+
+/*    onMyPushNotificationToggle(event) {
+    console.log(event.detail.value);
+    this.pushMyNotificationToggleValue = this.pushMyNotificationToggleValue === 1 ? 0 : 1;
+    if (!this.pushMyNotificationToggle) {
+      this.pushNotificationService.unsubscribeFrom();
+    } else {
+      this.pushNotificationService.subscribeTo();
+    }
+    Plugins.Storage.set({ key: 'pushMyNotification', value: this.pushMyNotificationToggleValue.toString() });
+   } */
+
+   getToken() {
+    if (isPushNotificationsAvailable) {
+      fcm
+      .getToken()
+      .then((result) => {
+        this.remoteToken = result.token;
+      })
+      .catch((err) => console.log(err));
+    }
+
   }
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());

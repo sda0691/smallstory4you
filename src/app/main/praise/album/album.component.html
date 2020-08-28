@@ -1,0 +1,174 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>앨범</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>  
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col ion-col size-sm="6" offset-sm="3">
+        <ion-item>
+          <div class="scrolling-wrapper">
+            <div class="card" *ngFor="let item of loadedData ; let i=index" 
+              (click)="playAlbum(item)"
+              style="width:120px;padding: 1px; text-align: center;">
+                <img src="../../../assets/images/album.png"  
+                  height="120" width="100%" 
+                  
+                  [class.selectedAlbumImage]="albumName === item.albumName"
+                  [class.unselectedAlbumImage]="albumName !== item.albumName"
+                  ><p></p>
+                <!-- <button class="button icon-left ion-camera" (click)="delete(i)">Delete Photo</button> -->
+                <ion-button 
+                  [class.selectedAlbumTitle]="albumName === item.albumName"
+                  [class.unselectedAlbumTitle]="albumName !== item.albumName"                
+                  fill="clear" 
+                  >
+                  {{item.albumName}}
+                </ion-button>
+            </div>
+          </div>
+        </ion-item>
+        <ion-item *ngIf="selectedData && selectedData.length > 0">
+
+          <ion-buttons>
+            <p class="gray size-12 weight-regular">반복</p>
+            <ion-toggle 
+              checked
+              (ionChange)="onRepeatToggle($event)"
+              color="primary">
+            </ion-toggle>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-chip color="primary">
+              <ion-label 
+                color="primary"
+                (click)="onUpdateAlbum()">앨범수정</ion-label>
+            </ion-chip>
+            <ion-chip color="primary">
+              <ion-label 
+                color="primary"
+                (click)="onRemoveAlbum()">앨범삭제</ion-label>
+            </ion-chip>
+          </ion-buttons>
+
+        </ion-item>
+        <ion-item lines="full" 
+          class="ion-no-padding" 
+          *ngFor="let item of selectedData let i=index">
+        <div style="width:50px;padding:0px">
+          <ion-buttons slot="start" 
+          [class.hideEqualizer]="audioTitle !== item.title || audioTitle === item.title && showActiveEqualizer !== 'played'" 
+          [class.showEqualizer]="audioTitle === item.title && showActiveEqualizer === 'played'">
+          <ion-button>
+            <img src="../../../assets/images/music.webp" 
+            style="width:30px;height:30px;">
+          </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="start" 
+          [class.hideEqualizer]="audioTitle !== item.title || audioTitle === item.title && showActiveEqualizer !== 'paused'"
+          [class.showEqualizer]="audioTitle === item.title && showActiveEqualizer === 'paused'">
+          <ion-button>
+            <img src="../../../assets/images/equalizer-pause.png" 
+            style="width:30px;height:30px;">
+          </ion-button>
+        </ion-buttons> 
+        </div>
+       
+        <div style="padding: 0px 0px 15px 0px;" style="z-index: 1000;" (click)="playSingle(item)">
+          <p class="size-16 weight-bold padding-4" 
+            [class.titleColor]="audioTitle === item.title">{{item.title}} </p>
+          <p class="gray size-12 padding-4">
+            {{item.category}}
+            &nbsp;|&nbsp;{{item.genre}}
+            &nbsp;|&nbsp;{{item.format}}
+            &nbsp;|&nbsp;{{item.singer}}
+          </p>
+          <!-- <ion-button fill="outline" (click)="playSingle(item)">듣기</ion-button> -->
+        </div>
+        
+          <ion-buttons slot="end">
+            <ion-button (click)="removeList(item, i)">
+              <ion-icon name="remove-circle" style="font-size:20px"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          
+        
+      </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+<ion-footer 
+  [class.slideHide]="showFooter === false"
+  [class.slideShow]="showFooter === true"
+  >
+  <ion-toolbar >
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-no-padding">
+          <ion-col class="ion-no-padding" size-sm="6" offset-sm="3" 
+          >
+          <ion-item class="ion-no-padding" 
+            lines="none"
+            color="light"
+            style="background-color:var(--ion-color-light);">
+            <!-- <div style="width:80%; "> -->
+            <audio 
+              
+              #audio 
+              id="audioPlayer" 
+              (ended)="audioEnded()" 
+              (pause)="audioPaused()"
+              (play)="audioPlayed()"
+              preload="auto" tabindex="0" 
+              controls
+              controlsList="nodownload"
+              type="audio/mpeg"
+            >
+              <source #source id="audioSource" type="audio/mp3" src="{{audioUrl}}">
+              Sorry, your browser does not support HTML5 audio.
+            </audio>
+
+          <!--             <ion-button 
+          (click)="onPlaylist()"
+          fill="outline"
+          size=small>재생리스트</ion-button>  -->
+
+          <!--           <div style="width:20%;border:1px solid green; float:right">
+          <img src="../../../assets/images/playlist1.png" 
+            width="20px" height="20px"
+            style="vertical-align:middle">
+          </div> -->
+
+          <!--           <div class="example1" style="background-color:var(--ion-color-light)">
+
+          <ion-button fill="clear">
+            <ion-icon name="musical-notes-outline"></ion-icon> &nbsp;&nbsp;
+            <ion-label *ngIf="audioTitle">{{audioTitle}}</ion-label> 
+            <ion-label *ngIf="!audioTitle">음악을 선택해 주세요</ion-label> &nbsp;&nbsp;
+            <ion-icon name="musical-notes-outline"></ion-icon>
+          </ion-button>
+          </div> -->
+
+<!-- 
+          <ion-icon name="list-outline" 
+            slot="end"
+            style="font-size:25px;"
+            color="primary"
+            (click)="onPlayList()"
+            >
+          </ion-icon> -->
+          </ion-item>
+            
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  </ion-toolbar>
+</ion-footer>

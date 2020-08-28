@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { NewsService } from './news.service';
 import { News } from './News.model';
-import { ModalController, LoadingController } from '@ionic/angular';
+import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { MyinfoComponent } from 'src/app/auth/myinfo/myinfo.component';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Subscription, of } from 'rxjs';
@@ -12,6 +12,8 @@ import { User } from 'src/app/auth/user.model';
 import { GlobalConstants } from 'src/app/common/global-constants';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { DetailNewsComponent } from './detail-news/detail-news.component';
+
+
 
 
 @Component({
@@ -39,9 +41,14 @@ export class NewsPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private loadingCtrl: LoadingController,
     private storage: AngularFireStorage,
+    private alertCtrl: AlertController
     ) { }
 
   ngOnInit() {
+    // Push Notification
+    console.log('Initializing HomePage');
+    
+    
     const storageFolderName = GlobalConstants.newsCollection + '/'; // 'Members/';
     let fullPath = '';
     let fileRef = '';
@@ -70,6 +77,17 @@ export class NewsPage implements OnInit, OnDestroy {
     this.subs.push(this.authService.loggedUser.subscribe(user => {
       this.loggedUser = user;
     }));
+  }
+
+
+
+  private showAlert(message: string, header: string) {
+    this.alertCtrl.create({
+      header: header,
+      message: message,
+      buttons: ['Okay']
+    })
+    .then(alertEl => alertEl.present());
   }
   ionViewWillEnter() {
     this.fetchNews();
@@ -163,4 +181,6 @@ export class NewsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());
   }
+
+
 }

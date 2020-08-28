@@ -9,7 +9,8 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-
+    implementation project(':capacitor-community-fcm')
+    implementation project(':capacitor-file-transfer')
     implementation "com.squareup.okhttp3:okhttp:3.12.0"
 }
 

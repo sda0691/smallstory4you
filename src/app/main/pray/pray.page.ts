@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
 import { LoadingController, ModalController, AlertController, IonItemSliding } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,8 @@ import { SegmentChangeEventDetail } from '@ionic/core';
   styleUrls: ['./pray.page.scss'],
 })
 export class PrayPage implements OnInit, OnDestroy {
+  @ViewChild('audio', {static: false}) audioPlayer: ElementRef; 
+
   loggedUser: User;
   private subs: Subscription[] = [];
   loadedData = []; // Pray[];
@@ -102,7 +104,8 @@ export class PrayPage implements OnInit, OnDestroy {
         case 6: this.day = '토'; break;
       }
       // this.getDownloadUrl();
-      this.audioUrl = this.selectedPray.downloadUrl;
+      this.audioReset(this.selectedPray.downloadUrl);
+       // this.audioUrl = this.selectedPray.downloadUrl;
     }
   }
 /*   getDownloadUrl() {
@@ -117,6 +120,12 @@ export class PrayPage implements OnInit, OnDestroy {
       this.audioUrl = url;
     });
   } */
+  audioReset(downloadUrl) {
+    this.audioUrl = '';
+    this.audioUrl = downloadUrl;
+    this.audioPlayer.nativeElement.load();
+    this.audioPlayer.nativeElement.pause();
+  }
   onPreDay() {
     if (this.arrayIndex >= this.selectedData.length - 1) {
       return;

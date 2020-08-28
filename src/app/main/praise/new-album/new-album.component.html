@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>새앨범</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+        <ion-label>나가기</ion-label>
+      </ion-button>
+    </ion-buttons>  
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form (ngSubmit)="onAddAlbum(f)" #f="ngForm">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+        <ion-item>
+          <!-- <ion-label position="floating" >이름</ion-label> -->
+          <ion-input 
+            type="text" 
+            placeholder="*새앨범 이름"
+            ngModel 
+            name = "albumName" 
+            required 
+            clearInput
+            minlength = "2"
+            maxlength = "50"
+            #nameCtrl="ngModel">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <p *ngIf="!nameCtrl.valid && nameCtrl.touched"
+          class="error-message"
+          style="text-align: center;">
+          * 앨범 이름은 2 - 50 이어야 합니다.
+        </p>  
+        </ion-item>
+      </ion-col>
+    </ion-row>  
+    <ion-row>
+      <ion-col size-sm="6" offset-sm="3">  
+        <ion-button type="submit" [disabled]='!f.valid' expand="full" color="primary" >확인</ion-button>        
+      </ion-col>
+    </ion-row>                   
+  </ion-grid>
+</form>
+</ion-content>

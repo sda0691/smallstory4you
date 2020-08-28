@@ -110,6 +110,39 @@
         </ion-col>
       </ion-row> 
       <ion-row>
+        <ion-col>
+          <ion-item>
+            <p class="gray size-12 weight-regular">알림설정</p>
+            <ion-toggle 
+            name="pushNotificationToggle"
+            [(ngModel)]="pushNotificationToggle" 
+            (ionChange)="onPushNotificationToggle($event)"
+            color="primary">
+          </ion-toggle>
+          </ion-item>
+         </ion-col>
+      </ion-row>
+
+<!--       <ion-row>
+        <ion-col>
+          <ion-item>
+            <p class="gray size-12 weight-regular">내알림설정</p>
+            <ion-toggle 
+            name="pushMyNotificationToggle"
+            [(ngModel)]="pushMyNotificationToggle" 
+            (ionChange)="onMyPushNotificationToggle($event)"
+            color="primary">
+          </ion-toggle>
+          <ion-button  color="primary" 
+            expand="block"
+            (click)="getToken()">
+            Save
+          </ion-button>
+          {{remoteToken}}
+          </ion-item>
+         </ion-col>
+      </ion-row>   -->    
+      <ion-row>
         <ion-col size-sm="6" offset-sm="3">
           <ion-button type="submit" color="primary" 
             expand="block"
@@ -118,6 +151,16 @@
           </ion-button>
         </ion-col>
       </ion-row>      
+
+<!--       <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button  color="primary" 
+            expand="block"
+            >
+            Push Notification
+          </ion-button>
+        </ion-col>
+      </ion-row>    -->     
     </ion-grid>
   </form>
 </ion-content>

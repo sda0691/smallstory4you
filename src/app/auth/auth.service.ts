@@ -32,12 +32,14 @@ export interface AuthResponseData1 {
 })
 export class AuthService implements OnDestroy{
 
+  
   private _user = new BehaviorSubject<User>(null);
   private _users = new BehaviorSubject<User[]>(null); // begin used in users page
   private user: User;
 
   private activeLogoutTimer: any;
   userCollectionName = GlobalConstants.userCollection;
+  
   // private _userId = 'abc';
   testUser: any;
   get loggedUser() {
@@ -48,6 +50,7 @@ export class AuthService implements OnDestroy{
   get users() {
     return this._users.asObservable();
   }
+
 
   get groupId() {
     return 1;

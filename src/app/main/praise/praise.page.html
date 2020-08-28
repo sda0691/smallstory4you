@@ -42,30 +42,30 @@
         <ion-segment 
           class="ion-no-padding" 
          [(ngModel)] = "segCategory"
-         
+         (ionChange)="selectCategory($event)"
           scrollable  value="all" >
           <ion-segment-button class="ion-no-padding" value="all">
             <ion-label class="segment">전체</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="a">
+          <ion-segment-button class="ion-no-padding" value="싱글">
             <ion-label class="segment">싱글</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="b">
+          <ion-segment-button class="ion-no-padding" value="듀엣">
             <ion-label class="segment">듀엣</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="c">
+          <ion-segment-button class="ion-no-padding" value="합창">
             <ion-label class="segment">합창</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="d">
+          <ion-segment-button class="ion-no-padding" value="여성중창">
             <ion-label class="segment">여성중창</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="e">
+          <ion-segment-button class="ion-no-padding" value="남성중창">
             <ion-label class="segment">남성중창</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="f">
+          <ion-segment-button class="ion-no-padding" value="혼성중창">
             <ion-label class="segment">혼성중창</ion-label>
           </ion-segment-button>
-          <ion-segment-button class="ion-no-padding" value="g">
+          <ion-segment-button class="ion-no-padding" value="악기">
             <ion-label class="segment">악기</ion-label>
           </ion-segment-button>          
 
@@ -77,18 +77,37 @@
 </ion-header>
 
 <ion-content>
+
 <ion-grid *ngIf="!showPlaylist" >
+<!--   <ion-row>
+    <ion-col>
+      <ion-button 
+        (click)="playSelected()"
+        fill="outline"
+        size=small>song1
+      </ion-button>
+      <ion-button 
+        (click)="playSelected()"
+        fill="outline"
+        size=small>song2
+      </ion-button>
+      <ion-searchbar color="light">
+
+      </ion-searchbar>
+    </ion-col>
+  </ion-row> -->
+
   <ion-row>
 
     <ion-col size-sm="6" offset-sm="3" 
       class="ion-text-right ion-no-padding"
       style="background-color: var(--ion-color-light);padding-bottom:0px"
     >
-      <ion-item  >
+      <ion-item  lines="none">
       <ion-input
         type="text"
-        ngModel
-        
+        [(ngModel)]="search"
+        clearInput
         required
         name="author"
         #authorCtrl="ngModel"
@@ -98,7 +117,10 @@
         background-color: var(--ion-color-light) !important;"
       ></ion-input>
  
-        <ion-icon name="search-outline" style="padding: 0px 10px 0px 5px;">
+        <ion-icon 
+          (click)="onSearch()"
+          name="search-outline" 
+          style="padding: 0px 10px 0px 5px;">
         </ion-icon>
  
       
@@ -113,8 +135,9 @@
         fill="outline"
         item-end
         style="padding:0px"
+        (click)="openMyAlbum()"
         size=small>마이앨범
-      </ion-button>        
+      </ion-button>         
         <!-- <ion-button (click)="selectYoutubePlay()">Youtube play</ion-button> -->
       </ion-item>
     </ion-col>
@@ -144,7 +167,7 @@
     <ion-row>
     <ion-col size-sm="6" offset-sm="3">
       <ion-list>
-        <ion-item-sliding  *ngFor="let item of loadedData" #slidingItem>
+        <ion-item-sliding  *ngFor="let item of renderedPraise" #slidingItem>
 
         <ion-item tappable >
           <div style="z-index: 1000;" >  <!-- z-index make dom item recognized separately inside ion-item -->
@@ -170,7 +193,7 @@
             [class.hideEqualizer]="audioTitle !== item.title || audioTitle === item.title && showActiveEqualizer !== 'played'" 
             [class.showEqualizer]="audioTitle === item.title && showActiveEqualizer === 'played'">
             <ion-button>
-              <img src="../../../assets/images/music.webp" 
+              <img src="../../../assets/images/equalizer1.gif" 
               style="width:30px;height:30px;">
             </ion-button>
           </ion-buttons>
@@ -201,6 +224,17 @@
       </ion-list>
     </ion-col>
   </ion-row>
+    <ion-row>
+      <ion-col class="ion-text-center">
+        <ion-button 
+          (click)="showMore(searchedData)"
+          fill="clear"
+          [disabled]="renderedPraise.length===0 || (loadedData && counter >= searchedData.length)"
+        >
+          더보기
+        </ion-button>
+      </ion-col>
+    </ion-row>
 </ion-grid>
 
 <ion-grid *ngIf="showPlaylist">
@@ -212,8 +246,14 @@
           fill="outline"
           slot="end"
           class="ion-item-end"
+          (click)="addSongsToAlbum()"
           size=small>앨범에 추가
         </ion-button>  
+        <p class="gray size-12 weight-regular">반복</p>
+        <ion-toggle 
+        [(ngModel)]="repeatToggle" 
+        (ionChange)="onRepeatToggle($event)"
+        color="primary"></ion-toggle>
       </ion-item>
       
       <!-- <ion-button (click)="selectYoutubePlay()">Youtube play</ion-button> -->
@@ -222,7 +262,17 @@
   <ion-row>
     <ion-col>
       <ion-list >
-        <ion-item lines="full" class="ion-no-padding" *ngFor="let item of selectedPlayList">
+        <ion-item lines="full" 
+          tappable
+          class="ion-no-padding" 
+          *ngFor="let item of selectedPlayList let i=index">
+
+          <div style="z-index: 1000;" >  <!-- z-index make dom item recognized separately inside ion-item -->
+            <ion-checkbox color="primary" (ionChange)="selectListForAlbum(item, $event)"></ion-checkbox>
+          </div>
+          <div style="width:20px">
+          </div>
+
           <div style="width:50px;padding:0px">
             <ion-buttons slot="start" 
             [class.hideEqualizer]="audioTitle !== item.title || audioTitle === item.title && showActiveEqualizer !== 'played'" 
@@ -253,16 +303,12 @@
             </p>
             <!-- <ion-button fill="outline" (click)="playSingle(item)">듣기</ion-button> -->
           </div>
-          
-            <ion-buttons slot="end">
-              <ion-button (click)="removeList(item)">
-                <ion-icon name="remove-circle" style="font-size:20px"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-            
-          
+          <ion-buttons slot="end" style="z-index: 1000;">
+            <ion-button (click)="removeList(item, i)">
+              <ion-icon name="remove-circle" style="font-size:20px"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-item>
-
       </ion-list>
      </ion-col>
   </ion-row>
@@ -282,8 +328,6 @@
   [class.slideShow]="showFooter === true"
   >
   <ion-toolbar >
-
-
       <ion-grid class="ion-no-padding">
         <ion-row class="ion-no-padding">
           <ion-col class="ion-no-padding" size-sm="6" offset-sm="3" 
@@ -301,10 +345,11 @@
               (pause)="audioPaused()"
               (play)="audioPlayed()"
               preload="auto" tabindex="0" 
-              controls="" 
+              controls
+              controlsList="nodownload"
               type="audio/mpeg"
             >
-              <source type="audio/mp3" src="{{audioUrl}}">
+              <source #source id="audioSource" type="audio/mp3" src="{{audioUrl}}">
               Sorry, your browser does not support HTML5 audio.
             </audio>
 
@@ -341,9 +386,5 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-
-    
-    
-    
   </ion-toolbar>
 </ion-footer>

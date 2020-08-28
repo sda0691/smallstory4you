@@ -10,6 +10,8 @@ import { PraisePage } from './praise.page';
 import { CreatePraiseComponent } from './create-praise/create-praise.component';
 import { MediasPageModule } from '../medias/medias.module';
 import { EditPraiseComponent } from './edit-praise/edit-praise.component';
+import { AlbumComponent } from './album/album.component';
+import { NewAlbumComponent } from './new-album/new-album.component';
 
 @NgModule({
   imports: [
@@ -19,7 +21,7 @@ import { EditPraiseComponent } from './edit-praise/edit-praise.component';
     PraisePageRoutingModule,
     MediasPageModule
   ],
-  declarations: [PraisePage, CreatePraiseComponent, EditPraiseComponent],
-  entryComponents: [CreatePraiseComponent, EditPraiseComponent]
+  declarations: [PraisePage, CreatePraiseComponent, EditPraiseComponent, AlbumComponent, NewAlbumComponent],
+  entryComponents: [CreatePraiseComponent, EditPraiseComponent, AlbumComponent, NewAlbumComponent]
 })
 export class PraisePageModule {}

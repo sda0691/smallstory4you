@@ -143,18 +143,15 @@
         </div>                    
       </ion-col>
     </ion-row>  
-    <ion-row *ngIf="selectedPray">
+    <ion-row> <!-- <ion-row *ngIf="selectedPray"> nativeElement won't work with ngif. find work around to make it work -->
       <ion-col size-sm="6" offset-sm="3">
-        <div *ngIf="selectedPray && audioUrl" >
-<!--           <audio 
-            controls  
-            style="width:100%; background-color:rgb(225, 245, 220);" >
-            <source src="{{audioUrl}}" 
-              type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>  -->
+        <div> <!-- <div *ngIf="selectedPray && audioUrl" > -->
           <audio 
+            #audio
+            id="audioPlayer"
             controls  
+            preload="auto"
+            controlsList="nodownload"
             style="width:100%; background-color: var(--ion-color-light)" >
             <source src="{{audioUrl}}" 
               type="audio/mpeg">

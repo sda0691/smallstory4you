@@ -31,5 +31,3 @@ npm-debug.log*
 /www
 /android
 /ios
-.firebaserc
-capacitor.config.json

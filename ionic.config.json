@@ -1,9 +1,8 @@
 {
   "name": "goodnews4you",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
-
-
 }
